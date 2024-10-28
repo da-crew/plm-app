@@ -1,6 +1,3 @@
-Project
-=============
-Please use this template for your project.
+# port-logistics
 
-List your group's member's below with ID and name.
-
+Our port logistics management software
