@@ -128,27 +128,6 @@ public class UserController {
         if (role == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        /**
-        switch (roleString) {
-            case "DISPATCHER": 
-                role = Role.DISPATCHER;
-                break;
-            case "EXPORTER":
-                role = Role.EXPORTER;
-                    break;
-            case "CHECKER":
-                role = Role.CHECKER;
-                break;
-            case "ADMIN":
-                role = Role.ADMIN;
-                break;
-        }
-
-        if (role == Role.UNKNOWN) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        //*/
         if (userRepo.findByUsername(username) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResult("FAILURE! USER ALREADY EXISTS"));
         }
