@@ -2,17 +2,23 @@ package com.studentgroup.app.webservices;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.studentgroup.app.model.EmployeeUser;
 import com.studentgroup.app.model.Role;
 import com.studentgroup.app.model.UserRepository;
@@ -27,30 +33,15 @@ class AuthResult {
     }
 }
 
-class CredsRequest {
-    public String username;
-    public String password;
-
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-}
-
 
 @RestController
 public class UserController {
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    ObjectMapper mapper;
 
     @PostConstruct
     public void initDatabase() throws NoSuchAlgorithmException {
@@ -76,8 +67,10 @@ public class UserController {
 
 
     @GetMapping("/test")
-    public ResponseEntity<AuthResult> testGet() {
-        return new ResponseEntity<AuthResult>(new AuthResult("OK"), HttpStatus.OK);
+    public ResponseEntity<ObjectNode> testGet() {
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("Deadline", 52455);
+        return ResponseEntity.ok().body(objectNode);
     }
     
     @GetMapping("/test/users/{username}")
@@ -95,13 +88,10 @@ public class UserController {
         return new ResponseEntity<Iterable<EmployeeUser>>(userRepo.findAll(), HttpStatus.OK);
     }
 
-    //@RequestMapping(value = "/auth", method=RequestMethod.GET, consumes = "application/json")
-    @RequestMapping("/auth")
-    public ResponseEntity<AuthResult> authUser(@RequestBody CredsRequest creds) throws Exception {
-        String username = creds.username;//jsonNode.get("username").asText();
-        String password = creds.password;//jsonNode.get("password").asText();
-
-        if (username == null || password == null) {
+    @RequestMapping("/users/auth")
+    public ResponseEntity<AuthResult> authUser(@RequestParam("username") String username, 
+                                                @RequestParam("password") String password) throws Exception {
+        if (username == "" || password == "") {
             return new ResponseEntity<AuthResult>(new AuthResult("BAD REQUEST: HI"), HttpStatus.BAD_REQUEST);
         }
 
@@ -117,21 +107,14 @@ public class UserController {
         return ResponseEntity.ok(new AuthResult(emp.getToken()));
     }
 
-    @RequestMapping(value = "/users/register", method=RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity<String> registerUser(@RequestBody JsonNode jsonNode) throws Exception {
-        JsonNode usernamejson = jsonNode.get("username");
-        JsonNode passwordjson = jsonNode.get("password");
-        JsonNode roleStringjson = jsonNode.get("role");
-        JsonNode tokenjson = jsonNode.get("token");
+    @PostMapping("/users/register")
+    public ResponseEntity<AuthResult> registerUser(@RequestParam("username") String username, 
+                                                @RequestParam("password") String password,
+                                                @RequestParam("role") String roleString,
+                                                @RequestParam("token") String token) throws Exception {
 
-        if (usernamejson == null || passwordjson == null || roleStringjson == null || tokenjson == null) {
+        if (username == null || password == null || roleString == null || token == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        String username = usernamejson.asText();
-        String password = passwordjson.asText();
-        String roleString = roleStringjson.asText();
-        String token = tokenjson.asText();
 
         EmployeeUser caller = userRepo.findByToken(token);
         if (caller == null) {
@@ -141,7 +124,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         
-        Role role = Role.UNKNOWN;
+        Role role = Enum.valueOf(Role.class, roleString);
+        if (role == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        /**
         switch (roleString) {
             case "DISPATCHER": 
                 role = Role.DISPATCHER;
@@ -160,15 +148,32 @@ public class UserController {
         if (role == Role.UNKNOWN) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        //*/
         if (userRepo.findByUsername(username) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResult("FAILURE! USER ALREADY EXISTS"));
         }
 
         EmployeeUser emp = new EmployeeUser(username, password, role);
         userRepo.save(emp);
 
-        return new ResponseEntity<String>(emp.toString(), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResult(emp.toString()));
     }
+
+    @GetMapping("/users/role")
+    public ResponseEntity<ObjectNode> checkRole(@RequestParam("token") String token) {
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        
+        EmployeeUser user = userRepo.findByToken(token);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        ObjectNode obj = mapper.createObjectNode();
+        obj.put("role", user.getRole().toString());
+
+        return ResponseEntity.ok().body(obj);
+    }
+    
 
 }
