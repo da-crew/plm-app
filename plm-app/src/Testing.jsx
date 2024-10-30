@@ -1,14 +1,19 @@
 import { useState } from "react";
 import axios from 'axios';
-
+import { useCookies } from 'react-cookie';
 
 export default function Testing() {
     
     let [username, setUsername] = useState("");
     let [password, setPassword] = useState("");
+    let [cookies, setCookies, removeCookies] = useCookies(['loginToken']);
     let [token, setToken] = useState("");
+
+    setCookies('loginToken', "Password here");
     
     const authUrl = 'http://localhost:8080/users/auth';
+
+    console.log("cookies: " + cookies.loginToken);
 
     function auth() {
         if (username === "" || password === "")
