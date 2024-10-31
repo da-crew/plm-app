@@ -16,6 +16,7 @@ public class EmployeeUser {
 
     private String username;
 
+    
     private String passwordHash;
     private String salt;
     private String token;
