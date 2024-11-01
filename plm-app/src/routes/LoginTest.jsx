@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { authenticate, authToken, COOKIES_NAME } from "../users";
 
-export default function Testing() {
+export default function LoginTest() {
 
     let [username, setUsername] = useState("");
     let [password, setPassword] = useState("");
