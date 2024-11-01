@@ -36,21 +36,21 @@ export default function Dashboard() {
     
 
     return (<>
-        <Header />
+        <Header employeeName = {username} onLogout={() => setToLogin(true)} role={Role.toString(role)}/>
         <h1>This is a dashboard</h1>
         <p>Welcome, {username}</p>
         <p>Role: {Role.toString(role)}</p>
         <p></p>
-        <div>
-            <DashboardHeader />
-            {/* List of productorder here*/}
+        <div className="center-block">
+            <DashboardHeader/>
+            {/* List of product order here*/}
             
 
 
 
 
 
-            
+
         </div>
         
     </>);

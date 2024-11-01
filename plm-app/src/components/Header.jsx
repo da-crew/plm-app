@@ -1,12 +1,12 @@
 import React from 'react';
 
-function Header() {
+function Header({employeeName,role,onLogout}) {
   return (
     <header style={styles.header}>
       
       <div style={styles.userSection}>
-        <button style={styles.logoutButton}>Logout</button>
-        <span style={styles.employeeText}>Employee Admin</span>
+        <button style={styles.logoutButton} onClick={onLogout}>Logout</button>
+        <span className='employeeName' style={styles.employeeText}>{employeeName} Role: {role}</span>
         <div style={styles.profileIcon}>👤</div>
       </div>
     </header>

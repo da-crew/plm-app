@@ -18,3 +18,7 @@ html {
     width: 100vw;
 }
 
+.center-block {
+    width: 70%; /* Adjust as necessary */
+    margin: 0 auto;
+}
