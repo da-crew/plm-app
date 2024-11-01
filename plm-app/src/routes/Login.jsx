@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Navigate, redirect } from "react-router";
 import { authenticate, authToken, COOKIES_NAME } from "../users";
-
+import '../components/LoginForm.css'
 
 export default function Login() {
     let [username, setUsername] = useState("");
@@ -11,7 +11,7 @@ export default function Login() {
     let [isRedirect, setRedirect] = useState(false);
 
     let [cookies, setCookies, removeCookies] = useCookies([COOKIES_NAME]);
-    
+
 
     function submitCreds() {
         authenticate(username, password)
@@ -27,7 +27,7 @@ export default function Login() {
     useEffect(() => {
         if (cookies.loginToken != null) {
             authToken(cookies.loginToken)
-                .then((value) => {})
+                .then((value) => { })
                 .catch((e) => {
                     setCookies(COOKIES_NAME, null);
                 });
@@ -35,19 +35,35 @@ export default function Login() {
     }, []);
 
     if (isRedirect) {
-        return <Navigate to="/"/>
+        return <Navigate to="/" />
     }
 
 
     return (<>
-        <h2>Login</h2>
-        {loginFailed ? <p>Username or password is incorrect!</p> : <p></p>}
-        <form>
-            <label htmlFor="username">Username: </label>
-            <input type="text" id="username" onChange={(e) => setUsername(e.target.value)}></input><br/>
-            <label htmlFor="password">Password: </label>
-            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}></input>
-        </form>
-        <button onClick={() => {submitCreds()}}>Login</button>
+        <div className="container">
+            <div className="login-form">
+                <h2>Login</h2>
+                {loginFailed ? <p>Username or password is incorrect!</p> : <p></p>}
+                <form>
+                    <label htmlFor="username">Username: </label>
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Username"
+                        onChange={(e) => setUsername(e.target.value)}>
+                    </input>
+                    <br />
+
+                    <label htmlFor="password">Password: </label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        onChange={(e) => setPassword(e.target.value)}>
+                    </input>
+                </form>
+                <button onClick={() => { submitCreds() }}>Login</button>
+            </div>
+        </div>
     </>);
 }
