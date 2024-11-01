@@ -1,0 +1,16 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    background-image: url('plm-app/public/background.jpg'); /* Update with your image path */
+    background-size: cover;  /* Ensures the image covers the entire container */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
