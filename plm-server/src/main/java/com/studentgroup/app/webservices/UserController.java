@@ -149,5 +149,36 @@ public class UserController {
         return ResponseEntity.ok().body(obj);
     }
     
+    @GetMapping("/validate-token")
+    public ResponseEntity<ObjectNode> validateToken(@RequestParam("token") String token) {
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        if (userRepo.findByToken(token) != null) {
+            return ResponseEntity.ok().body(null);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
+    @GetMapping("/users/auth-token")
+    public ResponseEntity<ObjectNode> authToken(@RequestParam("token") String token) {
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        ObjectNode usernode = mapper.createObjectNode();
+        usernode.put("username", (String)null);
+        usernode.put("role", (String)null);
+
+        EmployeeUser user = userRepo.findByToken(token);
+
+        if (user != null) {
+            usernode.put("username", user.getUsername());
+            usernode.put("role", user.getRole().toString());
+            return ResponseEntity.ok().body(usernode);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
 
 }
