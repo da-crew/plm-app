@@ -40,7 +40,9 @@ export const Role = Object.freeze({
                 return "UNKNOWN";
         }
     }
-});  
+});
+
+export const COOKIES_NAME = "loginToken";
 
 const WEB_SERVICE_URL = "http://localhost:8080";
 
