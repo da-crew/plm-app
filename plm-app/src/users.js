@@ -40,7 +40,9 @@ export const Role = Object.freeze({
                 return "UNKNOWN";
         }
     }
-});  
+});
+
+export const COOKIES_NAME = "loginToken";
 
 const WEB_SERVICE_URL = "http://localhost:8080";
 
@@ -55,10 +57,7 @@ export function checkRole(token) {
     }
 
     let resp = Role.UNKNOWN;
-    axios.get(WEB_SERVICE_URL + "/users/role", {params:{token: token}})
-                    .then((value) => resp = value.data.role)
-                    .catch((error) => { throw new Error('Got an error in checkRole: ' + error)});
-    return resp;
+    return axios.get(WEB_SERVICE_URL + "/users/role", {params:{token: token}});
 }
 
 /*
@@ -67,8 +66,6 @@ String password
 returns: login token of type String
 */
 export function authenticate(username, password) {
-    if (username === "" || password === "")
-        return;
     console.log("Sending a request");
 
     let data = {
@@ -77,15 +74,10 @@ export function authenticate(username, password) {
             password: password
         },
     };
-    let token = null;
-    axios.get(WEB_SERVICE_URL + "/users/auth", data)
-        .then((value) => {
-            console.log(`success: ${JSON.stringify(value.data.token)} \nstatus: ${value.status}`);
-            token = value.data.token;
-        })
-        .catch((error) => {
-            console.log("Error in authenticate")
-        });
-        
-    return token;
+    return axios.get(WEB_SERVICE_URL + "/users/auth", data)
+}
+
+export function authToken(token) {
+    console.log("Authenticating using token");
+    return axios.get(WEB_SERVICE_URL + "/users/auth-token", {params: {token: token}});
 }

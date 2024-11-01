@@ -12,10 +12,7 @@ public class EmployeeUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-
     private String username;
-
     
     private String passwordHash;
     private String salt;
@@ -23,7 +20,6 @@ public class EmployeeUser {
 
     @Enumerated(EnumType.ORDINAL)
     Role role;
-
 
     public EmployeeUser() {}
 

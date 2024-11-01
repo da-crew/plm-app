@@ -2,8 +2,10 @@ package com.studentgroup.app.webservices;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +24,17 @@ import jakarta.annotation.PostConstruct;
 
 class AuthResult {
     public String token;
+    public String username;
+    public String role;
 
-    public AuthResult(String token) {
+    public AuthResult(String token, String username, String role) {
         this.token = token;
+        this.username = username;
+        this.role = role;
+    }
+
+    public static AuthResult fromUser(EmployeeUser user) {
+        return new AuthResult(user.getToken(), user.getUsername(), user.getRole().toString());
     }
 }
 
@@ -87,19 +97,19 @@ public class UserController {
     public ResponseEntity<AuthResult> authUser(@RequestParam("username") String username, 
                                                 @RequestParam("password") String password) throws Exception {
         if (username == "" || password == "") {
-            return new ResponseEntity<AuthResult>(new AuthResult("BAD REQUEST: HI"), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         EmployeeUser emp = userRepo.findByUsername(username);
         if (emp == null) {
-            return new ResponseEntity<AuthResult>(new AuthResult("USER NOT FOUND"), HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
 
         if (!emp.verify(password)) {
-            return new ResponseEntity<AuthResult>(new AuthResult("password incorrect"), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        return ResponseEntity.ok(new AuthResult(emp.getToken()));
+        return ResponseEntity.ok(AuthResult.fromUser(emp));
     }
 
     @PostMapping("/users/register")
@@ -121,16 +131,16 @@ public class UserController {
         
         Role role = Enum.valueOf(Role.class, roleString);
         if (role == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         if (userRepo.findByUsername(username) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResult("FAILURE! USER ALREADY EXISTS"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
 
         EmployeeUser emp = new EmployeeUser(username, password, role);
         userRepo.save(emp);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResult(emp.toString()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(AuthResult.fromUser(emp));
     }
 
     @GetMapping("/users/role")
@@ -147,6 +157,32 @@ public class UserController {
         obj.put("role", user.getRole().toString());
 
         return ResponseEntity.ok().body(obj);
+    }
+    
+    @GetMapping("/validate-token")
+    public ResponseEntity<ObjectNode> validateToken(@RequestParam("token") String token) {
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        if (userRepo.findByToken(token) != null) {
+            return ResponseEntity.ok().body(null);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
+    @GetMapping("/users/auth-token")
+    public ResponseEntity<AuthResult> authToken(@RequestParam("token") String token) {
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        EmployeeUser user = userRepo.findByToken(token);
+
+        if (user != null) {
+            return ResponseEntity.ok().body(AuthResult.fromUser(user));
+        }
+        return ResponseEntity.notFound().build();
     }
     
 
