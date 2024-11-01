@@ -45,7 +45,7 @@ export default function Login() {
                 <h2>Login</h2>
                 {loginFailed ? <p>Username or password is incorrect!</p> : <p></p>}
                 <form>
-                    <label htmlFor="username">Username: </label>
+                    
                     <input
                         type="text"
                         id="username"
@@ -53,8 +53,6 @@ export default function Login() {
                         onChange={(e) => setUsername(e.target.value)}>
                     </input>
                     <br />
-
-                    <label htmlFor="password">Password: </label>
                     <input
                         type="password"
                         id="password"
