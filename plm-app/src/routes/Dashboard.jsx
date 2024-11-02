@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Navigate } from "react-router";
+import Header from "../components/Header";
+import DashboardHeader from "../components/DashboardHeader";
 import { authToken, Role } from "../users";
 
 
@@ -29,14 +31,29 @@ export default function Dashboard() {
     }, []);
 
     if (toLogin) {
-        return <Navigate to="/login"/>
+        return <Navigate to="/login" />
     }
-
+    
 
     return (<>
+        <Header employeeName = {username} onLogout={() => setToLogin(true)} role={Role.toString(role)}/>
         <h1>This is a dashboard</h1>
         <p>Welcome, {username}</p>
         <p>Role: {Role.toString(role)}</p>
         <p></p>
+        <div className="center-block">
+            <DashboardHeader/>
+            {/* List of product order here*/}
+            
+
+
+
+
+
+
+        </div>
+        
     </>);
+
+
 }

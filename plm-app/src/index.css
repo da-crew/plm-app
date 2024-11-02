@@ -1,16 +1,24 @@
-body, html {
+body,
+html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
+    background-image: url('plm-app/public/background.jpg');
+    background-size: cover;
+    /* Ensures the image covers the entire viewport */
+    background-repeat: no-repeat;
+    /* Prevents the image from repeating */
+    background-attachment: fixed;
+    /* Keeps the background fixed on scroll */
+    background-position: center;
+    /* Centers the image */
+    margin: 0;
+    /* Removes default margin */
+    height: 100vh;
+    width: 100vw;
 }
 
-.container {
-    background-image: url('plm-app/public/background.jpg'); /* Update with your image path */
-    background-size: cover;  /* Ensures the image covers the entire container */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.center-block {
+    width: 70%; /* Adjust as necessary */
+    margin: 0 auto;
 }
