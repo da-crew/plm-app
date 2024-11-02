@@ -33,18 +33,20 @@ export default function Dashboard() {
     if (toLogin) {
         return <Navigate to="/login" />
     }
-    
+
 
     return (<>
-        <Header employeeName = {username} onLogout={() => setToLogin(true)} role={Role.toString(role)}/>
+        <Header employeeName={username} onLogout={() => setToLogin(true)} role={Role.toString(role)} />
         <h1>This is a dashboard</h1>
         <p>Welcome, {username}</p>
         <p>Role: {Role.toString(role)}</p>
         <p></p>
         <div className="center-block">
-            <DashboardHeader/>
+            <DashboardHeader isDispatcher={Role.toString(role) == "DISPATCHER" | Role.toString(role) == "ADMIN"}
+                isAdmin={Role.toString(role) == "ADMIN"}
+            />
             {/* List of product order here*/}
-            
+
 
 
 
@@ -52,7 +54,7 @@ export default function Dashboard() {
 
 
         </div>
-        
+
     </>);
 
 

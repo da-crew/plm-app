@@ -1,12 +1,12 @@
 import React from 'react';
 
-function Header({employeeName,role,onLogout}) {
+function Header(props) {
   return (
     <header style={styles.header}>
       
       <div style={styles.userSection}>
-        <button style={styles.logoutButton} onClick={onLogout}>Logout</button>
-        <span className='employeeName' style={styles.employeeText}>{employeeName} Role: {role}</span>
+        <button style={styles.logoutButton} onClick={props.onLogout}>Logout</button>
+        <span className='employeeName' style={styles.employeeText}>{props.employeeName}  Role: {props.role}</span>
         <div style={styles.profileIcon}>👤</div>
       </div>
     </header>
@@ -18,7 +18,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    backgroundColor: '#546E7A',
+    backgroundColor: '#323136',
     padding: '10px 20px',
   },
   
