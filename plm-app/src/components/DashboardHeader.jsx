@@ -1,13 +1,27 @@
 import React from 'react';
 
-function DashboardHeader() {
+function DashboardHeader(props) {
+  let CreateButton;
+  let ManageButton;
 
+  if (props.isDispatcher) { // Dispatcher or Admin
+    CreateButton = <button style={styles.createButton} onClick={props.onCreate}>Create</button>;
+  } else {
+    CreateButton = null;
+  }
+
+  if (props.isAdmin) {
+    ManageButton = <button style={styles.manageUserButton} onClick={props.onManage}>Manage User</button>;
+  } else {
+    ManageButton = null;
+  }
+  
 
   return (
     <div style={styles.panelContainer}>
       <div style={styles.buttonContainer}>
-        <button style={styles.createButton}>Create</button>
-        <button style={styles.manageUserButton}>Manage User</button>
+        {CreateButton}
+        {ManageButton}
       </div>
 
       <div style={styles.searchContainer}>
