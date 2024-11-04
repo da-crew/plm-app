@@ -1,12 +1,15 @@
 package com.studentgroup.app.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.studentgroup.app.Misc;
 
+import com.studentgroup.app.webservices.UserInfo;
 import jakarta.persistence.*;
 import java.security.NoSuchAlgorithmException;
 
 
 @Entity
+@Table(name = "iesnse")
 public class EmployeeUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,17 +19,28 @@ public class EmployeeUser {
     private String lastname;
     private String passwordHash;
     private String salt;
-    //private String token;
 
     @Enumerated(EnumType.ORDINAL)
     Role role;
 
     public EmployeeUser() {}
 
-    public EmployeeUser(String username, String password, Role role) throws NoSuchAlgorithmException {
+    public EmployeeUser(String username, String firstname, String lastname, String password, Role role) throws NoSuchAlgorithmException {
         this.username = username;
         this.role = role;
-        //this.token = Misc.genToken();
+        this.firstname = firstname;
+        this.lastname = lastname;
+
+        this.salt = Misc.genSalt();
+        this.passwordHash = Misc.hashPassword(password, this.salt);
+    }
+
+    public EmployeeUser(UserInfo userInfo, String password) throws NoSuchAlgorithmException {
+        this.username = userInfo.getUsername();
+        this.role = userInfo.getRole();
+        this.firstname = userInfo.getFirstname();
+        this.lastname = userInfo.getLastname();
+
         this.salt = Misc.genSalt();
         this.passwordHash = Misc.hashPassword(password, this.salt);
     }
@@ -78,14 +92,6 @@ public class EmployeeUser {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
-
-    //public String getToken() {
-    //    return token;
-    //}
-
-    //public void setToken(String token) {
-    //    this.token = token;
-    //}
 
     public String getFirstname() {
         return firstname;
