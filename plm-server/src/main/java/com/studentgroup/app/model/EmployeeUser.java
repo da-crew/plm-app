@@ -8,15 +8,15 @@ import java.security.NoSuchAlgorithmException;
 
 @Entity
 public class EmployeeUser {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
-    
+    private String firstname;
+    private String lastname;
     private String passwordHash;
     private String salt;
-    private String token;
+    //private String token;
 
     @Enumerated(EnumType.ORDINAL)
     Role role;
@@ -26,13 +26,17 @@ public class EmployeeUser {
     public EmployeeUser(String username, String password, Role role) throws NoSuchAlgorithmException {
         this.username = username;
         this.role = role;
-        this.token = Misc.genToken();
+        //this.token = Misc.genToken();
         this.salt = Misc.genSalt();
         this.passwordHash = Misc.hashPassword(password, this.salt);
     }
 
     public boolean verify(String password) throws Exception {
         return Misc.hashPassword(password, salt).equals(passwordHash);
+    }
+
+    public String toString() {
+        return "{ username: " + username + ", passwordHash: " + passwordHash + ", salt: " + salt + ", role: " + role.toString() + " }";
     }
     
     public Long getId() {
@@ -75,16 +79,28 @@ public class EmployeeUser {
         this.passwordHash = passwordHash;
     }
 
-    public String getToken() {
-        return token;
+    //public String getToken() {
+    //    return token;
+    //}
+
+    //public void setToken(String token) {
+    //    this.token = token;
+    //}
+
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String toString() {
-        return "{ username: " + username + ", passwordHash: " + passwordHash + ", salt: " + salt + ", role: " + role.toString() + " }";
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
 }

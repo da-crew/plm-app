@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.studentgroup.app.model.EmployeeUser;
@@ -21,22 +23,7 @@ import com.studentgroup.app.model.Role;
 import com.studentgroup.app.model.UserRepository;
 
 import jakarta.annotation.PostConstruct;
-
-class AuthResult {
-    public String token;
-    public String username;
-    public String role;
-
-    public AuthResult(String token, String username, String role) {
-        this.token = token;
-        this.username = username;
-        this.role = role;
-    }
-
-    public static AuthResult fromUser(EmployeeUser user) {
-        return new AuthResult(user.getToken(), user.getUsername(), user.getRole().toString());
-    }
-}
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @RestController
@@ -70,14 +57,12 @@ public class UserController {
         //*/
     }
 
-
-    @GetMapping("/test")
-    public ResponseEntity<ObjectNode> testGet() {
-        ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("Deadline", 52455);
-        return ResponseEntity.ok().body(objectNode);
+    @RequestMapping(path = "/test/json", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<JsonNode> testJSON(@RequestBody JsonNode json) {
+        //ObjectNode node = mapper
+        return ResponseEntity.ok().body(json);
     }
-    
+
     @GetMapping("/test/users/{username}")
     public ResponseEntity<EmployeeUser> getMethodName(@PathVariable String username) {
         EmployeeUser emp = userRepo.findByUsername(username);
@@ -93,8 +78,8 @@ public class UserController {
         return new ResponseEntity<Iterable<EmployeeUser>>(userRepo.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping("/users/auth")
-    public ResponseEntity<AuthResult> authUser(@RequestParam("username") String username, 
+    @GetMapping("/users/auth")
+    public ResponseEntity<AuthResult> authUser(@RequestParam("username") String username,
                                                 @RequestParam("password") String password) throws Exception {
         if (username == "" || password == "") {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -112,27 +97,65 @@ public class UserController {
         return ResponseEntity.ok(AuthResult.fromUser(emp));
     }
 
-    @PostMapping("/users/register")
-    public ResponseEntity<AuthResult> registerUser(@RequestParam("username") String username, 
-                                                @RequestParam("password") String password,
-                                                @RequestParam("role") String roleString,
-                                                @RequestParam("token") String token) throws Exception {
-
-        if (username == null || password == null || roleString == null || token == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-
-        EmployeeUser caller = userRepo.findByToken(token);
-        if (caller == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    /*
+    Request Body: {
+        username: String,
+        password: String,
+        role: String,
+        caller: {
+            username: String,
+            password: String
         }
-        if (caller.getRole() != Role.ADMIN) {
+    }
+    Returns:
+        BAD_REQUEST
+        FORBIDDEN
+        CONFLICT
+        CREATED
+    */
+    @RequestMapping(path = "/users/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AuthResult> registerUser(@RequestBody JsonNode json) throws Exception {
+
+        String username = json.get("username") != null
+                ? json.get("username").toString()
+                : null;
+
+        String password = json.get("password") != null
+                ? json.get("password").toString()
+                : null;
+
+        Role role = json.get("role") != null
+                ? Enum.valueOf(Role.class, json.get("role").toString())
+                : null;
+
+        JsonNode callerNode = json.get("caller");
+
+        if (username == null || password == null || role == null || callerNode == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        String callerUsername = callerNode.get("username") != null
+                ? callerNode.get("username").toString()
+                : null;
+
+        String callerPassword = callerNode.get("password") != null
+                ? callerNode.get("password").toString()
+                : null;
+
+        if (callerUsername == null || callerPassword == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        EmployeeUser caller = userRepo.findByUsername(callerUsername);
+
+        if (caller == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        //Authorization
+        if (!caller.verify(callerPassword))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-        
-        Role role = Enum.valueOf(Role.class, roleString);
-        if (role == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        if (caller.getRole() != Role.ADMIN)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+
+
         if (userRepo.findByUsername(username) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
@@ -143,47 +166,48 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(AuthResult.fromUser(emp));
     }
 
-    @GetMapping("/users/role")
-    public ResponseEntity<ObjectNode> checkRole(@RequestParam("token") String token) {
-        if (token == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-        
-        EmployeeUser user = userRepo.findByToken(token);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        ObjectNode obj = mapper.createObjectNode();
-        obj.put("role", user.getRole().toString());
-
-        return ResponseEntity.ok().body(obj);
-    }
     
-    @GetMapping("/validate-token")
-    public ResponseEntity<ObjectNode> validateToken(@RequestParam("token") String token) {
-        if (token == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        if (userRepo.findByToken(token) != null) {
-            return ResponseEntity.ok().body(null);
-        }
-        return ResponseEntity.notFound().build();
-    }
-    
-    @GetMapping("/users/auth-token")
-    public ResponseEntity<AuthResult> authToken(@RequestParam("token") String token) {
-        if (token == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        EmployeeUser user = userRepo.findByToken(token);
-
-        if (user != null) {
-            return ResponseEntity.ok().body(AuthResult.fromUser(user));
-        }
-        return ResponseEntity.notFound().build();
-    }
-    
+//    @GetMapping("/users/role")
+//    public ResponseEntity<ObjectNode> checkRole(@RequestParam("token") String token) {
+//        if (token == null) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//        EmployeeUser user = userRepo.findByToken(token);
+//        if (user == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        ObjectNode obj = mapper.createObjectNode();
+//        obj.put("role", user.getRole().toString());
+//
+//        return ResponseEntity.ok().body(obj);
+//    }
+//
+//    @GetMapping("/validate-token")
+//    public ResponseEntity<ObjectNode> validateToken(@RequestParam("token") String token) {
+//        if (token == null) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//        if (userRepo.findByToken(token) != null) {
+//            return ResponseEntity.ok().body(null);
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
+//
+//    @GetMapping("/users/auth-token")
+//    public ResponseEntity<AuthResult> authToken(@RequestParam("token") String token) {
+//        if (token == null) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//        EmployeeUser user = userRepo.findByToken(token);
+//
+//        if (user != null) {
+//            return ResponseEntity.ok().body(AuthResult.fromUser(user));
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
+//
 
 }

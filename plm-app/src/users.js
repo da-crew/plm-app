@@ -44,7 +44,7 @@ export const Role = Object.freeze({
 
 export const COOKIES_NAME = "loginToken";
 
-const WEB_SERVICE_URL = "http://localhost:8080";
+export const WEB_SERVICE_URL = "http://localhost:8080";
 
 /*
 String token: login token to be checked
