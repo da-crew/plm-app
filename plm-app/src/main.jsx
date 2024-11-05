@@ -6,6 +6,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './routes/Login.jsx';
 import Dashboard from './routes/Dashboard.jsx';
 import LoginTest from './routes/LoginTest.jsx';
+import Create from './routes/Create.jsx';
+import ManageUser from './routes/ManageUser.jsx';
 
 const router = createBrowserRouter([
     {
@@ -17,6 +19,18 @@ const router = createBrowserRouter([
         element: <Dashboard/>,
         
     },
+    {
+        path: "/Create",
+        element: <Create/>,
+    },
+    {
+      path: "/ManageUser",
+      element: <ManageUser/>,
+  },
+ //   { ทำไงไม่รู้
+ //     path: "/",
+ //     element: <ProductOrder/>,
+ //   },
     {
         path: "/login-test",
         element: <LoginTest/>,

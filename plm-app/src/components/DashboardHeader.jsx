@@ -4,13 +4,13 @@ function DashboardHeader(props) {
   let CreateButton;
   let ManageButton;
 
-  if (props.isDispatcher) { // Dispatcher or Admin
+  if (props.role == "DISPATCHER"| props.role=="ADMIN") { // Dispatcher or Admin
     CreateButton = <button style={styles.createButton} onClick={props.onCreate}>Create</button>;
   } else {
     CreateButton = null;
   }
 
-  if (props.isAdmin) {
+  if (props.role == "ADMIN") {
     ManageButton = <button style={styles.manageUserButton} onClick={props.onManage}>Manage User</button>;
   } else {
     ManageButton = null;
