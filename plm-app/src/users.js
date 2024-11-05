@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 export const Role = Object.freeze({ 
     UNKNOWN: Symbol.for("UNKNOWN"),
@@ -42,9 +44,9 @@ export const Role = Object.freeze({
     }
 });
 
-export const COOKIES_NAME = "loginToken";
+export const COOKIES_NAME = "loginCreds";
 
-const WEB_SERVICE_URL = "http://localhost:8080";
+export const WEB_SERVICE_URL = "http://localhost:8080";
 
 /*
 String token: login token to be checked
@@ -77,7 +79,37 @@ export function authenticate(username, password) {
     return axios.get(WEB_SERVICE_URL + "/users/auth", data)
 }
 
-export function authToken(token) {
-    console.log("Authenticating using token");
-    return axios.get(WEB_SERVICE_URL + "/users/auth-token", {params: {token: token}});
+export function useAuthenticate() {
+    let [userInfo, setUserInfo] = useState({});
+    let [cookies, setCookies, removeCookies] = useCookies(['username', 'password']);
+    let [success, setSuccess] = useState(true);
+
+    useEffect(() => {
+        if (cookies.username != null && cookies.password != null) {
+            console.log("authenticating");
+            authenticate(cookies.username, cookies.password)
+                .then((value) => {
+                    setUserInfo(value.data);
+                })
+                .catch((e) => {
+                    console.log("Invalid token");
+                    setCookies('username', null);
+                    setCookies('password', null);
+                    setSuccess(false);
+                });
+        } else {
+            setSuccess(false);
+        }
+    }, [cookies.username, cookies.password, setCookies, setSuccess, success]);
+
+    let user = {
+        username: userInfo.username, 
+        firstname: userInfo.firstname, 
+        lastname: userInfo.lastname, 
+        role: Role.fromString(userInfo.role)
+    };
+
+    console.log(userInfo.role);
+
+    return [success, user, cookies.password];
 }

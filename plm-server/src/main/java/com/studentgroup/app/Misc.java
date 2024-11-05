@@ -1,13 +1,20 @@
 package com.studentgroup.app;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.security.SecureRandom;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 public class Misc {
 
     public static final int SALT_SIZE = 16;
     public static final int TOKEN_SIZE = 32;
+
+    public static String jsonToString(JsonNode json, String key) {
+        return json.get(key) != null ? json.get(key).asText() : null;
+    }
 
     public static String genString(int len) {
         final String syms = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
