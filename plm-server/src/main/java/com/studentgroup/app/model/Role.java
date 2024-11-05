@@ -18,10 +18,12 @@ public enum Role {
     }
 
     public static Role fromString(String name) {
+        Role res = null;
         try {
-            return Enum.valueOf(Role.class, name);
+            res = Enum.valueOf(Role.class, name);
         } catch (IllegalArgumentException e) {
             return null;
         }
+        return res;
     }
 }

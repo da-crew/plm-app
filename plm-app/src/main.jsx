@@ -6,7 +6,6 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './routes/Login.jsx';
 import Dashboard from './routes/Dashboard.jsx';
 import LoginTest from './routes/LoginTest.jsx';
-import TestJson from './routes/TestJson.jsx';
 
 const router = createBrowserRouter([
     {
@@ -16,14 +15,11 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Dashboard/>,
+        
     },
     {
         path: "/login-test",
         element: <LoginTest/>,
-    },
-    {
-        path: "json-test",
-        element: <TestJson/>,
     }
 ]);
 

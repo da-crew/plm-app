@@ -1,57 +1,31 @@
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import { Navigate } from "react-router";
 import Header from "../components/Header";
 import DashboardHeader from "../components/DashboardHeader";
-import { authToken, Role } from "../users";
-
+import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 
 export default function Dashboard() {
-    let [cookies, setCookies, removeCookies] = useCookies(['loginToken']);
+
     let [toLogin, setToLogin] = useState(false);
-    let [username, setUsername] = useState("");
-    let [role, setRole] = useState(Role.UNKNOWN);
-
-    useEffect(() => {
-        if (cookies.loginToken != null) {
-            authToken(cookies.loginToken)
-                .then((value) => {
-                    setUsername(value.data.username);
-                    setRole(Role.fromString(value.data.role));
-                })
-                .catch((e) => {
-                    console.log("Invalid token");
-                    setCookies("loginCookies", null);
-                    setToLogin(true);
-                });
-        } else {
-            console.log("Invalid token");
-            setToLogin(true);
-        }
-    }, []);
-
-    if (toLogin) {
+    let [validCreds, userInfo, password] = useAuthenticate();
+    
+    useEffect(() => console.log(JSON.stringify(userInfo)), []);
+    if (toLogin || !validCreds) {
         return <Navigate to="/login" />
     }
 
 
     return (<>
-        <Header employeeName={username} onLogout={() => setToLogin(true)} role={Role.toString(role)} />
+        <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />
         <h1>This is a dashboard</h1>
-        <p>Welcome, {username}</p>
-        <p>Role: {Role.toString(role)}</p>
+        <p>Welcome, {userInfo.username}</p>
+        <p>Role: {Role.toString(userInfo.role)}</p>
         <p></p>
         <div className="center-block">
-            <DashboardHeader isDispatcher={Role.toString(role) == "DISPATCHER" | Role.toString(role) == "ADMIN"}
-                isAdmin={Role.toString(role) == "ADMIN"}
+            <DashboardHeader isDispatcher={userInfo.role == Role.DISPATCHER | userInfo.role == Role.ADMIN}
+                isAdmin={userInfo.role == Role.ADMIN}
             />
             {/* List of product order here*/}
-
-
-
-
-
-
 
         </div>
 

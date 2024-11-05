@@ -13,7 +13,7 @@ public class Misc {
     public static final int TOKEN_SIZE = 32;
 
     public static String jsonToString(JsonNode json, String key) {
-        return Objects.toString(json.get(key), null);
+        return json.get(key) != null ? json.get(key).asText() : null;
     }
 
     public static String genString(int len) {

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import { authenticate, authToken, COOKIES_NAME } from "../users";
+import { authenticate, COOKIES_NAME, useAuthenticate } from "../users";
 
 export default function LoginTest() {
 
@@ -12,25 +12,12 @@ export default function LoginTest() {
 
     let [isLogin, setLogin] = useState(false);
     let [loginFailed, setLoginFailed] = useState(false);
-    let [cookies, setCookies, removeCookies] = useCookies([COOKIES_NAME]);
-    let [token, setToken] = useState(null);
-    
-    if (cookies.loginToken != null) {
-        authToken(cookies.loginToken)
-            .then((value) => {
-                setToken(cookies.loginToken);
-                setLogin(true);
-                setDisplayName(value.data.username);
-                console.log("Login successful");
-            }).catch((e) => {
-                setCookies(COOKIES_NAME, null);
-            });
-    }
 
-
+    let [toLogin, userInfo] = useAuthenticate();
 
     return (<>
         <h2>Testing Page</h2>
+        <p>{toLogin ? "invalid cookies" : ""}</p>
         <p>{loginFailed ? "Login failed" : ""}</p>
         {
             isLogin ? <div>
@@ -48,8 +35,8 @@ export default function LoginTest() {
                 console.log("authenticating");
                 authenticate(username, password)
                     .then((value) => {
-                        setToken(value.data.token);
-                        setCookies("loginToken", value.data.token);
+                        setCookies("username", username);
+                        setCookies("password", password);
                         setLoginFailed(false);
                         setDisplayName(username);
                         setLogin(true);
@@ -62,23 +49,7 @@ export default function LoginTest() {
             }}></input>
         </form>
 
-        <button onClick={() => {
-            console.log("Testing");
-            axios.get("http://localhost:8080/test")
-                .then((value) => console.log(`success: ${JSON.stringify(value.data)} \nstatus: ${value.status}`))
-                .catch((error) => console.log("error " + error));
-        }}>Test</button><br></br>
-
-        <button onClick={() => {
-            if (token === "") {
-                console.log("Token is empty!");
-                return;
-            }
-            console.log("Checking role");
-            axios.get("http://localhost:8080/users/role", { params: { token: token } })
-                .then((value) => console.log(`success: ${JSON.stringify(value.data)} \nstatus: ${value.status}`))
-                .catch((error) => console.log("error " + error));
-        }}>Check role</button><br/>
+        
         <button onClick={() => {
             setCookies("loginToken", null);
         }}>

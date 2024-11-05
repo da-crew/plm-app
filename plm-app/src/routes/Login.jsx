@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Navigate, redirect } from "react-router";
-import { authenticate, authToken, COOKIES_NAME } from "../users";
+import { authenticate, COOKIES_NAME } from "../users";
 import '../components/LoginForm.css'
 
 export default function Login() {
@@ -9,14 +9,15 @@ export default function Login() {
     let [password, setPassword] = useState("");
     let [loginFailed, setLoginFailed] = useState(false);
     let [isRedirect, setRedirect] = useState(false);
-
-    let [cookies, setCookies, removeCookies] = useCookies([COOKIES_NAME]);
+    let [cookies, setCookies, removeCookies] = useCookies(['username', 'password']);
 
 
     function submitCreds() {
         authenticate(username, password)
             .then((value) => {
-                setCookies(COOKIES_NAME, value.data.token);
+                setCookies('username', username);
+                setCookies('password', password);
+                console.log("login successful! " + JSON.stringify(value.data));
                 setRedirect(true);
             })
             .catch((err) => {
@@ -25,13 +26,11 @@ export default function Login() {
     }
 
     useEffect(() => {
-        if (cookies.loginToken != null) {
-            authToken(cookies.loginToken)
-                .then((value) => { })
-                .catch((e) => {
-                    setCookies(COOKIES_NAME, null);
-                });
-        }
+        authenticate(cookies.username, cookies.password)
+            .then((value) => { })
+            .catch((err) => {
+                setCookies(COOKIES_NAME, null);
+            });
     }, []);
 
     if (isRedirect) {
@@ -45,7 +44,7 @@ export default function Login() {
                 <h2>Login</h2>
                 {loginFailed ? <p>Username or password is incorrect!</p> : <p></p>}
                 <form>
-                    
+
                     <input
                         type="text"
                         id="username"
