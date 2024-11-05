@@ -31,7 +31,7 @@ export default function Dashboard() {
         <p>Role: {Role.toString(userInfo.role)}</p>
         <p></p>
         <div className="center-block">
-            <DashboardHeader role = {Role.toString(userInfo.role)} onCreate = {() => setToCreate(true) } onManage = {() => setToManageUser(true) }/>
+            <DashboardHeader role = {userInfo.role} onCreate = {() => setToCreate(true) } onManage = {() => setToManageUser(true) }/>
             {/* List of product order here*/}
             
 
