@@ -34,6 +34,8 @@ public class UserController {
 
     @PostConstruct
     public void initDatabase() throws NoSuchAlgorithmException {
+
+        if (userRepo.count() > 0) return;
         /**/
         EmployeeUser[] users = new EmployeeUser[] {
                 new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),

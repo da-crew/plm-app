@@ -6,10 +6,11 @@ import com.studentgroup.app.Misc;
 import com.studentgroup.app.webservices.UserInfo;
 import jakarta.persistence.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 
 @Entity
-@Table(name = "iesnse")
+@Table(name = "Employee")
 public class EmployeeUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,8 +21,19 @@ public class EmployeeUser {
     private String passwordHash;
     private String salt;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     Role role;
+
+    @OneToMany()
+    private List<ProductOrder> orders;
+
+    public List<ProductOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<ProductOrder> orders) {
+        this.orders = orders;
+    }
 
     public EmployeeUser() {}
 
