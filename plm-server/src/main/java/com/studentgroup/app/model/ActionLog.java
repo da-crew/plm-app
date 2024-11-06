@@ -1,5 +1,6 @@
 package com.studentgroup.app.model;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -19,10 +20,12 @@ public class ActionLog {
     private EmployeeUser employee;
 
     @Column(name = "TIMESTAMP")
-    private Date timestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime timestamp;
 
     //constructor   
-    public ActionLog(Date timestamp) {
+    public ActionLog() {}
+    public ActionLog(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -51,11 +54,11 @@ public class ActionLog {
         this.employee = employee;
     }
 
-    public Date getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 }

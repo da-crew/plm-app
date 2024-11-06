@@ -2,7 +2,7 @@ package com.studentgroup.app.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.studentgroup.app.Misc;
-
+import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.webservices.UserInfo;
 import jakarta.persistence.*;
 import java.security.NoSuchAlgorithmException;
@@ -16,6 +16,7 @@ public class EmployeeUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "EMP_ID")
     private Long id;
+
     private String username;
     private String firstname;
     private String lastname;

@@ -22,8 +22,6 @@ public class ProductOrder {
     @Column(name = "COSIGNEE") private String cosigneeName;
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
     @Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;
-    
-    
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
@@ -33,8 +31,9 @@ public class ProductOrder {
     
 
     //constructor
+    public ProductOrder() {}
     public ProductOrder(String bLNumber, Date orderDate, String vesselName, String voyNumber, String cosigneeName,
-            String wharfReceiptImgUrl, Integer totalTrucks, ProductOrderStatus prodStatus, EmployeeUser checker) {
+            String wharfReceiptImgUrl, Integer totalTrucks, ProductOrderStatus prodStatus) {
         BLNumber = bLNumber;
         this.orderDate = orderDate;
         this.vesselName = vesselName;
@@ -43,7 +42,6 @@ public class ProductOrder {
         this.wharfReceiptImgUrl = wharfReceiptImgUrl;
         this.totalTrucks = totalTrucks;
         this.statusName = prodStatus;
-        this.checker = checker;
         trucks = new ArrayList<>();
         actionLogs = new ArrayList<>();
     }

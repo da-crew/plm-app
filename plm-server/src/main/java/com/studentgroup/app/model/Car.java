@@ -1,5 +1,7 @@
 package com.studentgroup.app.model;
 
+import com.studentgroup.app.model.enums.Report;
+
 import jakarta.persistence.*;
 
 
@@ -21,7 +23,8 @@ public class Car {
     private Truck truck;
 
     //constructor
-    public Car(String modelName, Report report, Truck truck) {
+    public Car() {}
+    public Car(String modelName, Report report) {
         this.modelName = modelName;
         this.report = report;
     }

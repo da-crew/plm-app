@@ -1,13 +1,14 @@
 package com.studentgroup.app.webservices;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.studentgroup.app.model.ActionLog;
-import com.studentgroup.app.model.EmployeeUser;
-import com.studentgroup.app.model.Role;
+import com.studentgroup.app.model.*;
+import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.model.repositories.*;
 
 import jakarta.annotation.PostConstruct;
@@ -57,20 +58,42 @@ public class DatabaseInitializer {
                 new EmployeeUser("omar_L55", "Omar", "Liu", "omarPass345!", Role.CHECKER),
                 new EmployeeUser("brianN", "Brian", "Nkwanzi", "nkwPass234#", Role.ADMIN),
                 new EmployeeUser("esme_R", "Esme", "Rogers", "esmeUnique678*", Role.EXPORTER),
-                new EmployeeUser("yara_F22", "Yara", "Farah", "farahSafe456$", Role.UNKNOWN)
+                new EmployeeUser("yara_F22", "Yara", "Farah", "farahSafe456$", Role.UNKNOWN),
         };
 
         ActionLog[] actionLogs = new ActionLog[] {
-                new ActionLog(new Date(2024 - 1900, 9, 1, 8, 30)), // October 1, 2024, 08:30 AM
-                new ActionLog(new Date(2024 - 1900, 9, 5, 14, 45)), // October 5, 2024, 02:45 PM
-                new ActionLog(new Date(2024 - 1900, 9, 10, 10, 0)), // October 10, 2024, 10:00 AM
-                new ActionLog(new Date(2024 - 1900, 9, 15, 18, 15)), // October 15, 2024, 06:15 PM
-                new ActionLog(new Date(2024 - 1900, 9, 20, 23, 30)), // October 20, 2024, 11:30 PM
-                new ActionLog(new Date(2024 - 1900, 9, 25, 6, 5)), // October 25, 2024, 06:05 AM
-                new ActionLog(new Date(2024 - 1900, 10, 1, 9, 0)), // November 1, 2024, 09:00 AM
-                new ActionLog(new Date(2024 - 1900, 10, 3, 12, 20)), // November 3, 2024, 12:20 PM
-                new ActionLog(new Date(2024 - 1900, 10, 6, 16, 0)) // November 6, 2024, 04:00 PM
+            new ActionLog(ZonedDateTime.of(2019, 5, 17, 8, 30, 15, 7895427, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2019, 8, 12, 13, 45, 33, 4524524, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2019, 11, 25, 19, 20, 50, 7527788, ZoneId.systemDefault())),
+        
+            new ActionLog(ZonedDateTime.of(2020, 2, 3, 6, 5, 12, 75278645, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2020, 7, 22, 14, 45, 50, 987654321, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2020, 12, 15, 17, 30, 10, 127934, ZoneId.systemDefault())),
+        
+            new ActionLog(ZonedDateTime.of(2021, 1, 9, 10, 5, 5, 92792, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2021, 3, 10, 10, 5, 5, 7952982, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2021, 6, 20, 15, 40, 55, 69420, ZoneId.systemDefault())),
+        
+            new ActionLog(ZonedDateTime.of(2022, 4, 18, 8, 25, 35, 1642964, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2022, 10, 30, 18, 20, 30, 9120642, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2022, 12, 7, 21, 45, 0, 4104514, ZoneId.systemDefault())),
+        
+            new ActionLog(ZonedDateTime.of(2023, 3, 14, 5, 10, 15, 3141592, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2023, 8, 5, 14, 30, 25, 05772156, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2023, 12, 5, 23, 35, 45, 2718281, ZoneId.systemDefault())),
+        
+            new ActionLog(ZonedDateTime.of(2024, 2, 14, 6, 15, 25, 778899001, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2024, 7, 10, 13, 40, 55, 998877665, ZoneId.systemDefault())),
+            new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
         };
+
+        Car[] cars = new Car[] {
+
+        };
+
+        for (ActionLog log: actionLogs) {
+            actionLogRepo.save(log);
+        }
 
         for (EmployeeUser user : users) {
             userRepo.save(user);

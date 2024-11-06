@@ -1,5 +1,7 @@
 package com.studentgroup.app.model;
 
+import com.studentgroup.app.model.enums.Role;
+
 public enum ProductOrderStatus {
     UNKNOWN("UNKNOWN"),
     CHECKING("CHECKING"),

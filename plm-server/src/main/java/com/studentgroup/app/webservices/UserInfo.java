@@ -2,7 +2,7 @@ package com.studentgroup.app.webservices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.studentgroup.app.model.EmployeeUser;
-import com.studentgroup.app.model.Role;
+import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.Misc;
 
 import java.util.Objects;

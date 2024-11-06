@@ -22,6 +22,7 @@ public class Truck {
     private List<Car> cars;
     
     //constructor
+    public Truck() {}
     public Truck(String truckNumber, Integer totalCars) {
         this.truckNumber = truckNumber;
         this.totalCars = totalCars;

@@ -1,4 +1,4 @@
-package com.studentgroup.app.model;
+package com.studentgroup.app.model.enums;
 
 public enum Role {
     UNKNOWN("UNKNOWN"),

@@ -1,4 +1,6 @@
-package com.studentgroup.app.model;
+package com.studentgroup.app.model.enums;
+
+import com.studentgroup.app.model.Car;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +29,7 @@ public class Report {
     private String reportText;
 
     //constructors
+    public Report() {}
     public Report(String reportText) {
         this.reportText = reportText;
     }
