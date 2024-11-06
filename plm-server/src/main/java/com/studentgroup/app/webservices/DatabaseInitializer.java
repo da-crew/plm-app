@@ -33,8 +33,6 @@ public class DatabaseInitializer {
     public void initDatabase() throws Exception {
 
         /**/
-
-
         userRepo.deleteAll();
         actionLogRepo.deleteAll();
         carRepo.deleteAll();
