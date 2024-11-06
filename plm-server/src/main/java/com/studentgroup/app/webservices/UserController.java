@@ -35,42 +35,6 @@ public class UserController {
     @Autowired
     DatabaseInitializer dbInitializer;
 
-    /**
-    @PostConstruct
-    public void initDatabase() throws NoSuchAlgorithmException {
-
-        if (userRepo.count() > 0) return;
-        
-        EmployeeUser[] users = new EmployeeUser[] {
-                new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),
-                new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
-                new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),
-                new EmployeeUser("sofiaG", "Sofia", "Garcia", "garciaPass456@", Role.EXPORTER),
-                new EmployeeUser("anwark12", "Anwar", "Khan", "unique567&", Role.UNKNOWN),
-                new EmployeeUser("fatimaB", "Fatima", "Bakshi", "fatima678*", Role.DISPATCHER),
-                new EmployeeUser("joH56", "Joseph", "Ho", "joe!pass789", Role.CHECKER),
-                new EmployeeUser("miriamB_", "Miriam", "Blake", "mirPwd890#", Role.ADMIN),
-                new EmployeeUser("kunle_A", "Kunle", "Adebayo", "adebPass012!", Role.EXPORTER),
-                new EmployeeUser("maya_R13", "Maya", "Rai", "may@Pass1234", Role.UNKNOWN),
-                new EmployeeUser("zhangL", "Lei", "Zhang", "zhanPass456$", Role.DISPATCHER),
-                new EmployeeUser("amal23K", "Amal", "Kamal", "kamalSafe567#", Role.CHECKER),
-                new EmployeeUser("dianeT", "Diane", "Trent", "dian@pass678", Role.ADMIN),
-                new EmployeeUser("thaboM", "Thabo", "Mokoena", "thaboPwd789!", Role.EXPORTER),
-                new EmployeeUser("keiko_S", "Keiko", "Suzuki", "suzPass890*", Role.UNKNOWN),
-                new EmployeeUser("priya34", "Priya", "Nair", "pnairSafe012$", Role.DISPATCHER),
-                new EmployeeUser("omar_L55", "Omar", "Liu", "omarPass345!", Role.CHECKER),
-                new EmployeeUser("brianN", "Brian", "Nkwanzi", "nkwPass234#", Role.ADMIN),
-                new EmployeeUser("esme_R", "Esme", "Rogers", "esmeUnique678*", Role.EXPORTER),
-                new EmployeeUser("yara_F22", "Yara", "Farah", "farahSafe456$", Role.UNKNOWN)
-        };
-
-        for (EmployeeUser user : users) {
-            userRepo.save(user);
-        }
-        
-    }
-    //*/
-
     @RequestMapping(path = "/test/json", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<JsonNode> testJSON(@RequestBody JsonNode json) {
         //ObjectNode node = mapper
