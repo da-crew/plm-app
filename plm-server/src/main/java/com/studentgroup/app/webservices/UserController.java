@@ -32,11 +32,15 @@ public class UserController {
     @Autowired
     ObjectMapper mapper;
 
+    @Autowired
+    DatabaseInitializer dbInitializer;
+
+    /**
     @PostConstruct
     public void initDatabase() throws NoSuchAlgorithmException {
 
         if (userRepo.count() > 0) return;
-        /**/
+        
         EmployeeUser[] users = new EmployeeUser[] {
                 new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),
                 new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
@@ -63,8 +67,9 @@ public class UserController {
         for (EmployeeUser user : users) {
             userRepo.save(user);
         }
-        //*/
+        
     }
+    //*/
 
     @RequestMapping(path = "/test/json", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<JsonNode> testJSON(@RequestBody JsonNode json) {

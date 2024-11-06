@@ -31,16 +31,7 @@ public class EmployeeUser {
     @OneToMany(mappedBy = "employee")
     private List<ActionLog> actionLogs;
 
-
-
-    public List<ProductOrder> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<ProductOrder> orders) {
-        this.orders = orders;
-    }
-
+    //constructors
     public EmployeeUser() {}
 
     public EmployeeUser(String username, String firstname, String lastname, String password, Role role) throws NoSuchAlgorithmException {
@@ -63,12 +54,23 @@ public class EmployeeUser {
         this.passwordHash = Misc.hashPassword(password, this.salt);
     }
 
+
+    //misc methods
     public boolean verify(String password) throws Exception {
         return Misc.hashPassword(password, salt).equals(passwordHash);
     }
 
     public String toString() {
         return "{ username: " + username + ", passwordHash: " + passwordHash + ", salt: " + salt + ", role: " + role.toString() + " }";
+    }
+
+    //getters and setters
+    public List<ProductOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<ProductOrder> orders) {
+        this.orders = orders;
     }
     
     public Long getId() {

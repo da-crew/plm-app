@@ -19,4 +19,35 @@ public class Car {
 
     @ManyToOne
     private Truck truck;
+
+    //constructor
+    public Car(String modelName, Report report, Truck truck) {
+        this.modelName = modelName;
+        this.report = report;
+    }
+    
+    //getters and setters
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
+
+    public Truck getTruck() {
+        return truck;
+    }
+
+    public void setTruck(Truck truck) {
+        this.truck = truck;
+    }
 }

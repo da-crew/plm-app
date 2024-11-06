@@ -1,5 +1,6 @@
 package com.studentgroup.app.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,38 +14,125 @@ public class ProductOrder {
     @Column(name = "PROD_ORDER_ID")
     private Long id; 
 
-    @Column(name = "BL_NO")
-    private String BLNumber;
+    //product order details
+    @Column(name = "BL_NO") private String BLNumber;
+    @Column(name = "ORDER_DATE") private Date orderDate;
+    @Column(name = "VESSEL") private String vesselName;
+    @Column(name = "VOY_NO") private String voyNumber;
+    @Column(name = "COSIGNEE") private String cosigneeName;
+    @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
+    @Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;
+    @Column(name = "STATUS") private String statusName;
 
-    @Column(name = "ORDER_DATE")
-    private Date orderDate;
-
-    @Column(name = "VESSEL")
-    private String vesselName;
-
-    @Column(name = "VOY_NO")
-    private String voyNumber;
-
-    @Column(name = "COSIGNEE")
-    private String cosigneeName;
-
-    @Column(name = "WHARF_RECEIPT_IMAGE")
-    private String wharfReceiptImgUrl;
-
-    @Column(name = "TOTAL_TRUCKS")
-    private Integer totalTrucks;
+    //table relationships
+    @ManyToOne private EmployeeUser checker;
+    @OneToMany(mappedBy = "productOrder") private List<ActionLog> actionLogs;
+    @OneToMany(mappedBy = "productOrder") private List<Truck> trucks;
     
-    @Column(name = "STATUS")
-    private String statusName;
 
+    //constructor
+    public ProductOrder(String bLNumber, Date orderDate, String vesselName, String voyNumber, String cosigneeName,
+            String wharfReceiptImgUrl, Integer totalTrucks, String statusName, EmployeeUser checker) {
+        BLNumber = bLNumber;
+        this.orderDate = orderDate;
+        this.vesselName = vesselName;
+        this.voyNumber = voyNumber;
+        this.cosigneeName = cosigneeName;
+        this.wharfReceiptImgUrl = wharfReceiptImgUrl;
+        this.totalTrucks = totalTrucks;
+        this.statusName = statusName;
+        this.checker = checker;
+        trucks = new ArrayList<>();
+        actionLogs = new ArrayList<>();
+    }
 
-    @ManyToOne
-    private EmployeeUser checker;
+    //getters and setters, this will make a bad Qi flow
+    public String getBLNumber() {
+        return BLNumber;
+    }
 
-    @OneToMany(mappedBy = "productOrder")
-    private List<ActionLog> actionLogs;
+    public void setBLNumber(String bLNumber) {
+        BLNumber = bLNumber;
+    }
 
-    @OneToMany(mappedBy = "productOrder")
-    private List<Truck> trucks;
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getVesselName() {
+        return vesselName;
+    }
+
+    public void setVesselName(String vesselName) {
+        this.vesselName = vesselName;
+    }
+
+    public String getVoyNumber() {
+        return voyNumber;
+    }
+
+    public void setVoyNumber(String voyNumber) {
+        this.voyNumber = voyNumber;
+    }
+
+    public String getCosigneeName() {
+        return cosigneeName;
+    }
+
+    public void setCosigneeName(String cosigneeName) {
+        this.cosigneeName = cosigneeName;
+    }
+
+    public String getWharfReceiptImgUrl() {
+        return wharfReceiptImgUrl;
+    }
+
+    public void setWharfReceiptImgUrl(String wharfReceiptImgUrl) {
+        this.wharfReceiptImgUrl = wharfReceiptImgUrl;
+    }
+
+    public Integer getTotalTrucks() {
+        return totalTrucks;
+    }
+
+    public void setTotalTrucks(Integer totalTrucks) {
+        this.totalTrucks = totalTrucks;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public EmployeeUser getChecker() {
+        return checker;
+    }
+
+    public void setChecker(EmployeeUser checker) {
+        this.checker = checker;
+    }
+
+    public List<ActionLog> getActionLogs() {
+        return actionLogs;
+    }
+
+    public void setActionLogs(List<ActionLog> actionLogs) {
+        this.actionLogs = actionLogs;
+    }
+
+    public List<Truck> getTrucks() {
+        return trucks;
+    }
+
+    public void setTrucks(List<Truck> trucks) {
+        this.trucks = trucks;
+    }
 
 }

@@ -25,4 +25,26 @@ public class Report {
     @Lob
     @Column(name = "DAMAGE_REPORT")
     private String reportText;
+
+    //constructors
+    public Report(String reportText) {
+        this.reportText = reportText;
+    }
+
+    //getters and setters
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    public String getReportText() {
+        return reportText;
+    }
+
+    public void setReportText(String reportText) {
+        this.reportText = reportText;
+    }
 }
