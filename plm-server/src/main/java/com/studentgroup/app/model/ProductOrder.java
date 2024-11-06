@@ -1,49 +1,50 @@
 package com.studentgroup.app.model;
 
 import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "product_order")
+@Table(name = "PRODUCT_ORDER")
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "prod_order_id")
+    @Column(name = "PROD_ORDER_ID")
     private Long id; 
 
     @Column(name = "BL_NO")
-    String BLNumber;
+    private String BLNumber;
 
     @Column(name = "ORDER_DATE")
-    Date orderDate;
+    private Date orderDate;
 
     @Column(name = "VESSEL")
-    String vesselName;
+    private String vesselName;
 
     @Column(name = "VOY_NO")
-    String voyNumber;
+    private String voyNumber;
 
     @Column(name = "COSIGNEE")
-    String cosigneeName;
+    private String cosigneeName;
 
     @Column(name = "WHARF_RECEIPT_IMAGE")
-    String wharfReceiptImgUrl;
+    private String wharfReceiptImgUrl;
 
     @Column(name = "TOTAL_TRUCKS")
-    int totalTrucks;
+    private Integer totalTrucks;
     
     @Column(name = "STATUS")
-    String statusName;
+    private String statusName;
 
 
-    @OneToOne()
-    EmployeeUser checker;
+    @ManyToOne
+    private EmployeeUser checker;
+
+    @OneToMany(mappedBy = "PRODUCT_ORDER")
+    private List<ActionLog> actionLogs;
+
+    @OneToMany(mappedBy = "PRODUCT_ORDER")
+    private List<Truck> trucks;
 
 }

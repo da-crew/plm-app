@@ -11,18 +11,19 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "report")
+@Table(name = "REPORT")
 public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "REPORT_ID")
+    private Long id;
 
     //1-1 to CAR_ID
     @OneToOne
-    Car car;
+    private Car car;
 
     @Lob
-    @Column(name = "damage_report")
-    String reportText;
+    @Column(name = "DAMAGE_REPORT")
+    private String reportText;
 }

@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studentgroup.app.model.EmployeeUser;
 import com.studentgroup.app.model.Role;
-import com.studentgroup.app.model.UserRepository;
+import com.studentgroup.app.model.repositories.UserRepository;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -10,10 +10,11 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "Employee")
+@Table(name = "EMPLOYEE")
 public class EmployeeUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "EMP_ID")
     private Long id;
     private String username;
     private String firstname;
@@ -26,6 +27,11 @@ public class EmployeeUser {
 
     @OneToMany()
     private List<ProductOrder> orders;
+
+    @OneToMany(mappedBy = "EMPLOYEE")
+    private List<ActionLog> actionLogs;
+
+
 
     public List<ProductOrder> getOrders() {
         return orders;

@@ -4,14 +4,19 @@ import jakarta.persistence.*;
 
 
 @Entity
+@Table(name = "CAR")
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @Column(name = "CAR_ID")
+    private Long id;
     
     @Column(name = "CAR_MODEL")
-    String modelName;
+    private String modelName;
 
-    @OneToOne
-    Report report;
+    @OneToOne(mappedBy = "CAR")
+    private Report report;
+
+    @ManyToOne
+    private Truck truck;
 }

@@ -9,11 +9,13 @@ export default function Dashboard() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
     
+
+    
     useEffect(() => console.log(JSON.stringify(userInfo)), []);
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
     }
-
+    
 
     return (<>
         <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />
