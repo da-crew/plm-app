@@ -1,7 +1,6 @@
 package com.studentgroup.app.model;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import jakarta.persistence.*;
 

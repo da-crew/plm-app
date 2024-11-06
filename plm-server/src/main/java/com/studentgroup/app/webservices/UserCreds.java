@@ -2,7 +2,6 @@ package com.studentgroup.app.webservices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.studentgroup.app.Misc;
-import org.apache.catalina.User;
 
 public class UserCreds {
     private String username;
