@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 public class Truck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TRUCK_ID")
     private Long id;
 
     @Column(name = "TRUCK_NUMBER")
@@ -18,7 +19,8 @@ public class Truck {
     @Column(name = "TOTAL_CARS")
     private Integer totalCars;
 
-    @OneToMany(mappedBy = "truck")
+    @OneToMany
+    @JoinColumn(name = "TRUCK_ID")
     private List<Car> cars;
     
     //constructor

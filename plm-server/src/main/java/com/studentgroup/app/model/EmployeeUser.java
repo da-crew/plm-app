@@ -25,10 +25,12 @@ public class EmployeeUser {
     @Enumerated(EnumType.STRING)
     Role role = Role.UNKNOWN;
 
-    @OneToMany()
+    @OneToMany
+    @JoinTable(name = "PROD_ORDER_ID")
     private List<ProductOrder> orders;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany
+    @JoinColumn(name = "EMP_ID")
     private List<ActionLog> actionLogs;
 
     //constructors

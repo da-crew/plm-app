@@ -30,6 +30,8 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void initDatabase() throws Exception {
+        
+        /**/
         userRepo.deleteAll();
         actionLogRepo.deleteAll();
         carRepo.deleteAll();
@@ -86,18 +88,50 @@ public class DatabaseInitializer {
             new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
         };
 
-        Car[] cars = new Car[] {
-
+        Report[] reports = new Report[] {
+            new Report("Minor scratches on the front bumper and left door."),
+            new Report("Broken tail light and dent on rear bumper."),
+            new Report("Windshield has a small crack near the passenger side."),
+            new Report("Front left tire worn out; needs replacement."),
+            new Report("Dashboard display malfunction; intermittent screen blackout."),
+            new Report("A large, perfect circular hole has pierced through the car, as if something passed clean through it."),
+            new Report("Unexplained damage on the car's roof; as if something heavy had been dragged across it.")
         };
 
-        for (ActionLog log: actionLogs) {
-            actionLogRepo.save(log);
+        Car[] cars = new Car[] {
+            new Car("Toyota Corolla"),
+            new Car("Honda Civic"),
+            new Car("Ford Focus"),
+            new Car("Chevrolet Malibu"), 
+            new Car("BMW 3 Series"),
+            new Car("Mercedes-Benz A-Class"),
+            new Car("Audi A4"),         
+            new Car("Nissan Altima"),
+            new Car("Hyundai Elantra"),
+            new Car("Volkswagen Golf"),
+            new Car("Mazda CX-5"),
+            new Car("Kia Optima"),
+            new Car("Subaru Impreza"),
+            new Car("Toyota Camry"),
+            new Car("Honda Accord"),
+            new Car("Tesla Model 3")  
+        };
+
+        for (ActionLog log : actionLogs) actionLogRepo.save(log);
+        for (EmployeeUser user : users) userRepo.save(user);
+
+        //give reports
+        for (int i = 0; i < reports.length; i++) {
+            cars[i].setReport(reports[i]);
+            //reports[i].setCar(cars[i]);
         }
 
-        for (EmployeeUser user : users) {
-            userRepo.save(user);
-        }
+        for (Car c : cars) carRepo.save(c);
+        for (Report r : reports) reportRepo.save(r);
+        
+        //*/
 
+        //save data
     }
 
 }

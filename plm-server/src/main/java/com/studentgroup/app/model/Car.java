@@ -14,14 +14,22 @@ public class Car {
     @Column(name = "CAR_MODEL")
     private String modelName;
 
-    @OneToOne(mappedBy = "car")
+    //table relationships 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CAR_ID")
     private Report report;
 
     @ManyToOne
+    @JoinColumn(name = "CAR_ID")
     private Truck truck;
 
-    //constructor
+    //constructors
     public Car() {}
+
+    public Car(String modelName) {
+        this.modelName = modelName;
+    }
+
     public Car(String modelName, Report report) {
         this.modelName = modelName;
         this.report = report;

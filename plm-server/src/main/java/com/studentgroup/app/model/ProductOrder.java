@@ -27,9 +27,17 @@ public class ProductOrder {
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
-    @ManyToOne private EmployeeUser checker;
-    @OneToMany(mappedBy = "productOrder") private List<ActionLog> actionLogs;
-    @OneToMany(mappedBy = "productOrder") private List<Truck> trucks;
+    @ManyToOne
+    @JoinColumn(name = "EMP_ID")
+    private EmployeeUser checker;
+
+    @OneToMany
+    @JoinColumn(name = "PROD_ORDER_ID")
+    private List<ActionLog> actionLogs;
+
+    @OneToMany
+    @JoinColumn(name = "PROD_ORDER_ID")
+    private List<Truck> trucks;
     
 
     //constructor

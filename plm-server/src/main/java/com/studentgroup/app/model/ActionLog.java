@@ -12,10 +12,13 @@ public class ActionLog {
     @Column(name = "ACTION_LOG_ID")
     private Long id;
 
+    //table relationships
     @ManyToOne
+    @JoinColumn(name = "PROD_ORDER_ID")
     private ProductOrder productOrder;
 
     @ManyToOne
+    @JoinColumn(name = "EMP_ID")
     private EmployeeUser employee;
 
     @Column(name = "TIMESTAMP")
