@@ -1,5 +1,6 @@
 package com.studentgroup.app.model;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,12 +19,12 @@ public class ProductOrder {
 
     //product order details
     @Column(name = "BL_NO") private String BLNumber;
-    @Column(name = "ORDER_DATE") private Date orderDate;
+    @Column(name = "ORDER_DATE") @Temporal(TemporalType.TIMESTAMP) private ZonedDateTime orderDate;
     @Column(name = "VESSEL") private String vesselName;
     @Column(name = "VOY_NO") private String voyNumber;
     @Column(name = "COSIGNEE") private String cosigneeName;
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
-    @Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;
+    @Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;//we probably dont need this too
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
@@ -42,15 +43,14 @@ public class ProductOrder {
 
     //constructor
     public ProductOrder() {}
-    public ProductOrder(String bLNumber, Date orderDate, String vesselName, String voyNumber, String cosigneeName,
-            String wharfReceiptImgUrl, Integer totalTrucks, ProductOrderStatus prodStatus) {
+    public ProductOrder(String bLNumber, ZonedDateTime orderDate, String vesselName, String voyNumber, String cosigneeName,
+            String wharfReceiptImgUrl, ProductOrderStatus prodStatus) {
         BLNumber = bLNumber;
         this.orderDate = orderDate;
         this.vesselName = vesselName;
         this.voyNumber = voyNumber;
         this.cosigneeName = cosigneeName;
         this.wharfReceiptImgUrl = wharfReceiptImgUrl;
-        this.totalTrucks = totalTrucks;
         this.statusName = prodStatus;
         trucks = new ArrayList<>();
         actionLogs = new ArrayList<>();
@@ -65,11 +65,11 @@ public class ProductOrder {
         BLNumber = bLNumber;
     }
 
-    public Date getOrderDate() {
+    public ZonedDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(ZonedDateTime orderDate) {
         this.orderDate = orderDate;
     }
 

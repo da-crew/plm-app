@@ -13,6 +13,7 @@ public class Truck {
     @Column(name = "TRUCK_ID")
     private Long id;
 
+    //we probably dont need this
     @Column(name = "TRUCK_NUMBER")
     private String truckNumber;
 
@@ -25,9 +26,8 @@ public class Truck {
     
     //constructor
     public Truck() {}
-    public Truck(String truckNumber, Integer totalCars) {
+    public Truck(String truckNumber) {
         this.truckNumber = truckNumber;
-        this.totalCars = totalCars;
         this.cars = new ArrayList<>();
     }
 
