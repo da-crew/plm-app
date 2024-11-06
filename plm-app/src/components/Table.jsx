@@ -1,10 +1,12 @@
 import React from 'react';
 
-const TableComponent = ({ data }) => {
-  const handleRowClick = (item) => {
+function TableComponent(props){
+  function handleRowClick(item) {
     console.log("Row clicked:", item);
-  };
-
+    if (props.onRowClick) {
+      props.onRowClick(item); // Call the parent's callback
+    }
+  }
   const styles = {
     tableContainer: {
       overflowX: 'auto',
@@ -48,8 +50,8 @@ const TableComponent = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
-            data.map((item, index) => (
+          {props.data.length > 0 ? (
+            props.data.map((item, index) => (
               <tr
                 key={index}
                 style={styles.clickableRow}
@@ -74,16 +76,16 @@ const TableComponent = ({ data }) => {
   );
 };
 
-// Sample data to test the component
-const sampleData = [
-  { blNo: "12345", date: "2024-11-04", cNo: "C001", status: "Pending" },
-  { blNo: "12346", date: "2024-11-04", cNo: "C002", status: "Completed" },
-];
+// // Sample data to test the component
+// const sampleData = [
+//   { blNo: "12345", date: "2024-11-04", cNo: "C001", status: "Pending" },
+//   { blNo: "12346", date: "2024-11-04", cNo: "C002", status: "Completed" },
+// ];
 
-// Test
-const App = () => {
-  return <TableComponent data={sampleData} />;
-};
+// //just for Test
+// const App = () => {
+//   return <TableComponent data={sampleData} />;
+// };
 
-//
-export default Table;
+// //
+export default TableComponent;
