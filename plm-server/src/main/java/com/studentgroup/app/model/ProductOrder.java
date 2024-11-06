@@ -22,7 +22,9 @@ public class ProductOrder {
     @Column(name = "COSIGNEE") private String cosigneeName;
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
     @Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;
-    @Column(name = "STATUS") private String statusName;
+    
+    
+    @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
     @ManyToOne private EmployeeUser checker;
@@ -32,7 +34,7 @@ public class ProductOrder {
 
     //constructor
     public ProductOrder(String bLNumber, Date orderDate, String vesselName, String voyNumber, String cosigneeName,
-            String wharfReceiptImgUrl, Integer totalTrucks, String statusName, EmployeeUser checker) {
+            String wharfReceiptImgUrl, Integer totalTrucks, ProductOrderStatus prodStatus, EmployeeUser checker) {
         BLNumber = bLNumber;
         this.orderDate = orderDate;
         this.vesselName = vesselName;
@@ -40,7 +42,7 @@ public class ProductOrder {
         this.cosigneeName = cosigneeName;
         this.wharfReceiptImgUrl = wharfReceiptImgUrl;
         this.totalTrucks = totalTrucks;
-        this.statusName = statusName;
+        this.statusName = prodStatus;
         this.checker = checker;
         trucks = new ArrayList<>();
         actionLogs = new ArrayList<>();
@@ -103,11 +105,11 @@ public class ProductOrder {
         this.totalTrucks = totalTrucks;
     }
 
-    public String getStatusName() {
+    public ProductOrderStatus getStatusName() {
         return statusName;
     }
 
-    public void setStatusName(String statusName) {
+    public void setStatusName(ProductOrderStatus statusName) {
         this.statusName = statusName;
     }
 

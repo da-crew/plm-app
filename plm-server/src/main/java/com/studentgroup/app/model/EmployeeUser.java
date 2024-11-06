@@ -23,7 +23,7 @@ public class EmployeeUser {
     private String salt;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    Role role = Role.UNKNOWN;
 
     @OneToMany()
     private List<ProductOrder> orders;
