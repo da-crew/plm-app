@@ -1,7 +1,5 @@
 package com.studentgroup.app.model;
 
-import com.studentgroup.app.model.enums.Report;
-
 import jakarta.persistence.*;
 
 

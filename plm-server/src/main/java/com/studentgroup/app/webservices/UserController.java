@@ -1,6 +1,5 @@
 package com.studentgroup.app.webservices;
 
-import java.security.NoSuchAlgorithmException;
 
 import com.studentgroup.app.Misc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import com.studentgroup.app.model.EmployeeUser;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.model.repositories.UserRepository;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 

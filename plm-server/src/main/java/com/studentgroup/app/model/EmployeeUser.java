@@ -1,6 +1,5 @@
 package com.studentgroup.app.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.studentgroup.app.Misc;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.webservices.UserInfo;

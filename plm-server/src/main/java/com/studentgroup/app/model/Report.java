@@ -1,6 +1,4 @@
-package com.studentgroup.app.model.enums;
-
-import com.studentgroup.app.model.Car;
+package com.studentgroup.app.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

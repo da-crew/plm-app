@@ -1,6 +1,4 @@
-package com.studentgroup.app.model;
-
-import com.studentgroup.app.model.enums.Role;
+package com.studentgroup.app.model.enums;
 
 public enum ProductOrderStatus {
     UNKNOWN("UNKNOWN"),

@@ -5,8 +5,6 @@ import com.studentgroup.app.model.EmployeeUser;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.Misc;
 
-import java.util.Objects;
-
 public class UserInfo {
 
     private String username;
