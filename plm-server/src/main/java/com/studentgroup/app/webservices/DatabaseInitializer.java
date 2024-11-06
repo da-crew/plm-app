@@ -154,11 +154,11 @@ public class DatabaseInitializer {
 
 
         for (EmployeeUser u : users) userRepo.save(u);
-        for (ActionLog a : actionLogs) actionLogRepo.save(a);
-        for (Report r : reports) reportRepo.save(r);
-        for (Car c : cars) carRepo.save(c);
-        for (ProductOrder p : productOrders) prodOrderRepo.save(p);
-        for (Truck t : trucks) truckRepo.save(t);
+        //for (ActionLog a : actionLogs) actionLogRepo.save(a);
+        //for (Report r : reports) reportRepo.save(r);
+        //for (Car c : cars) carRepo.save(c);
+        //for (ProductOrder p : productOrders) prodOrderRepo.save(p);
+        //for (Truck t : trucks) truckRepo.save(t);
 
         // save data
     }
