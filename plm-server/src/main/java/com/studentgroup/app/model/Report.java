@@ -19,7 +19,6 @@ public class Report {
     @Column(name = "REPORT_ID")
     private Long id;
 
-    //1-1 to CAR_ID
     @OneToOne
     private Car car;
 

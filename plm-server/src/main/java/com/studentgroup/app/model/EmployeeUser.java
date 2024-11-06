@@ -28,7 +28,7 @@ public class EmployeeUser {
     @OneToMany()
     private List<ProductOrder> orders;
 
-    @OneToMany(mappedBy = "EMPLOYEE")
+    @OneToMany(mappedBy = "employee")
     private List<ActionLog> actionLogs;
 
 

@@ -20,6 +20,6 @@ public class Truck {
     @ManyToOne
     private ProductOrder productOrder;
 
-    @OneToMany(mappedBy = "TRUCK")
+    @OneToMany(mappedBy = "truck")
     private List<Car> cars;
 }

@@ -14,7 +14,7 @@ public class Car {
     @Column(name = "CAR_MODEL")
     private String modelName;
 
-    @OneToOne(mappedBy = "CAR")
+    @OneToOne(mappedBy = "car")
     private Report report;
 
     @ManyToOne

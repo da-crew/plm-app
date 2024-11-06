@@ -41,10 +41,10 @@ public class ProductOrder {
     @ManyToOne
     private EmployeeUser checker;
 
-    @OneToMany(mappedBy = "PRODUCT_ORDER")
+    @OneToMany(mappedBy = "productOrder")
     private List<ActionLog> actionLogs;
 
-    @OneToMany(mappedBy = "PRODUCT_ORDER")
+    @OneToMany(mappedBy = "productOrder")
     private List<Truck> trucks;
 
 }
