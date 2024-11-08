@@ -1,4 +1,5 @@
 import React from 'react';
+import './Table.css';
 
 function TableComponent(props){
   function handleRowClick(item) {
@@ -7,46 +8,16 @@ function TableComponent(props){
       props.onRowClick(item); // Call the parent's callback
     }
   }
-  const styles = {
-    tableContainer: {
-      overflowX: 'auto',
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      margin: '20px 0',
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-    },
-    tableHeader: {
-      backgroundColor: '#f8f8f8',
-      fontWeight: 'bold',
-    },
-    cell: {
-      padding: '12px',
-      textAlign: 'left',
-      borderBottom: '1px solid #ddd',
-    },
-    emptyRow: {
-      textAlign: 'center',
-      color: '#999',
-      fontStyle: 'italic',
-    },
-    clickableRow: {
-      cursor: 'pointer',
-    },
-  };
 
   return (
-    <div style={styles.tableContainer}>
-      <table style={styles.table}>
+    <div className="table-container">
+      <table className="table">
         <thead>
           <tr>
-            <th style={{ ...styles.cell, ...styles.tableHeader }}>B/L No.</th>
-            <th style={{ ...styles.cell, ...styles.tableHeader }}>Date</th>
-            <th style={{ ...styles.cell, ...styles.tableHeader }}>C. No.</th>
-            <th style={{ ...styles.cell, ...styles.tableHeader }}>Status</th>
+            <th className="cell table-header">B/L No.</th>
+            <th className="cell table-header">Date</th>
+            <th className="cell table-header">C. No.</th>
+            <th className="cell table-header">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -54,18 +25,18 @@ function TableComponent(props){
             props.data.map((item, index) => (
               <tr
                 key={index}
-                style={styles.clickableRow}
+                className="clickable-row"
                 onClick={() => handleRowClick(item)}
               >
-                <td style={styles.cell}>{item.blNo}</td>
-                <td style={styles.cell}>{item.date}</td>
-                <td style={styles.cell}>{item.cNo}</td>
-                <td style={styles.cell}>{item.status}</td>
+                <td className="cell"> {item.blNo}</td>
+                <td className="cell"> {item.date}</td>
+                <td className="cell"> {item.cNo}</td>
+                <td className="cell"> {item.status}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ ...styles.cell, ...styles.emptyRow }}>
+              <td colSpan="4"  className="cell empty-row">
                 Empty
               </td>
             </tr>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Role} from '../users';
 
 function Header(props) {
   return (
@@ -6,7 +7,7 @@ function Header(props) {
       
       <div style={styles.userSection}>
         <button style={styles.logoutButton} onClick={props.onLogout}>Logout</button>
-        <span className='employeeName' style={styles.employeeText}>{props.employeeName}  Role: {props.role}</span>
+        <span className='employeeName' style={styles.employeeText}>{props.employeeName}  Role: {Role.toString(props.role)}</span>
         <div style={styles.profileIcon}>👤</div>
       </div>
     </header>
