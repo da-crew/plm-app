@@ -21,7 +21,7 @@ public class Report {
     @Column(name = "REPORT_ID")
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "CAR_ID")
     private Car car;
 

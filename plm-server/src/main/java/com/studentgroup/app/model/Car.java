@@ -14,10 +14,32 @@ public class Car {
     @Column(name = "CAR_MODEL")
     private String modelName;
 
-    //table relationships 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "REPORT_ID")
-    private Report report;
+    @Column(name = "DAMAGE_REPORT")
+    private String damageReport;
+
+    public String getDamageReport() {
+        return damageReport;
+    }
+
+    public void setDamageReport(String damageReport) {
+        this.damageReport = damageReport;
+    }
+
+    @Column(name = "DAMAGE_IMAGE")
+    private String damageImageLink;
+
+    //table relationships
+    //@OneToOne(cascade = CascadeType.PERSIST, mappedBy = "car")
+    //@JoinColumn(name = "REPORT_ID")
+    //private Report report;
+
+    public String getDamageImageLink() {
+        return damageImageLink;
+    }
+
+    public void setDamageImageLink(String damageImageLink) {
+        this.damageImageLink = damageImageLink;
+    }
 
     @ManyToOne
     @JoinColumn(name = "TRUCK_ID")
@@ -32,7 +54,7 @@ public class Car {
 
     public Car(String modelName, Report report) {
         this.modelName = modelName;
-        this.report = report;
+        //this.report = report;
     }
     
     //getters and setters
@@ -44,13 +66,14 @@ public class Car {
         this.modelName = modelName;
     }
 
-    public Report getReport() {
-        return report;
-    }
+    //public Report getReport() {
+    //    return report;
+    //}
 
-    public void setReport(Report report) {
-        this.report = report;
-    }
+    //public void setReport(Report report) {
+        //report.setCar(this);
+    //    this.report = report;
+    //}
 
     public Truck getTruck() {
         return truck;
