@@ -5,12 +5,14 @@ import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.webservices.UserInfo;
 import jakarta.persistence.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
 @Table(name = "EMPLOYEE")
 public class EmployeeUser {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "EMP_ID")
@@ -25,13 +27,13 @@ public class EmployeeUser {
     @Enumerated(EnumType.STRING)
     Role role = Role.UNKNOWN;
 
-    @OneToMany
-    @JoinTable(name = "PROD_ORDER_ID")
-    private List<ProductOrder> orders;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "checker")
+    private List<ProductOrder> orders = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "EMP_ID")
-    private List<ActionLog> actionLogs;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "employee")
+    private List<ActionLog> actionLogs = new ArrayList<>();
+
+    
 
     //constructors
     public EmployeeUser() {}
@@ -66,14 +68,32 @@ public class EmployeeUser {
         return "{ username: " + username + ", passwordHash: " + passwordHash + ", salt: " + salt + ", role: " + role.toString() + " }";
     }
 
+    public void addProductOrder(ProductOrder prod) {
+        orders.add(prod);
+        prod.setChecker(this);
+    }
+
+    public void addActionLog(ActionLog log) {
+        actionLogs.add(log);
+        log.setEmployee(this);
+    }
+
+    public List<ActionLog> getActionLogs() {
+        return actionLogs;
+    }
+
+    //public void setActionLogs(List<ActionLog> actionLogs) {
+    //    this.actionLogs = actionLogs;
+    //}
+
     //getters and setters
     public List<ProductOrder> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<ProductOrder> orders) {
-        this.orders = orders;
-    }
+    //public void setOrders(List<ProductOrder> orders) {
+    //    this.orders = orders;
+    //}
     
     public Long getId() {
         return id;

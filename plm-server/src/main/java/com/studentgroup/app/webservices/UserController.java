@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studentgroup.app.model.EmployeeUser;
 import com.studentgroup.app.model.enums.Role;
+import com.studentgroup.app.model.repositories.ProductOrderRepository;
 import com.studentgroup.app.model.repositories.UserRepository;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +30,9 @@ public class UserController {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired 
+    ProductOrderRepository productOrderRepo;
 
     @Autowired
     DatabaseInitializer dbInitializer;

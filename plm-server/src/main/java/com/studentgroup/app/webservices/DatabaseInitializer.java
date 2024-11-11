@@ -33,12 +33,34 @@ public class DatabaseInitializer {
     public void initDatabase() throws Exception {
 
         /**/
+        for (ProductOrder prod : prodOrderRepo.findAll()) {
+            prod.setChecker(null);
+            prodOrderRepo.save(prod);
+        }
+
+        for (ActionLog log : actionLogRepo.findAll()) {
+            log.setEmployee(null);
+            log.setProductOrder(null);
+            actionLogRepo.save(log);
+        }
+
+        for (Truck truck : truckRepo.findAll()) {
+            truck.setProductOrder(null);
+            truckRepo.save(truck);
+        }
+
+        for (Car car : carRepo.findAll()) {
+            car.setTruck(null);
+            car.setReport(null);
+            carRepo.save(car);
+        }
+
         userRepo.deleteAll();
-        actionLogRepo.deleteAll();
-        carRepo.deleteAll();
         prodOrderRepo.deleteAll();
-        reportRepo.deleteAll();
+        actionLogRepo.deleteAll();
         truckRepo.deleteAll();
+        carRepo.deleteAll();
+        //reportRepo.deleteAll();
 
         //mock data
         EmployeeUser[] users = new EmployeeUser[] {
@@ -150,14 +172,63 @@ public class DatabaseInitializer {
             new Truck("TRK-6348")
         };
 
+        //for (EmployeeUser u : users) userRepo.save(u);
+        //for (ActionLog a : actionLogs) actionLogRepo.save(a);
+        //for (Report r : reports) reportRepo.save(r);
+        //for (Car c : cars) carRepo.save(c);
+        //for (ProductOrder p : productOrders) prodOrderRepo.save(p);
+        //for (Truck t : trucks) truckRepo.save(t);
 
-        for (EmployeeUser u : users) userRepo.save(u);
-        for (ActionLog a : actionLogs) actionLogRepo.save(a);
-        for (Report r : reports) reportRepo.save(r);
-        for (Car c : cars) carRepo.save(c);
-        for (ProductOrder p : productOrders) prodOrderRepo.save(p);
-        for (Truck t : trucks) truckRepo.save(t);
+        trucks[0].addCar(cars[1]);
+        trucks[0].addCar(cars[2]);
+        trucks[0].addCar(cars[3]);
 
+        trucks[1].addCar(cars[4]);
+        trucks[1].addCar(cars[6]);
+        trucks[1].addCar(cars[7]);
+
+        productOrders[1].addTruck(trucks[0]);
+        productOrders[1].addTruck(trucks[1]);
+        productOrders[1].addTruck(trucks[2]);
+
+        productOrders[2].addTruck(trucks[3]);
+        productOrders[2].addTruck(trucks[4]);
+        productOrders[3].addTruck(trucks[5]);
+
+        users[0].addActionLog(actionLogs[0]);
+        users[0].addActionLog(actionLogs[1]);
+        users[0].addActionLog(actionLogs[2]);
+
+        users[0].addProductOrder(productOrders[0]);
+        users[0].addProductOrder(productOrders[1]);
+        users[0].addProductOrder(productOrders[2]);
+        userRepo.save(users[0]);
+
+        users[1].addActionLog(actionLogs[3]);
+        users[1].addActionLog(actionLogs[4]);
+        users[1].addActionLog(actionLogs[5]);
+
+        
+        users[1].addProductOrder(productOrders[3]);
+        users[1].addProductOrder(productOrders[4]);
+        users[1].addProductOrder(productOrders[5]);
+        userRepo.save(users[1]);
+
+
+        //for (ProductOrder prod : prodOrderRepo.findAll()) {
+        //    prod.setChecker(null);
+        //    prodOrderRepo.save(prod);
+        //}
+
+        //for (ActionLog actionLog : actionLogRepo.findAll()) {
+        //    actionLog.setEmployee(null);
+        //    actionLogRepo.save(actionLog);
+        //}
+
+        //userRepo.delete(users[0]);
+
+        //users[0].clearChildren();
+        //userRepo.delete(users[0]);
         // save data
     }
 

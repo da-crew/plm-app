@@ -16,11 +16,11 @@ public class Car {
 
     //table relationships 
     @OneToOne(cascade = CascadeType.ALL)
-    //@JoinColumn(name = "CAR_ID") THIS BREAKS THE BACKEND!
+    @JoinColumn(name = "REPORT_ID")
     private Report report;
 
     @ManyToOne
-    //@JoinColumn(name = "CAR_ID") THIS BREAKS THE BACKEND!
+    @JoinColumn(name = "TRUCK_ID")
     private Truck truck;
 
     //constructors
