@@ -27,6 +27,7 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(name = "TRUCK_ID")
+
     private Truck truck;
 
     //constructors

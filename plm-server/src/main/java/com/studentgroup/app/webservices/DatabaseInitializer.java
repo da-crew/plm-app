@@ -225,6 +225,7 @@ public class DatabaseInitializer {
         userRepo.save(users[1]);
 
         userRepo.save(users[2]);
+
     }
 
 }
