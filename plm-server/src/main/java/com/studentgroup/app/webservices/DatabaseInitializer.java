@@ -61,9 +61,12 @@ public class DatabaseInitializer {
 
         // mock data
         EmployeeUser[] users = new EmployeeUser[] {
-                new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),
+                //ในdatabaseเพิ่มไปแค่3ผู้ใช้แรก ที่เหลือยังไม่ได้ใช้
+                //ผู้ใช้ที่่3ไม่มีproduct order
+                new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),  
                 new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
-                new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),
+                new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),         
+
                 new EmployeeUser("sofiaG", "Sofia", "Garcia", "garciaPass456@", Role.EXPORTER),
                 new EmployeeUser("anwark12", "Anwar", "Khan", "unique567&", Role.UNKNOWN),
                 new EmployeeUser("fatimaB", "Fatima", "Bakshi", "fatima678*", Role.DISPATCHER),
@@ -108,22 +111,6 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2024, 7, 10, 13, 40, 55, 998877665, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
         };
-
-        /*
-         * Report[] reports = new Report[] {
-         * new Report("Minor scratches on the front bumper and left door."),
-         * new Report("Broken tail light and dent on rear bumper."),
-         * new Report("Windshield has a small crack near the passenger side."),
-         * new Report("Front left tire worn out; needs replacement."),
-         * new Report("Dashboard display malfunction; intermittent screen blackout."),
-         * new Report(
-         * "A large, perfect circular hole has pierced through the car, as if something passed clean through it."
-         * ),
-         * new
-         * Report("Unexplained damage on the car's roof; as if something heavy had been dragged across it."
-         * )
-         * };
-         */
 
         String[] reportTexts = new String[] {
             "Minor scratches on the front bumper and left door.",
@@ -194,16 +181,14 @@ public class DatabaseInitializer {
                 new Truck("TRK-6348")
         };
 
-        // for (EmployeeUser u : users) userRepo.save(u);
-        // for (ActionLog a : actionLogs) actionLogRepo.save(a);
-        // for (Report r : reports) reportRepo.save(r);
-        // for (Car c : cars) carRepo.save(c);
-        // for (ProductOrder p : productOrders) prodOrderRepo.save(p);
-        // for (Truck t : trucks) truckRepo.save(t);
-
-        // cars[1].setReport(reports[0]);
-        // cars[3].setReport(reports[1]);
-        // cars[4].setReport(reports[3]);
+        cars[1].setDamageReport(reportTexts[2]);
+        cars[1].setDamageImageLink(reportImages[2]);
+        
+        cars[3].setDamageReport(reportTexts[1]);
+        cars[3].setDamageImageLink(reportImages[1]);
+        
+        cars[4].setDamageReport(reportTexts[3]);
+        cars[4].setDamageImageLink(reportImages[3]);
 
         trucks[0].addCar(cars[1]);
         trucks[0].addCar(cars[2]);
@@ -239,7 +224,7 @@ public class DatabaseInitializer {
         users[1].addProductOrder(productOrders[5]);
         userRepo.save(users[1]);
 
-        // save data
+        userRepo.save(users[2]);
     }
 
 }
