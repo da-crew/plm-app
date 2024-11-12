@@ -3,6 +3,9 @@ package com.studentgroup.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -22,9 +25,11 @@ public class Truck {
 
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
+    @JsonBackReference
     private ProductOrder productOrder;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "truck")
+    @JsonManagedReference
     private List<Car> cars = new ArrayList<>();
     
     //constructor

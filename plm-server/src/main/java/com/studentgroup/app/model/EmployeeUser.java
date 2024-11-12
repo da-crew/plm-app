@@ -1,5 +1,6 @@
 package com.studentgroup.app.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.studentgroup.app.Misc;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.webservices.UserInfo;
@@ -28,9 +29,11 @@ public class EmployeeUser {
     Role role = Role.UNKNOWN;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "checker")
+    @JsonManagedReference
     private List<ProductOrder> orders = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "employee")
+    @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
 
     

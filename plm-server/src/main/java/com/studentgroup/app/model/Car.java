@@ -1,5 +1,7 @@
 package com.studentgroup.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 
@@ -21,13 +23,9 @@ public class Car {
     private String damageImageLink;
 
     //table relationships
-    //@OneToOne(cascade = CascadeType.PERSIST, mappedBy = "car")
-    //@JoinColumn(name = "REPORT_ID")
-    //private Report report;
-
     @ManyToOne
     @JoinColumn(name = "TRUCK_ID")
-
+    @JsonBackReference
     private Truck truck;
 
     //constructors

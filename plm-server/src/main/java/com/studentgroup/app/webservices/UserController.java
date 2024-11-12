@@ -52,7 +52,6 @@ public class UserController {
         return new ResponseEntity<EmployeeUser>(emp, HttpStatus.OK);
     }
 
-    
     @GetMapping("/test/users")
     public ResponseEntity<Iterable<EmployeeUser>> getUsers() {
         return new ResponseEntity<Iterable<EmployeeUser>>(userRepo.findAll(), HttpStatus.OK);

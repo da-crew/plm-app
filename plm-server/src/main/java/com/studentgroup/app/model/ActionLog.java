@@ -2,6 +2,8 @@ package com.studentgroup.app.model;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,10 +17,12 @@ public class ActionLog {
     //table relationships
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
+    @JsonBackReference
     private ProductOrder productOrder;
 
     @ManyToOne
     @JoinColumn(name = "EMP_ID")
+    @JsonBackReference
     private EmployeeUser employee;
 
     @Column(name = "TIMESTAMP")

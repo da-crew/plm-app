@@ -4,6 +4,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
 
 import jakarta.persistence.*;
@@ -29,12 +32,15 @@ public class ProductOrder {
     //table relationships
     @ManyToOne
     @JoinColumn(name = "EMP_ID")
+    @JsonBackReference
     private EmployeeUser checker;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
+    @JsonManagedReference
     private List<ActionLog> actionLogs;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
+    @JsonManagedReference
     private List<Truck> trucks;
     
 
