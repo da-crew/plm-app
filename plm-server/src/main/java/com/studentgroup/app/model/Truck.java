@@ -16,12 +16,8 @@ public class Truck {
     @Column(name = "TRUCK_ID")
     private Long id;
 
-    //we probably dont need this
     @Column(name = "TRUCK_NUMBER")
     private String truckNumber;
-
-    //@Column(name = "TOTAL_CARS")
-    //private Integer totalCars;
 
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
 
@@ -26,7 +25,6 @@ public class ProductOrder {
     @Column(name = "VOY_NO") private String voyNumber;
     @Column(name = "COSIGNEE") private String cosigneeName;
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
-    //@Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;//we probably dont need this too
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
