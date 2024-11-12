@@ -25,8 +25,6 @@ public class DatabaseInitializer {
     @Autowired
     private ProductOrderRepository prodOrderRepo;
     @Autowired
-    private ReportRepository reportRepo;
-    @Autowired
     private TruckRepository truckRepo;
 
     @PostConstruct
@@ -51,18 +49,17 @@ public class DatabaseInitializer {
 
         for (Car car : carRepo.findAll()) {
             car.setTruck(null);
-            car.setReport(null);
+            // car.setReport(null);
             carRepo.save(car);
         }
 
-        userRepo.deleteAll();
-        prodOrderRepo.deleteAll();
         actionLogRepo.deleteAll();
-        truckRepo.deleteAll();
+        prodOrderRepo.deleteAll();
         carRepo.deleteAll();
-        //reportRepo.deleteAll();
+        truckRepo.deleteAll();
+        userRepo.deleteAll();
 
-        //mock data
+        // mock data
         EmployeeUser[] users = new EmployeeUser[] {
                 new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),
                 new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
@@ -112,15 +109,40 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
         };
 
-        Report[] reports = new Report[] {
-                new Report("Minor scratches on the front bumper and left door."),
-                new Report("Broken tail light and dent on rear bumper."),
-                new Report("Windshield has a small crack near the passenger side."),
-                new Report("Front left tire worn out; needs replacement."),
-                new Report("Dashboard display malfunction; intermittent screen blackout."),
-                new Report(
-                        "A large, perfect circular hole has pierced through the car, as if something passed clean through it."),
-                new Report("Unexplained damage on the car's roof; as if something heavy had been dragged across it.")
+        /*
+         * Report[] reports = new Report[] {
+         * new Report("Minor scratches on the front bumper and left door."),
+         * new Report("Broken tail light and dent on rear bumper."),
+         * new Report("Windshield has a small crack near the passenger side."),
+         * new Report("Front left tire worn out; needs replacement."),
+         * new Report("Dashboard display malfunction; intermittent screen blackout."),
+         * new Report(
+         * "A large, perfect circular hole has pierced through the car, as if something passed clean through it."
+         * ),
+         * new
+         * Report("Unexplained damage on the car's roof; as if something heavy had been dragged across it."
+         * )
+         * };
+         */
+
+        String[] reportTexts = new String[] {
+            "Minor scratches on the front bumper and left door.",
+            "Broken tail light and dent on rear bumper.",
+            "Windshield has a small crack near the passenger side.",
+            "Front left tire worn out; needs replacement.",
+            "Dashboard display malfunction; intermittent screen blackout.",
+            "A large, perfect circular hole has pierced through the car, as if something passed clean through it.",
+            "Unexplained damage on the car's roof; as if something heavy had been dragged across it."
+        };
+
+        String[] reportImages = new String[] {
+            "dam1.png",
+            "dam2.png",
+            "dam3.png",
+            "dam4.png",
+            "dam5.png",
+            "dam6.png",
+            "dam7.png",
         };
 
         Car[] cars = new Car[] {
@@ -164,20 +186,24 @@ public class DatabaseInitializer {
         };
 
         Truck[] trucks = new Truck[] {
-            new Truck("TRK-1023"),
-            new Truck("TRK-2045"),
-            new Truck("TRK-3089"),
-            new Truck("TRK-4120"),
-            new Truck("TRK-5234"),
-            new Truck("TRK-6348")
+                new Truck("TRK-1023"),
+                new Truck("TRK-2045"),
+                new Truck("TRK-3089"),
+                new Truck("TRK-4120"),
+                new Truck("TRK-5234"),
+                new Truck("TRK-6348")
         };
 
-        //for (EmployeeUser u : users) userRepo.save(u);
-        //for (ActionLog a : actionLogs) actionLogRepo.save(a);
-        //for (Report r : reports) reportRepo.save(r);
-        //for (Car c : cars) carRepo.save(c);
-        //for (ProductOrder p : productOrders) prodOrderRepo.save(p);
-        //for (Truck t : trucks) truckRepo.save(t);
+        // for (EmployeeUser u : users) userRepo.save(u);
+        // for (ActionLog a : actionLogs) actionLogRepo.save(a);
+        // for (Report r : reports) reportRepo.save(r);
+        // for (Car c : cars) carRepo.save(c);
+        // for (ProductOrder p : productOrders) prodOrderRepo.save(p);
+        // for (Truck t : trucks) truckRepo.save(t);
+
+        // cars[1].setReport(reports[0]);
+        // cars[3].setReport(reports[1]);
+        // cars[4].setReport(reports[3]);
 
         trucks[0].addCar(cars[1]);
         trucks[0].addCar(cars[2]);
@@ -208,27 +234,11 @@ public class DatabaseInitializer {
         users[1].addActionLog(actionLogs[4]);
         users[1].addActionLog(actionLogs[5]);
 
-        
         users[1].addProductOrder(productOrders[3]);
         users[1].addProductOrder(productOrders[4]);
         users[1].addProductOrder(productOrders[5]);
         userRepo.save(users[1]);
 
-
-        //for (ProductOrder prod : prodOrderRepo.findAll()) {
-        //    prod.setChecker(null);
-        //    prodOrderRepo.save(prod);
-        //}
-
-        //for (ActionLog actionLog : actionLogRepo.findAll()) {
-        //    actionLog.setEmployee(null);
-        //    actionLogRepo.save(actionLog);
-        //}
-
-        //userRepo.delete(users[0]);
-
-        //users[0].clearChildren();
-        //userRepo.delete(users[0]);
         // save data
     }
 
