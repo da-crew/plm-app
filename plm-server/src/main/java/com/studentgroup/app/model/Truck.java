@@ -17,42 +17,52 @@ public class Truck {
     @Column(name = "TRUCK_NUMBER")
     private String truckNumber;
 
-    @Column(name = "TOTAL_CARS")
-    private Integer totalCars;
+    //@Column(name = "TOTAL_CARS")
+    //private Integer totalCars;
 
-    @OneToMany
-    @JoinColumn(name = "TRUCK_ID")
-    private List<Car> cars;
+    @ManyToOne
+    @JoinColumn(name = "PROD_ORDER_ID")
+    private ProductOrder productOrder;
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "truck")
+    private List<Car> cars = new ArrayList<>();
     
     //constructor
     public Truck() {}
     public Truck(String truckNumber) {
         this.truckNumber = truckNumber;
-        this.cars = new ArrayList<>();
+    }
+
+    //misc methods
+    public void addCar(Car car) {
+        cars.add(car);
+        car.setTruck(this);
     }
 
     //getters and setters
-    @ManyToOne
-    private ProductOrder productOrder;
-    
     public String getTruckNumber() {
         return truckNumber;
     }
 
-
     public void setTruckNumber(String truckNumber) {
         this.truckNumber = truckNumber;
     }
-
-
-    public Integer getTotalCars() {
-        return totalCars;
+    
+    public ProductOrder getProductOrder() {
+        return productOrder;
+    }
+    public void setProductOrder(ProductOrder productOrder) {
+        this.productOrder = productOrder;
     }
 
+    //public Integer getTotalCars() {
+    //    return totalCars;
+    //}
 
-    public void setTotalCars(Integer totalCars) {
-        this.totalCars = totalCars;
-    }
+
+    //public void setTotalCars(Integer totalCars) {
+    //    this.totalCars = totalCars;
+    //}
 
 
     public List<Car> getCars() {
@@ -60,9 +70,9 @@ public class Truck {
     }
 
 
-    public void setCars(List<Car> cars) {
-        this.cars = cars;
-    }
+    //public void setCars(List<Car> cars) {
+    //    this.cars = cars;
+    //}
 
 
 
