@@ -129,49 +129,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserInfo.fromUser(emp));
     }
 
-
-
-//    @GetMapping("/users/role")
-//    public ResponseEntity<ObjectNode> checkRole(@RequestParam("token") String token) {
-//        if (token == null) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        EmployeeUser user = userRepo.findByToken(token);
-//        if (user == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        ObjectNode obj = mapper.createObjectNode();
-//        obj.put("role", user.getRole().toString());
-//
-//        return ResponseEntity.ok().body(obj);
-//    }
-//
-//    @GetMapping("/validate-token")
-//    public ResponseEntity<ObjectNode> validateToken(@RequestParam("token") String token) {
-//        if (token == null) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        if (userRepo.findByToken(token) != null) {
-//            return ResponseEntity.ok().body(null);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    @GetMapping("/users/auth-token")
-//    public ResponseEntity<AuthResult> authToken(@RequestParam("token") String token) {
-//        if (token == null) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        EmployeeUser user = userRepo.findByToken(token);
-//
-//        if (user != null) {
-//            return ResponseEntity.ok().body(AuthResult.fromUser(user));
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-
 }
