@@ -17,7 +17,7 @@ const UserTable = (props) => {
     };
 
     const handleDelete = (username) => {
-        console.log(`Delete user with ID: ${username}`);
+        console.log(`Delete user with username: ${username}`);
         if (props.onDelete) {
             props.onDelete(username);
         }
@@ -25,14 +25,14 @@ const UserTable = (props) => {
 
 
     const handleUpdate = (username) => {
-        console.log(`Update user with ID: ${username}`);
+        console.log(`Update user with username: ${username}`);
         if (props.onDelete) {
             props.onUpdate(username);
         }
     };
 
     const handleResetPassword = (username) => {
-        console.log(`Reset password with ID: ${username}`);
+        console.log(`Reset password with username: ${username}`);
         if (props.onReset) {
             props.onReset(username);
         };
@@ -46,11 +46,12 @@ const UserTable = (props) => {
                     <thead>
                         <tr>
                             <th className="cell table-header"></th>
-                            <th className="cell table-header"><div style={{ paddingLeft: 8 }}>ID</div></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 10 }}>User name</div></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 10 }}>First name</div></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 10 }}>Last name</div></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 25 }}>Role</div></th>
+                            <th className="cell table-header"></th>
+                            <th className="cell table-header"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,7 +65,7 @@ const UserTable = (props) => {
                                         Delete
                                     </button>
                                 </td>
-                                <td className="cell">{user.id}</td>
+                               
                                 <td className="cell">{/* Username  ************************************/}
                                     <input
                                         type="text"

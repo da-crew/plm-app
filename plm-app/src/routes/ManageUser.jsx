@@ -7,8 +7,10 @@ import UserTable from "../components/UserTable";
 import ResetPasswordModal from "../components/ResetPassword";
 
 export default function ManageUser() {
+    
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
+
 
     const [users, setUsers] = useState([//mock data
     { username: 'Dispatcher001', firstname: "Nattapol", lastname: "Aunsri", role: 'Dispatcher' },
@@ -22,14 +24,26 @@ export default function ManageUser() {
     { username: 'GateOut002', firstname: "Wichai", lastname: "Dee", role: 'GateOut' },
     { username: 'Admin002', firstname: "Somchai", lastname: "Kam", role: 'Admin' },
     ]);
+    let [showReset, setShowReset] = useState(false);
+    let [selectedUser, setSelectedUser] = useState(users.username);
+
+
+
 
     useEffect(() => console.log(JSON.stringify(userInfo)), []);
 
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
     }
-
-
+  
+    function handleOnReset(username){//click reset
+        setSelectedUser(username) 
+        setShowReset(true)
+        console.log(selectedUser)
+    }
+    function handleNewPassword(NewPassword){//click submit// password ที่จะเปลี่ยน
+        console.log('submit reset: '+NewPassword)
+    }
 
     return (<>
         <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />
@@ -37,9 +51,11 @@ export default function ManageUser() {
         <p>Welcome, {userInfo.username}</p>
         <p>Role: {Role.toString(userInfo.role)}</p>
         <div className="center-block">
-            <UserTable users={users} />
+            <UserTable users={users} onReset={handleOnReset}/>
         </div>
-
+        <ResetPasswordModal show={showReset} onClose={() => setShowReset(false)} 
+        onPasswordReset={handleNewPassword/**/}/>
+        
     </>);
 
 

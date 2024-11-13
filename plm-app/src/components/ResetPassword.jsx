@@ -1,0 +1,109 @@
+import React, { useState } from 'react';
+
+const ResetPasswordModal = (props) => {
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    function handleNewPasswordChange(event) {
+        setNewPassword(event.target.value);
+    }
+
+    function handleConfirmPasswordChange(event) {
+        setConfirmPassword(event.target.value);
+    }
+
+    const handleSubmit = () => {
+        if (newPassword !== confirmPassword) {
+            setErrorMessage("Passwords don't match!");
+            return;
+        }
+
+        // If passwords match, call the onPasswordReset callback to notify the parent component
+        if(props.onPasswordReset){
+        props.onPasswordReset(newPassword);// password ที่จะเปลี่ยน
+        }
+        // Clear the fields and close the modal
+        setNewPassword(''); 
+        setConfirmPassword('');
+        setErrorMessage('');
+        props.onClose();
+        
+    };
+
+    const styles = {
+        overlay: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        modal: {
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            width: '300px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        },
+        errorText: {
+            color: 'red',
+            marginBottom: '10px',
+        },
+        input: {
+            width: '100%',
+            padding: '8px',
+            marginBottom: '10px',
+        },
+        buttonContainer: {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
+        cancelButton: {
+            padding: '8px 12px',
+        },
+        submitButton: {
+            padding: '8px 12px',
+            backgroundColor: 'blue',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+        },
+    };
+
+    if (!props.show) return null;
+
+    return (
+        <div style={styles.overlay}>
+            <div style={styles.modal}>
+                <h3>Reset Password</h3>
+                {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
+                <input
+                    type="password"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={handleNewPasswordChange}
+                    style={styles.input}
+                />
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    style={styles.input}
+                />
+                <div style={styles.buttonContainer}>
+                    <button onClick={props.onClose} style={styles.cancelButton}>Cancel</button>
+                    <button 
+                    onClick={handleSubmit} style={styles.submitButton}>Submit</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ResetPasswordModal;
