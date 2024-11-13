@@ -4,23 +4,32 @@ import Header from "../components/Header";
 import DashboardHeader from "../components/DashboardHeader";
 import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import UserTable from "../components/UserTable";
+import ResetPasswordModal from "../components/ResetPassword";
 
 export default function ManageUser() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
 
+    const [users, setUsers] = useState([//mock data
+    { username: 'Dispatcher001', firstname: "Nattapol", lastname: "Aunsri", role: 'Dispatcher' },
+    { username: 'Dispatcher002', firstname: "Ananya", lastname: "Chai", role: 'Dispatcher' },
+    { username: 'Checker001', firstname: "Sarun", lastname: "Phan", role: 'Checker' },
+    { username: 'Checker002', firstname: "Kanya", lastname: "Tham", role: 'Checker' },
+    { username: 'GateOut001', firstname: "Preecha", lastname: "Thongchai", role: 'GateOut' },
+    { username: 'Admin001', firstname: "Supaporn", lastname: "Yim", role: 'Admin' },
+    { username: 'Dispatcher003', firstname: "Somsak", lastname: "Chaidee", role: 'Dispatcher' },
+    { username: 'Checker003', firstname: "Patchara", lastname: "Yuen", role: 'Checker' },
+    { username: 'GateOut002', firstname: "Wichai", lastname: "Dee", role: 'GateOut' },
+    { username: 'Admin002', firstname: "Somchai", lastname: "Kam", role: 'Admin' },
+    ]);
+
     useEffect(() => console.log(JSON.stringify(userInfo)), []);
+
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
     }
 
-    const [users, setUsers] = useState([//mock data
-        { id: '0001', username: 'Dispatcher001', role: 'Dispatcher' },
-        { id: '0004', username: 'Checker001', role: 'Checker' },
-        { id: '0005', username: 'Checker002', role: 'Checker' },
-        { id: '0006', username: 'Checker003', role: 'Checker' },
-        { id: '0007', username: 'Exporter001', role: 'Exporter' },
-    ]);
+
 
     return (<>
         <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />

@@ -8,33 +8,33 @@ const UserTable = (props) => {
     const roles = [Role.DISPATCHER, Role.CHECKER, Role.EXPORTER, Role.ADMIN];
 
     // Handler to update username or role
-    const handleInputChange = (id, field, value) => {
+    const handleInputChange = (username, field, value) => {
         setUsers((prevUsers) =>
             prevUsers.map((user) =>
-                user.id === id ? { ...user, [field]: value } : user
+                user.username === username ? { ...user, [field]: value } : user
             )
         );
     };
 
-    const handleDelete = (id) => {
-        console.log(`Delete user with ID: ${id}`);
+    const handleDelete = (username) => {
+        console.log(`Delete user with ID: ${username}`);
         if (props.onDelete) {
-            props.onDelete(id);
+            props.onDelete(username);
         }
     };
 
 
-    const handleUpdate = (id) => {
-        console.log(`Update user with ID: ${id}`);
+    const handleUpdate = (username) => {
+        console.log(`Update user with ID: ${username}`);
         if (props.onDelete) {
-            props.onUpdate(id);
+            props.onUpdate(username);
         }
     };
 
-    const handleResetPassword = (id) => {
-        console.log(`Reset password with ID: ${id}`);
+    const handleResetPassword = (username) => {
+        console.log(`Reset password with ID: ${username}`);
         if (props.onReset) {
-            props.onReset(id);
+            props.onReset(username);
         };
        
     };
@@ -48,9 +48,9 @@ const UserTable = (props) => {
                             <th className="cell table-header"></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 8 }}>ID</div></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 10 }}>User name</div></th>
+                            <th className="cell table-header"><div style={{ paddingLeft: 10 }}>First name</div></th>
+                            <th className="cell table-header"><div style={{ paddingLeft: 10 }}>Last name</div></th>
                             <th className="cell table-header"><div style={{ paddingLeft: 25 }}>Role</div></th>
-                            <th className="cell table-header"></th>
-                            <th className="cell table-header"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,7 +58,7 @@ const UserTable = (props) => {
                             <tr key={user.id}>
                                 <td className="cell">{/* Delete  ************************************/}
                                     <button
-                                        onClick={() => handleDelete(user.id)}
+                                        onClick={() => handleDelete(user.username)}
                                         style={{ backgroundColor: '#D32F2F', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
                                     >
                                         Delete
@@ -69,14 +69,30 @@ const UserTable = (props) => {
                                     <input
                                         type="text"
                                         value={user.username}
-                                        onChange={(e) => handleInputChange(user.id, 'username', e.target.value)}
+                                        onChange={(e) => handleInputChange(user.username, 'username', e.target.value)}
+                                        style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
+                                    />
+                                </td>
+                                <td className="cell">{/* firstname  ************************************/}
+                                    <input
+                                        type="text"
+                                        value={user.firstname}
+                                        onChange={(e) => handleInputChange(user.username, 'firstname', e.target.value)}
+                                        style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
+                                    />
+                                </td>
+                                <td className="cell">{/* lastname  ************************************/}
+                                    <input
+                                        type="text"
+                                        value={user.lastname}
+                                        onChange={(e) => handleInputChange(user.username, 'lastname', e.target.value)}
                                         style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
                                     />
                                 </td>
                                 <td className="cell">{/* Role  ************************************/}
                                     <select
                                         value={user.role}
-                                        onChange={(e) => handleInputChange(user.id, 'role', e.target.value)}
+                                        onChange={(e) => handleInputChange(user.username, 'role', e.target.value)}
                                         style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
                                     >
                                         {roles.map((role) => (
@@ -88,7 +104,7 @@ const UserTable = (props) => {
                                 </td>
                                 <td className="cell">{/* Reset Password  ************************************/}
                                     <button
-                                        onClick={() => handleResetPassword(user.id)}
+                                        onClick={() => handleResetPassword(user.username)}
                                         style={{ backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
                                     >
                                         Reset Password
@@ -96,7 +112,7 @@ const UserTable = (props) => {
                                 </td>
                                 <td className="cell">{/* Update  ************************************/}
                                     <button
-                                        onClick={() => handleUpdate(user.id)}
+                                        onClick={() => handleUpdate(user.username)}
                                         style={{ backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
                                     >
                                         Update
