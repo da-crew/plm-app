@@ -14,6 +14,13 @@ public class ActionLog {
     @Column(name = "ACTION_LOG_ID")
     private Long id;
 
+    @Column(name = "TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime timestamp;
+
+    @Column(name = "ACTION")
+    private String actionText;
+
     //table relationships
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
@@ -25,9 +32,6 @@ public class ActionLog {
     @JsonBackReference
     private EmployeeUser employee;
 
-    @Column(name = "TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime timestamp;
 
     //constructor   
     public ActionLog() {}

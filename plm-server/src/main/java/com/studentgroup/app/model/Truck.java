@@ -3,7 +3,7 @@ package com.studentgroup.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -18,11 +18,6 @@ public class Truck {
 
     @Column(name = "TRUCK_NUMBER")
     private String truckNumber;
-
-    @ManyToOne
-    @JoinColumn(name = "PROD_ORDER_ID")
-    @JsonBackReference
-    private ProductOrder productOrder;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "truck")
     @JsonManagedReference
@@ -48,33 +43,10 @@ public class Truck {
     public void setTruckNumber(String truckNumber) {
         this.truckNumber = truckNumber;
     }
-    
-    public ProductOrder getProductOrder() {
-        return productOrder;
-    }
-    public void setProductOrder(ProductOrder productOrder) {
-        this.productOrder = productOrder;
-    }
-
-    //public Integer getTotalCars() {
-    //    return totalCars;
-    //}
-
-
-    //public void setTotalCars(Integer totalCars) {
-    //    this.totalCars = totalCars;
-    //}
 
 
     public List<Car> getCars() {
         return cars;
     }
-
-
-    //public void setCars(List<Car> cars) {
-    //    this.cars = cars;
-    //}
-
-
-
+    
 }

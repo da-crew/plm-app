@@ -28,15 +28,13 @@ public class EmployeeUser {
     @Enumerated(EnumType.STRING)
     Role role = Role.UNKNOWN;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "checker")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "checker")
     @JsonManagedReference
     private List<ProductOrder> orders = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "employee")
     @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
-
-    
 
     //constructors
     public EmployeeUser() {}
@@ -71,9 +69,14 @@ public class EmployeeUser {
         return "{ username: " + username + ", passwordHash: " + passwordHash + ", salt: " + salt + ", role: " + role.toString() + " }";
     }
 
-    public void addProductOrder(ProductOrder prod) {
+    public void assignAsChecker(ProductOrder prod) {
         orders.add(prod);
         prod.setChecker(this);
+    }
+
+    public void assignAsDispatcher(ProductOrder prod) {
+        orders.add(prod);
+        prod.setDispatcher(this);
     }
 
     public void addActionLog(ActionLog log) {
