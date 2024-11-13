@@ -21,8 +21,6 @@ public class ActionLog {
     @Column(name = "ACTION")
     private String actionText;
 
-
-
     //table relationships
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")

@@ -196,7 +196,7 @@ public class DatabaseInitializer {
         truckRepo.save(trucks[0]);
         truckRepo.save(trucks[1]);
 
-        //situation #1: a dispatcher(user[0]) creates a new product order(productOrders[0]) and assign to a checker(users[1])
+        //situation #1: a dispatcher(user[0]) creates a new product order(productOrders[0]) and assign it to a checker(users[1])
 
         //trucks[0] is being loaded with cars[0] and cars[1]
         trucks[0].addCar(cars[0]);
@@ -211,6 +211,7 @@ public class DatabaseInitializer {
         productOrders[0].addCar(cars[0]);
         productOrders[0].addCar(cars[1]);
         users[0].assignAsDispatcher(productOrders[0]);
+        users[1].assignAsChecker(productOrders[0]);
 
         //save the entities
         prodOrderRepo.save(productOrders[0]);
