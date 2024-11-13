@@ -25,28 +25,48 @@ public class DatabaseInitializer {
     @Autowired
     private ProductOrderRepository prodOrderRepo;
     @Autowired
-    private ReportRepository reportRepo;
-    @Autowired
     private TruckRepository truckRepo;
 
     @PostConstruct
     public void initDatabase() throws Exception {
 
         /**/
+        for (ProductOrder prod : prodOrderRepo.findAll()) {
+            prod.setChecker(null);
+            prodOrderRepo.save(prod);
+        }
 
+        for (ActionLog log : actionLogRepo.findAll()) {
+            log.setEmployee(null);
+            log.setProductOrder(null);
+            actionLogRepo.save(log);
+        }
 
-        userRepo.deleteAll();
+        for (Truck truck : truckRepo.findAll()) {
+            truck.setProductOrder(null);
+            truckRepo.save(truck);
+        }
+
+        for (Car car : carRepo.findAll()) {
+            car.setTruck(null);
+            // car.setReport(null);
+            carRepo.save(car);
+        }
+
         actionLogRepo.deleteAll();
-        carRepo.deleteAll();
         prodOrderRepo.deleteAll();
-        reportRepo.deleteAll();
+        carRepo.deleteAll();
         truckRepo.deleteAll();
+        userRepo.deleteAll();
 
-        //mock data
+        // mock data
         EmployeeUser[] users = new EmployeeUser[] {
-                new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),
+                //ในdatabaseเพิ่มไปแค่3ผู้ใช้แรก ที่เหลือยังไม่ได้ใช้
+                //ผู้ใช้ที่่3ไม่มีproduct order
+                new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),  
                 new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
-                new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),
+                new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),         
+
                 new EmployeeUser("sofiaG", "Sofia", "Garcia", "garciaPass456@", Role.EXPORTER),
                 new EmployeeUser("anwark12", "Anwar", "Khan", "unique567&", Role.UNKNOWN),
                 new EmployeeUser("fatimaB", "Fatima", "Bakshi", "fatima678*", Role.DISPATCHER),
@@ -92,15 +112,24 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
         };
 
-        Report[] reports = new Report[] {
-                new Report("Minor scratches on the front bumper and left door."),
-                new Report("Broken tail light and dent on rear bumper."),
-                new Report("Windshield has a small crack near the passenger side."),
-                new Report("Front left tire worn out; needs replacement."),
-                new Report("Dashboard display malfunction; intermittent screen blackout."),
-                new Report(
-                        "A large, perfect circular hole has pierced through the car, as if something passed clean through it."),
-                new Report("Unexplained damage on the car's roof; as if something heavy had been dragged across it.")
+        String[] reportTexts = new String[] {
+            "Minor scratches on the front bumper and left door.",
+            "Broken tail light and dent on rear bumper.",
+            "Windshield has a small crack near the passenger side.",
+            "Front left tire worn out; needs replacement.",
+            "Dashboard display malfunction; intermittent screen blackout.",
+            "A large, perfect circular hole has pierced through the car, as if something passed clean through it.",
+            "Unexplained damage on the car's roof; as if something heavy had been dragged across it."
+        };
+
+        String[] reportImages = new String[] {
+            "dam1.png",
+            "dam2.png",
+            "dam3.png",
+            "dam4.png",
+            "dam5.png",
+            "dam6.png",
+            "dam7.png",
         };
 
         Car[] cars = new Car[] {
@@ -144,23 +173,59 @@ public class DatabaseInitializer {
         };
 
         Truck[] trucks = new Truck[] {
-            new Truck("TRK-1023"),
-            new Truck("TRK-2045"),
-            new Truck("TRK-3089"),
-            new Truck("TRK-4120"),
-            new Truck("TRK-5234"),
-            new Truck("TRK-6348")
+                new Truck("TRK-1023"),
+                new Truck("TRK-2045"),
+                new Truck("TRK-3089"),
+                new Truck("TRK-4120"),
+                new Truck("TRK-5234"),
+                new Truck("TRK-6348")
         };
 
+        cars[1].setDamageReport(reportTexts[2]);
+        cars[1].setDamageImageLink(reportImages[2]);
+        
+        cars[3].setDamageReport(reportTexts[1]);
+        cars[3].setDamageImageLink(reportImages[1]);
+        
+        cars[4].setDamageReport(reportTexts[3]);
+        cars[4].setDamageImageLink(reportImages[3]);
 
-        for (EmployeeUser u : users) userRepo.save(u);
-        //for (ActionLog a : actionLogs) actionLogRepo.save(a);
-        //for (Report r : reports) reportRepo.save(r);
-        //for (Car c : cars) carRepo.save(c);
-        //for (ProductOrder p : productOrders) prodOrderRepo.save(p);
-        //for (Truck t : trucks) truckRepo.save(t);
+        trucks[0].addCar(cars[1]);
+        trucks[0].addCar(cars[2]);
+        trucks[0].addCar(cars[3]);
 
-        // save data
+        trucks[1].addCar(cars[4]);
+        trucks[1].addCar(cars[6]);
+        trucks[1].addCar(cars[7]);
+
+        productOrders[1].addTruck(trucks[0]);
+        productOrders[1].addTruck(trucks[1]);
+        productOrders[1].addTruck(trucks[2]);
+
+        productOrders[2].addTruck(trucks[3]);
+        productOrders[2].addTruck(trucks[4]);
+        productOrders[3].addTruck(trucks[5]);
+
+        users[0].addActionLog(actionLogs[0]);
+        users[0].addActionLog(actionLogs[1]);
+        users[0].addActionLog(actionLogs[2]);
+
+        users[0].addProductOrder(productOrders[0]);
+        users[0].addProductOrder(productOrders[1]);
+        users[0].addProductOrder(productOrders[2]);
+        userRepo.save(users[0]);
+
+        users[1].addActionLog(actionLogs[3]);
+        users[1].addActionLog(actionLogs[4]);
+        users[1].addActionLog(actionLogs[5]);
+
+        users[1].addProductOrder(productOrders[3]);
+        users[1].addProductOrder(productOrders[4]);
+        users[1].addProductOrder(productOrders[5]);
+        userRepo.save(users[1]);
+
+        userRepo.save(users[2]);
+
     }
 
 }

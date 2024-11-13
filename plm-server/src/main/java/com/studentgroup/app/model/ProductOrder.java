@@ -2,7 +2,6 @@ package com.studentgroup.app.model;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.studentgroup.app.model.enums.ProductOrderStatus;
@@ -24,7 +23,7 @@ public class ProductOrder {
     @Column(name = "VOY_NO") private String voyNumber;
     @Column(name = "COSIGNEE") private String cosigneeName;
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
-    @Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;//we probably dont need this too
+    //@Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;//we probably dont need this too
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
@@ -32,12 +31,10 @@ public class ProductOrder {
     @JoinColumn(name = "EMP_ID")
     private EmployeeUser checker;
 
-    @OneToMany
-    @JoinColumn(name = "PROD_ORDER_ID")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
     private List<ActionLog> actionLogs;
 
-    @OneToMany
-    @JoinColumn(name = "PROD_ORDER_ID")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
     private List<Truck> trucks;
     
 
@@ -56,7 +53,19 @@ public class ProductOrder {
         actionLogs = new ArrayList<>();
     }
 
-    //getters and setters, this will make a bad Qi flow
+    //misc methods
+
+    public void addActionLog(ActionLog log) {
+        actionLogs.add(log);
+        log.setProductOrder(this);
+    }
+
+    public void addTruck(Truck truck) {
+        trucks.add(truck);
+        truck.setProductOrder(this);
+    }
+
+    //getters and setters
     public String getBLNumber() {
         return BLNumber;
     }
@@ -105,13 +114,13 @@ public class ProductOrder {
         this.wharfReceiptImgUrl = wharfReceiptImgUrl;
     }
 
-    public Integer getTotalTrucks() {
-        return totalTrucks;
-    }
+    //public Integer getTotalTrucks() {
+    //    return totalTrucks;
+    //}
 
-    public void setTotalTrucks(Integer totalTrucks) {
-        this.totalTrucks = totalTrucks;
-    }
+    //public void setTotalTrucks(Integer totalTrucks) {
+    //    this.totalTrucks = totalTrucks;
+    //}
 
     public ProductOrderStatus getStatusName() {
         return statusName;
@@ -133,16 +142,16 @@ public class ProductOrder {
         return actionLogs;
     }
 
-    public void setActionLogs(List<ActionLog> actionLogs) {
-        this.actionLogs = actionLogs;
-    }
+    //public void setActionLogs(List<ActionLog> actionLogs) {
+    //    this.actionLogs = actionLogs;
+    //}
 
     public List<Truck> getTrucks() {
         return trucks;
     }
 
-    public void setTrucks(List<Truck> trucks) {
-        this.trucks = trucks;
-    }
+    //public void setTrucks(List<Truck> trucks) {
+    //    this.trucks = trucks;
+    //}
 
 }
