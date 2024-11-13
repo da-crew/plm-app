@@ -10,7 +10,6 @@ import com.studentgroup.app.model.*;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.model.repositories.*;
-
 import jakarta.annotation.PostConstruct;
 
 @Component
@@ -48,7 +47,6 @@ public class DatabaseInitializer {
         for (Car car : carRepo.findAll()) {
             car.setTruck(null);
             car.setProductOrder(null);
-            // car.setReport(null);
             carRepo.save(car);
         }
 
@@ -66,13 +64,11 @@ public class DatabaseInitializer {
 
         // mock data
         EmployeeUser[] users = new EmployeeUser[] {
-                //ในdatabaseเพิ่มไปแค่3ผู้ใช้แรก ที่เหลือยังไม่ได้ใช้
-                //ผู้ใช้ที่่3ไม่มีproduct order
                 new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),  
                 new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
                 new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),         
-
                 new EmployeeUser("sofiaG", "Sofia", "Garcia", "garciaPass456@", Role.EXPORTER),
+                /**
                 new EmployeeUser("anwark12", "Anwar", "Khan", "unique567&", Role.UNKNOWN),
                 new EmployeeUser("fatimaB", "Fatima", "Bakshi", "fatima678*", Role.DISPATCHER),
                 new EmployeeUser("joH56", "Joseph", "Ho", "joe!pass789", Role.CHECKER),
@@ -89,6 +85,7 @@ public class DatabaseInitializer {
                 new EmployeeUser("brianN", "Brian", "Nkwanzi", "nkwPass234#", Role.ADMIN),
                 new EmployeeUser("esme_R", "Esme", "Rogers", "esmeUnique678*", Role.EXPORTER),
                 new EmployeeUser("yara_F22", "Yara", "Farah", "farahSafe456$", Role.UNKNOWN),
+                //*/
         };
 
         ActionLog[] actionLogs = new ActionLog[] {
@@ -99,7 +96,7 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2020, 2, 3, 6, 5, 12, 75278645, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2020, 7, 22, 14, 45, 50, 987654321, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2020, 12, 15, 17, 30, 10, 127934, ZoneId.systemDefault())),
-
+                /**
                 new ActionLog(ZonedDateTime.of(2021, 1, 9, 10, 5, 5, 92792, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2021, 3, 10, 10, 5, 5, 7952982, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2021, 6, 20, 15, 40, 55, 69420, ZoneId.systemDefault())),
@@ -115,7 +112,21 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2024, 2, 14, 6, 15, 25, 778899001, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2024, 7, 10, 13, 40, 55, 998877665, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
+                //*/
         };
+
+        String[] actionTexts = {
+            "Product packed and ready for shipment.",
+            "Payment has been successfully processed.",
+            "Product has been shipped to the customer.",
+            "Customer confirmed delivery of the product.",
+            "Order has been cancelled by the customer.",
+            "Order marked as completed in system."
+        };
+
+        for (int i = 0; i < actionTexts.length; i++) {
+            actionLogs[i].setActionText(actionTexts[i]);
+        }
 
         Report[] reports = new Report[] {
             new Report("Minor scratches on the front bumper and left door.", "dam1.png"),
@@ -175,63 +186,18 @@ public class DatabaseInitializer {
                 new Truck("TRK-5234"),
                 new Truck("TRK-6348")
         };
-
-        cars[1].addReport(reports[0]);
-
-        cars[2].addReport(reports[1]);
-        cars[4].addReport(reports[2]);
-        cars[7].addReport(reports[5]);
-
-        trucks[0].addCar(cars[1]);
-        trucks[0].addCar(cars[2]);
-        trucks[0].addCar(cars[3]);
-
-        trucks[1].addCar(cars[4]);
-        trucks[1].addCar(cars[6]);
-        trucks[1].addCar(cars[7]);
-
+        userRepo.save(users[0]);
         truckRepo.save(trucks[0]);
-        truckRepo.save(trucks[1]);
 
-        productOrders[0].addCar(cars[1]);
-        productOrders[0].addCar(cars[2]);
-        productOrders[0].addCar(cars[3]);
-        
-        productOrders[1].addCar(cars[4]);
-        productOrders[1].addCar(cars[6]);
-        productOrders[1].addCar(cars[7]);
-
-        users[0].addActionLog(actionLogs[0]);
-        users[0].addActionLog(actionLogs[1]);
-        users[0].addActionLog(actionLogs[2]);
-
+        //add things
+        productOrders[0].addCar(cars[0]);
+        trucks[0].addCar(cars[0]);
         users[0].assignAsDispatcher(productOrders[0]);
-        users[0].assignAsDispatcher(productOrders[1]);
-        users[0].assignAsDispatcher(productOrders[2]);
+
+        prodOrderRepo.save(productOrders[0]);
+        carRepo.save(cars[0]);
         userRepo.save(users[0]);
 
-        users[3].assignAsChecker(productOrders[0]);
-        users[3].assignAsChecker(productOrders[1]);
-        userRepo.save(users[3]);
-
-        users[1].addActionLog(actionLogs[3]);
-        users[1].addActionLog(actionLogs[4]);
-        users[1].addActionLog(actionLogs[5]);
-
-        users[1].assignAsChecker(productOrders[3]);
-        users[1].assignAsChecker(productOrders[4]);
-        users[1].assignAsChecker(productOrders[5]);
-        userRepo.save(users[1]);
-
-        users[2].assignAsDispatcher(productOrders[3]);
-        users[2].assignAsDispatcher(productOrders[5]);
-        userRepo.save(users[2]);
-
-        for (int i = 0; i < 6; i++) {
-            prodOrderRepo.save(productOrders[i]);
-        }
-
-
+        userRepo.findByUsername(null);
     }
-
 }

@@ -39,7 +39,7 @@ public class ProductOrder {
     @JsonBackReference
     private EmployeeUser dispatcher;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
     @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
 
@@ -62,13 +62,15 @@ public class ProductOrder {
 
     //misc methods
 
-    public void addActionLog(ActionLog log) {
+    public void addActionLog(ActionLog log, EmployeeUser user) {
         actionLogs.add(log);
+        user.addActionLog(log);
         log.setProductOrder(this);
     }
 
     public void addCar(Car car) {
         cars.add(car);
+        car.setProductOrder(this);
     }
 
     //getters and setters

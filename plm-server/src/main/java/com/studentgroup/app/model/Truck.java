@@ -19,7 +19,7 @@ public class Truck {
     @Column(name = "TRUCK_NUMBER")
     private String truckNumber;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "truck")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "truck")
     @JsonManagedReference
     private List<Car> cars = new ArrayList<>();
     

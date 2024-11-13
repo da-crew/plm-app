@@ -21,6 +21,8 @@ public class ActionLog {
     @Column(name = "ACTION")
     private String actionText;
 
+
+
     //table relationships
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
@@ -46,6 +48,13 @@ public class ActionLog {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getActionText() {
+        return actionText;
+    }
+    public void setActionText(String actionText) {
+        this.actionText = actionText;
     }
 
     public ProductOrder getProductOrder() {

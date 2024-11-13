@@ -32,7 +32,7 @@ public class EmployeeUser {
     @JsonManagedReference
     private List<ProductOrder> orders = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "employee")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "employee")
     @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
 
