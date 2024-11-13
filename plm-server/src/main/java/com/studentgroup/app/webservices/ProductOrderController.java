@@ -22,14 +22,26 @@ public class ProductOrderController {
     @Autowired
     ObjectMapper mapper;
  
-    @GetMapping("/prod-orders/{username}")
-    public ResponseEntity<List<ProductOrder>> getProductOrders(@PathVariable String username) {
+    @GetMapping("/product-orders/{username}/checking")
+    public ResponseEntity<List<ProductOrder>> getChecking(@PathVariable String username) {
         EmployeeUser user = userRepo.findByUsername(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
-        List<ProductOrder> orders = user.getOrders();
+        List<ProductOrder> orders = user.getCheckingOrders();
+
+        return ResponseEntity.ok().body(orders);
+    }
+
+    @GetMapping("/product-orders/{username}/dispatching")
+    public ResponseEntity<List<ProductOrder>> getDispatching(@PathVariable String username) {
+        EmployeeUser user = userRepo.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<ProductOrder> orders = user.getDispatchingOrders();
 
         return ResponseEntity.ok().body(orders);
     }

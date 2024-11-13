@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Table(name = "EMPLOYEE")
 public class EmployeeUser {
@@ -28,11 +27,15 @@ public class EmployeeUser {
     @Enumerated(EnumType.STRING)
     Role role = Role.UNKNOWN;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "checker")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "checker", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<ProductOrder> orders = new ArrayList<>();
+    private List<ProductOrder> checkingOrders = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "employee")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "dispatcher", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<ProductOrder> dispatchingOrders = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "employee", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
 
@@ -59,7 +62,6 @@ public class EmployeeUser {
         this.passwordHash = Misc.hashPassword(password, this.salt);
     }
 
-
     //misc methods
     public boolean verify(String password) throws Exception {
         return Misc.hashPassword(password, salt).equals(passwordHash);
@@ -70,12 +72,12 @@ public class EmployeeUser {
     }
 
     public void assignAsChecker(ProductOrder prod) {
-        orders.add(prod);
+        checkingOrders.add(prod);
         prod.setChecker(this);
     }
 
     public void assignAsDispatcher(ProductOrder prod) {
-        orders.add(prod);
+        dispatchingOrders.add(prod);
         prod.setDispatcher(this);
     }
 
@@ -84,22 +86,21 @@ public class EmployeeUser {
         log.setEmployee(this);
     }
 
+
+
+    //getters and setters
+
+    public List<ProductOrder> getCheckingOrders() {
+        return checkingOrders;
+    }
+
+    public List<ProductOrder> getDispatchingOrders() {
+        return dispatchingOrders;
+    }
+
     public List<ActionLog> getActionLogs() {
         return actionLogs;
     }
-
-    //public void setActionLogs(List<ActionLog> actionLogs) {
-    //    this.actionLogs = actionLogs;
-    //}
-
-    //getters and setters
-    public List<ProductOrder> getOrders() {
-        return orders;
-    }
-
-    //public void setOrders(List<ProductOrder> orders) {
-    //    this.orders = orders;
-    //}
     
     public Long getId() {
         return id;

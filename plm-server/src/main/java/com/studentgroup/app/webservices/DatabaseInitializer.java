@@ -2,6 +2,7 @@ package com.studentgroup.app.webservices;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,9 +29,10 @@ public class DatabaseInitializer {
     @Autowired 
     private ReportRepository reportRepo;
 
+    //please find a way to turn this off when we're deploying this thing on Google Cloud.
     @PostConstruct
     public void initDatabase() throws Exception {
-
+        
         /**/
         for (ProductOrder prod : prodOrderRepo.findAll()) {
             prod.setChecker(null);
@@ -186,18 +188,34 @@ public class DatabaseInitializer {
                 new Truck("TRK-5234"),
                 new Truck("TRK-6348")
         };
-        userRepo.save(users[0]);
-        truckRepo.save(trucks[0]);
 
-        //add things
-        productOrders[0].addCar(cars[0]);
+        //pretend that this is the data we've had beforehand
+
+        userRepo.save(users[0]);
+        userRepo.save(users[1]);
+        truckRepo.save(trucks[0]);
+        truckRepo.save(trucks[1]);
+
+        //situation #1: a dispatcher(user[0]) creates a new product order(productOrders[0]) and assign to a checker(users[1])
+
+        //trucks[0] is being loaded with cars[0] and cars[1]
         trucks[0].addCar(cars[0]);
+        trucks[0].addCar(cars[1]);
+        truckRepo.save(trucks[0]);//we need to save the truck entities first
+
+        //trucks[1] is being loaded with cars[2] and car[3]
+        trucks[1].addCar(cars[2]);
+        trucks[1].addCar(cars[3]);
+        truckRepo.save(trucks[1]);
+
+        productOrders[0].addCar(cars[0]);
+        productOrders[0].addCar(cars[1]);
         users[0].assignAsDispatcher(productOrders[0]);
 
+        //save the entities
         prodOrderRepo.save(productOrders[0]);
         carRepo.save(cars[0]);
         userRepo.save(users[0]);
-
-        userRepo.findByUsername(null);
+        //end of situation #1
     }
 }
