@@ -98,23 +98,6 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2020, 2, 3, 6, 5, 12, 75278645, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2020, 7, 22, 14, 45, 50, 987654321, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2020, 12, 15, 17, 30, 10, 127934, ZoneId.systemDefault())),
-                /**
-                new ActionLog(ZonedDateTime.of(2021, 1, 9, 10, 5, 5, 92792, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2021, 3, 10, 10, 5, 5, 7952982, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2021, 6, 20, 15, 40, 55, 69420, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2022, 4, 18, 8, 25, 35, 1642964, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2022, 10, 30, 18, 20, 30, 9120642, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2022, 12, 7, 21, 45, 0, 4104514, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2023, 3, 14, 5, 10, 15, 3141592, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2023, 8, 5, 14, 30, 25, 05772156, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2023, 12, 5, 23, 35, 45, 2718281, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2024, 2, 14, 6, 15, 25, 778899001, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2024, 7, 10, 13, 40, 55, 998877665, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
-                //*/
         };
 
         String[] actionTexts = {
@@ -210,13 +193,27 @@ public class DatabaseInitializer {
 
         productOrders[0].addCar(cars[0]);
         productOrders[0].addCar(cars[1]);
+        productOrders[0].addCar(cars[2]);
+        productOrders[0].addCar(cars[3]);
         users[0].assignAsDispatcher(productOrders[0]);
         users[1].assignAsChecker(productOrders[0]);
 
+
+        ActionLog actionLog = new ActionLog("Create product order of BL/NO: " + productOrders[0].getBLNumber());
+        productOrders[0].addActionLog(actionLog, users[0]);
+
         //save the entities
         prodOrderRepo.save(productOrders[0]);
+
         carRepo.save(cars[0]);
+        carRepo.save(cars[1]);
+        carRepo.save(cars[2]);
+        carRepo.save(cars[3]);
+
         userRepo.save(users[0]);
+        //actionLogRepo.save(actionLog);
         //end of situation #1
+
+
     }
 }

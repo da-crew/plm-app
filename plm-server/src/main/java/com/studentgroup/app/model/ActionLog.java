@@ -39,6 +39,16 @@ public class ActionLog {
         this.timestamp = timestamp;
     }
 
+    public ActionLog(String action) {
+        this.timestamp = ZonedDateTime.now();
+        this.actionText = action;
+    }
+
+    public ActionLog(String action, ZonedDateTime timestamp) {
+        this.timestamp = timestamp;
+        this.actionText = action;
+    }
+
     //getter and setters
     public Long getId() {
         return id;
