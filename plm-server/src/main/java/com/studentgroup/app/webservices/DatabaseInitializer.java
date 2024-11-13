@@ -198,10 +198,12 @@ public class DatabaseInitializer {
         users[0].assignAsDispatcher(productOrders[0]);
         users[1].assignAsChecker(productOrders[0]);
 
-
-        ActionLog actionLog = new ActionLog("Create product order of BL/NO: " + productOrders[0].getBLNumber());
+        
+        ActionLog actionLog = new ActionLog(String.format("Create product order with BL Number %s.", productOrders[0].getBLNumber()));
         productOrders[0].addActionLog(actionLog, users[0]);
 
+        actionLog = new ActionLog(String.format("Assign product order with BL Number %s to %s for checking.", productOrders[0].getBLNumber(), users[1].getUsername()));
+        productOrders[0].addActionLog(actionLog, users[0]);
         //save the entities
         prodOrderRepo.save(productOrders[0]);
 
@@ -211,7 +213,6 @@ public class DatabaseInitializer {
         carRepo.save(cars[3]);
 
         userRepo.save(users[0]);
-        //actionLogRepo.save(actionLog);
         //end of situation #1
 
 
