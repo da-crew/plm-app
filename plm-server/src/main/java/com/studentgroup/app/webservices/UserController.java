@@ -52,7 +52,6 @@ public class UserController {
         return new ResponseEntity<EmployeeUser>(emp, HttpStatus.OK);
     }
 
-    
     @GetMapping("/test/users")
     public ResponseEntity<Iterable<EmployeeUser>> getUsers() {
         return new ResponseEntity<Iterable<EmployeeUser>>(userRepo.findAll(), HttpStatus.OK);
@@ -100,24 +99,24 @@ public class UserController {
         CREATED
     */
     @RequestMapping(path = "/users/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<UserInfo> registerUser(@RequestBody JsonNode json) throws Exception {
+    public ResponseEntity<String> registerUser(@RequestBody JsonNode json) throws Exception {
 
         UserInfo userInfo = UserInfo.fromJson(json.get("user"));
         String password = Misc.jsonToString(json, "password");
         UserCreds callerCreds = json.get("caller") != null ? UserCreds.fromJson(json.get("caller")) : null;
 
         if (userInfo == null || callerCreds == null || password == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid data");
 
         EmployeeUser caller = userRepo.findByUsername(callerCreds.getUsername());
         if (caller == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("couldn't find a user");
 
         //Authorization
         if (!caller.verify(callerCreds.getPassword()))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("invalid credentials");
         if (caller.getRole() != Role.ADMIN)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("you are not allowed to do this!");
 
 
         if (userRepo.findByUsername(userInfo.getUsername()) != null) {
@@ -127,52 +126,7 @@ public class UserController {
         EmployeeUser emp = new EmployeeUser(userInfo, password);
         userRepo.save(emp);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserInfo.fromUser(emp));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully registered");
     }
-
-
-
-//    @GetMapping("/users/role")
-//    public ResponseEntity<ObjectNode> checkRole(@RequestParam("token") String token) {
-//        if (token == null) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        EmployeeUser user = userRepo.findByToken(token);
-//        if (user == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        ObjectNode obj = mapper.createObjectNode();
-//        obj.put("role", user.getRole().toString());
-//
-//        return ResponseEntity.ok().body(obj);
-//    }
-//
-//    @GetMapping("/validate-token")
-//    public ResponseEntity<ObjectNode> validateToken(@RequestParam("token") String token) {
-//        if (token == null) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        if (userRepo.findByToken(token) != null) {
-//            return ResponseEntity.ok().body(null);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    @GetMapping("/users/auth-token")
-//    public ResponseEntity<AuthResult> authToken(@RequestParam("token") String token) {
-//        if (token == null) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        EmployeeUser user = userRepo.findByToken(token);
-//
-//        if (user != null) {
-//            return ResponseEntity.ok().body(AuthResult.fromUser(user));
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
 
 }

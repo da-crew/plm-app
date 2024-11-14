@@ -2,6 +2,7 @@ package com.studentgroup.app.webservices;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,6 @@ import com.studentgroup.app.model.*;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.model.repositories.*;
-
 import jakarta.annotation.PostConstruct;
 
 @Component
@@ -26,13 +26,17 @@ public class DatabaseInitializer {
     private ProductOrderRepository prodOrderRepo;
     @Autowired
     private TruckRepository truckRepo;
+    @Autowired 
+    private ReportRepository reportRepo;
 
+    //please find a way to turn this off when we're deploying this thing on Google Cloud.
     @PostConstruct
     public void initDatabase() throws Exception {
-
+        
         /**/
         for (ProductOrder prod : prodOrderRepo.findAll()) {
             prod.setChecker(null);
+            prod.setDispatcher(null);
             prodOrderRepo.save(prod);
         }
 
@@ -42,15 +46,15 @@ public class DatabaseInitializer {
             actionLogRepo.save(log);
         }
 
-        for (Truck truck : truckRepo.findAll()) {
-            truck.setProductOrder(null);
-            truckRepo.save(truck);
-        }
-
         for (Car car : carRepo.findAll()) {
             car.setTruck(null);
-            // car.setReport(null);
+            car.setProductOrder(null);
             carRepo.save(car);
+        }
+
+        for (Report report : reportRepo.findAll()) {
+            report.setCar(null);
+            reportRepo.save(report);
         }
 
         actionLogRepo.deleteAll();
@@ -58,16 +62,15 @@ public class DatabaseInitializer {
         carRepo.deleteAll();
         truckRepo.deleteAll();
         userRepo.deleteAll();
+        reportRepo.deleteAll();
 
         // mock data
         EmployeeUser[] users = new EmployeeUser[] {
-                //ในdatabaseเพิ่มไปแค่3ผู้ใช้แรก ที่เหลือยังไม่ได้ใช้
-                //ผู้ใช้ที่่3ไม่มีproduct order
                 new EmployeeUser("aminA22", "Amina", "Ali", "securePass123!", Role.DISPATCHER),  
                 new EmployeeUser("carlos_H", "Carlos", "Hernandez", "safePwd234#", Role.CHECKER),
                 new EmployeeUser("linhNg", "Linh", "Nguyen", "linhPwd345$", Role.ADMIN),         
-
                 new EmployeeUser("sofiaG", "Sofia", "Garcia", "garciaPass456@", Role.EXPORTER),
+                /**
                 new EmployeeUser("anwark12", "Anwar", "Khan", "unique567&", Role.UNKNOWN),
                 new EmployeeUser("fatimaB", "Fatima", "Bakshi", "fatima678*", Role.DISPATCHER),
                 new EmployeeUser("joH56", "Joseph", "Ho", "joe!pass789", Role.CHECKER),
@@ -84,6 +87,7 @@ public class DatabaseInitializer {
                 new EmployeeUser("brianN", "Brian", "Nkwanzi", "nkwPass234#", Role.ADMIN),
                 new EmployeeUser("esme_R", "Esme", "Rogers", "esmeUnique678*", Role.EXPORTER),
                 new EmployeeUser("yara_F22", "Yara", "Farah", "farahSafe456$", Role.UNKNOWN),
+                //*/
         };
 
         ActionLog[] actionLogs = new ActionLog[] {
@@ -94,42 +98,29 @@ public class DatabaseInitializer {
                 new ActionLog(ZonedDateTime.of(2020, 2, 3, 6, 5, 12, 75278645, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2020, 7, 22, 14, 45, 50, 987654321, ZoneId.systemDefault())),
                 new ActionLog(ZonedDateTime.of(2020, 12, 15, 17, 30, 10, 127934, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2021, 1, 9, 10, 5, 5, 92792, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2021, 3, 10, 10, 5, 5, 7952982, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2021, 6, 20, 15, 40, 55, 69420, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2022, 4, 18, 8, 25, 35, 1642964, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2022, 10, 30, 18, 20, 30, 9120642, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2022, 12, 7, 21, 45, 0, 4104514, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2023, 3, 14, 5, 10, 15, 3141592, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2023, 8, 5, 14, 30, 25, 05772156, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2023, 12, 5, 23, 35, 45, 2718281, ZoneId.systemDefault())),
-
-                new ActionLog(ZonedDateTime.of(2024, 2, 14, 6, 15, 25, 778899001, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2024, 7, 10, 13, 40, 55, 998877665, ZoneId.systemDefault())),
-                new ActionLog(ZonedDateTime.of(2024, 11, 2, 20, 50, 35, 223344556, ZoneId.systemDefault()))
         };
 
-        String[] reportTexts = new String[] {
-            "Minor scratches on the front bumper and left door.",
-            "Broken tail light and dent on rear bumper.",
-            "Windshield has a small crack near the passenger side.",
-            "Front left tire worn out; needs replacement.",
-            "Dashboard display malfunction; intermittent screen blackout.",
-            "A large, perfect circular hole has pierced through the car, as if something passed clean through it.",
-            "Unexplained damage on the car's roof; as if something heavy had been dragged across it."
+        String[] actionTexts = {
+            "Product packed and ready for shipment.",
+            "Payment has been successfully processed.",
+            "Product has been shipped to the customer.",
+            "Customer confirmed delivery of the product.",
+            "Order has been cancelled by the customer.",
+            "Order marked as completed in system."
         };
 
-        String[] reportImages = new String[] {
-            "dam1.png",
-            "dam2.png",
-            "dam3.png",
-            "dam4.png",
-            "dam5.png",
-            "dam6.png",
-            "dam7.png",
+        for (int i = 0; i < actionTexts.length; i++) {
+            actionLogs[i].setActionText(actionTexts[i]);
+        }
+
+        Report[] reports = new Report[] {
+            new Report("Minor scratches on the front bumper and left door.", "dam1.png"),
+            new Report("Broken tail light and dent on rear bumper.", "dam2.png"),
+            new Report("Windshield has a small crack near the passenger side.", "dam3.png"),
+            new Report("Front left tire worn out; needs replacement.", "dam4.png"),
+            new Report("Dashboard display malfunction; intermittent screen blackout.", "dam5.png"),
+            new Report("A large, perfect circular hole has pierced through the car, as if something passed clean through it.", "dam6.png"),
+            new Report("Unexplained damage on the car's roof; as if something heavy had been dragged across it.", "dam7.png")
         };
 
         Car[] cars = new Car[] {
@@ -181,51 +172,50 @@ public class DatabaseInitializer {
                 new Truck("TRK-6348")
         };
 
-        cars[1].setDamageReport(reportTexts[2]);
-        cars[1].setDamageImageLink(reportImages[2]);
-        
-        cars[3].setDamageReport(reportTexts[1]);
-        cars[3].setDamageImageLink(reportImages[1]);
-        
-        cars[4].setDamageReport(reportTexts[3]);
-        cars[4].setDamageImageLink(reportImages[3]);
+        //pretend that this is the data we've had beforehand
 
-        trucks[0].addCar(cars[1]);
-        trucks[0].addCar(cars[2]);
-        trucks[0].addCar(cars[3]);
-
-        trucks[1].addCar(cars[4]);
-        trucks[1].addCar(cars[6]);
-        trucks[1].addCar(cars[7]);
-
-        productOrders[1].addTruck(trucks[0]);
-        productOrders[1].addTruck(trucks[1]);
-        productOrders[1].addTruck(trucks[2]);
-
-        productOrders[2].addTruck(trucks[3]);
-        productOrders[2].addTruck(trucks[4]);
-        productOrders[3].addTruck(trucks[5]);
-
-        users[0].addActionLog(actionLogs[0]);
-        users[0].addActionLog(actionLogs[1]);
-        users[0].addActionLog(actionLogs[2]);
-
-        users[0].addProductOrder(productOrders[0]);
-        users[0].addProductOrder(productOrders[1]);
-        users[0].addProductOrder(productOrders[2]);
         userRepo.save(users[0]);
-
-        users[1].addActionLog(actionLogs[3]);
-        users[1].addActionLog(actionLogs[4]);
-        users[1].addActionLog(actionLogs[5]);
-
-        users[1].addProductOrder(productOrders[3]);
-        users[1].addProductOrder(productOrders[4]);
-        users[1].addProductOrder(productOrders[5]);
         userRepo.save(users[1]);
-
         userRepo.save(users[2]);
+        truckRepo.save(trucks[0]);
+        truckRepo.save(trucks[1]);
+
+        //situation #1: a dispatcher(user[0]) creates a new product order(productOrders[0]) and assign it to a checker(users[1])
+
+        //trucks[0] is being loaded with cars[0] and cars[1]
+        trucks[0].addCar(cars[0]);
+        trucks[0].addCar(cars[1]);
+        truckRepo.save(trucks[0]);//we need to save the truck entities first
+
+        //trucks[1] is being loaded with cars[2] and car[3]
+        trucks[1].addCar(cars[2]);
+        trucks[1].addCar(cars[3]);
+        truckRepo.save(trucks[1]);
+
+        productOrders[0].addCar(cars[0]);
+        productOrders[0].addCar(cars[1]);
+        productOrders[0].addCar(cars[2]);
+        productOrders[0].addCar(cars[3]);
+        users[0].assignAsDispatcher(productOrders[0]);
+        users[1].assignAsChecker(productOrders[0]);
+
+        
+        ActionLog actionLog = new ActionLog(String.format("Create product order with BL Number %s.", productOrders[0].getBLNumber()));
+        productOrders[0].addActionLog(actionLog, users[0]);
+
+        actionLog = new ActionLog(String.format("Assign product order with BL Number %s to %s for checking.", productOrders[0].getBLNumber(), users[1].getUsername()));
+        productOrders[0].addActionLog(actionLog, users[0]);
+        //save the entities
+        prodOrderRepo.save(productOrders[0]);
+
+        carRepo.save(cars[0]);
+        carRepo.save(cars[1]);
+        carRepo.save(cars[2]);
+        carRepo.save(cars[3]);
+
+        userRepo.save(users[0]);
+        //end of situation #1
+
 
     }
-
 }

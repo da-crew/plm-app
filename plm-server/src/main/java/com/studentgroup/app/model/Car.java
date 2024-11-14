@@ -1,5 +1,11 @@
 package com.studentgroup.app.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 
@@ -14,21 +20,25 @@ public class Car {
     @Column(name = "CAR_MODEL")
     private String modelName;
 
-    @Column(name = "DAMAGE_REPORT")
-    private String damageReport;
-
-    @Column(name = "DAMAGE_IMAGE")
-    private String damageImageLink;
-
     //table relationships
-    //@OneToOne(cascade = CascadeType.PERSIST, mappedBy = "car")
-    //@JoinColumn(name = "REPORT_ID")
-    //private Report report;
-
     @ManyToOne
     @JoinColumn(name = "TRUCK_ID")
-
+    @JsonBackReference
     private Truck truck;
+
+    @ManyToOne
+    @JoinColumn(name = "PROD_ORDER_ID")
+    @JsonBackReference
+    private ProductOrder productOrder;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Report> reports = new ArrayList<>();
+
+    public void addReport(Report report) {
+        reports.add(report);
+        report.setCar(this);
+    }
 
     //constructors
     public Car() {}
@@ -38,7 +48,6 @@ public class Car {
     }
     
     //getters and setters
-
     public String getModelName() {
         return modelName;
     }
@@ -46,6 +55,11 @@ public class Car {
     public void setModelName(String modelName) {
         this.modelName = modelName;
     }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
 
     
     public Truck getTruck() {
@@ -56,19 +70,11 @@ public class Car {
         this.truck = truck;
     }
 
-    public String getDamageReport() {
-        return damageReport;
+    public ProductOrder getProductOrder() {
+        return productOrder;
     }
 
-    public void setDamageReport(String damageReport) {
-        this.damageReport = damageReport;
-    }
-
-    public String getDamageImageLink() {
-        return damageImageLink;
-    }
-
-    public void setDamageImageLink(String damageImageLink) {
-        this.damageImageLink = damageImageLink;
+    public void setProductOrder(ProductOrder productOrder) {
+        this.productOrder = productOrder;
     }
 }
