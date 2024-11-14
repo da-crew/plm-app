@@ -1,6 +1,7 @@
 package com.studentgroup.app.webservices;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studentgroup.app.model.*;
@@ -8,19 +9,24 @@ import com.studentgroup.app.model.enums.ProductOrderStatus;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.model.repositories.ProductOrderRepository;
 import com.studentgroup.app.model.repositories.UserRepository;
+import com.studentgroup.app.service.FileStorageService;
 import com.studentgroup.app.webservices.authorization.*;
 import com.studentgroup.app.webservices.authorization.AuthorizationResult;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class ProductOrderController {
@@ -37,6 +43,9 @@ public class ProductOrderController {
     @Autowired
     AuthorizationManager authMan;
 
+    @Autowired
+    FileStorageService storageService;
+
     /*
      * Request Body: {
      * productOrder: [see method ProductOrderInfo.fromJsonNode]
@@ -52,7 +61,6 @@ public class ProductOrderController {
      * FORBIDDEN
      * CREATED
      */
-
     @PostMapping("/product-orders/create")
     public ResponseEntity<String> postMethodName(@RequestBody JsonNode json) throws Exception {
 
@@ -68,7 +76,6 @@ public class ProductOrderController {
             case NO_PERMISSION:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("are not permitted to do this!");
             case SUCCESSFUL: break;
-            
         }
 
         EmployeeUser caller = authRes.getUser();
@@ -103,7 +110,23 @@ public class ProductOrderController {
         return ResponseEntity.ok().build();
     }
 
-
+    @PostMapping("/product-orders/{blNumber}/set-image")
+    public ResponseEntity<String> postMethodName(@PathVariable String blNumber, @RequestParam("file") MultipartFile file) {
+        ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
+        if (productOrder == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        try {
+            ImageFile imgFile = storageService.store(file);
+            productOrder.setWharfReceiptImgUrl(imgFile.getId());
+            prodOrderRepo.save(productOrder);
+            return ResponseEntity.ok().body("successful");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    
 
     @GetMapping("/product-orders/{username}/checking")
     public ResponseEntity<List<ProductOrder>> getChecking(@PathVariable String username) {
