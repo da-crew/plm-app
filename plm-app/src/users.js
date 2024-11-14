@@ -141,3 +141,24 @@ export function useProductOrders() {
 
     return [productOrders, success]
 }
+
+export function useAllProductOrders() {
+    let [success, setSuccess] = useState(true);
+    let [productOrders, setProductOrders] = useState([]);
+
+    useEffect(() => {
+        if (success){
+            axios.get(WEB_SERVICE_URL + "/product-orders/")
+                .then((response) => {
+                    setProductOrders(response.data);
+                })
+                .catch((error) => {
+                    setSuccess(false);
+                });
+        } else {
+        }
+    }, [success]);
+
+
+    return [productOrders, success]
+}
