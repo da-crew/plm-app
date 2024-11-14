@@ -113,3 +113,7 @@ export function useAuthenticate() {
 
     return [success, user, cookies.password];
 }
+
+export function useProductOrders() {
+    
+}

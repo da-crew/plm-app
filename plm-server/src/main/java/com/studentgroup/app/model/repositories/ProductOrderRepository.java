@@ -5,9 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.studentgroup.app.model.ProductOrder;
 
+
 @Repository
 public interface ProductOrderRepository extends CrudRepository<ProductOrder, Long>{
-
+    ProductOrder findByBLNumber(String bLNumber);
 }
 
     
