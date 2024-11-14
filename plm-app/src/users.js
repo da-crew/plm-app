@@ -114,6 +114,30 @@ export function useAuthenticate() {
     return [success, user, cookies.password];
 }
 
+
+//CALL useAuthenticate() FIRST BEFORE USING THIS!!!!!
 export function useProductOrders() {
-    
+    let [success, setSuccess] = useState(true);
+    let [cookies, setCookies, removeCookies] = useCookies(['username', 'password']);
+    let [productOrders, setProductOrders] = useState([]);
+
+    useEffect(() => {
+        if (cookies.username != null && success){
+            //console.log("Sending Request to " + WEB_SERVICE_URL + "/product-orders/" + cookies.username + "/");
+            axios.get(WEB_SERVICE_URL + "/product-orders/" + cookies.username + "/")
+                .then((response) => {
+                    setProductOrders(response.data);
+                    //console.log("response data " + response.data);
+                })
+                .catch((error) => {
+                    //console.log("Error " + error);
+                    setSuccess(false);
+                });
+        } else {
+            //console.log("Authorization unsuccessful");
+        }
+    }, [success]);
+
+
+    return [productOrders, success]
 }
