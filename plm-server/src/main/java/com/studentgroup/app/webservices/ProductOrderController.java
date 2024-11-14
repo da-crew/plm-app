@@ -52,7 +52,6 @@ public class ProductOrderController {
      * FORBIDDEN
      * CREATED
      */
-
     @PostMapping("/product-orders/create")
     public ResponseEntity<String> postMethodName(@RequestBody JsonNode json) throws Exception {
 
@@ -68,7 +67,6 @@ public class ProductOrderController {
             case NO_PERMISSION:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("are not permitted to do this!");
             case SUCCESSFUL: break;
-            
         }
 
         EmployeeUser caller = authRes.getUser();
@@ -103,7 +101,13 @@ public class ProductOrderController {
         return ResponseEntity.ok().build();
     }
 
-
+    @PostMapping("/product-orders/{bl-number}/set-image")
+    public String postMethodName(@PathVariable String blNumber) {
+        //TODO: process POST request
+        
+        return "entity";
+    }
+    
 
     @GetMapping("/product-orders/{username}/checking")
     public ResponseEntity<List<ProductOrder>> getChecking(@PathVariable String username) {
