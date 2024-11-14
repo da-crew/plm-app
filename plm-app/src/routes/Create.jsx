@@ -3,6 +3,7 @@ import { Navigate } from "react-router";
 import Header from "../components/Header";
 import DashboardHeader from "../components/DashboardHeader";
 import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
+import ProductOrder from "../components/ProductOrder";
 
 export default function Create() {
     let [toLogin, setToLogin] = useState(false);
@@ -18,9 +19,15 @@ export default function Create() {
         <h1>This is a Create</h1>
         <p>Welcome, {userInfo.username}</p>
         <p>Role: {Role.toString(userInfo.role)}</p>
+
+
+        <ProductOrder> {/* use ProductOrder component */}</>
+    
+        
         
 
-    </>);
+    </>
+    );
 
 
 }
