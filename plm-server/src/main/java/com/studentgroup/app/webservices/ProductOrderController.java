@@ -1,6 +1,7 @@
 package com.studentgroup.app.webservices;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studentgroup.app.model.*;
@@ -10,6 +11,9 @@ import com.studentgroup.app.model.repositories.ProductOrderRepository;
 import com.studentgroup.app.model.repositories.UserRepository;
 import com.studentgroup.app.webservices.authorization.*;
 import com.studentgroup.app.webservices.authorization.AuthorizationResult;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class ProductOrderController {
@@ -101,8 +106,8 @@ public class ProductOrderController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/product-orders/{bl-number}/set-image")
-    public String postMethodName(@PathVariable String blNumber) {
+    @PostMapping("/product-orders/upload")
+    public String postMethodName(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         //TODO: process POST request
         
         return "entity";
