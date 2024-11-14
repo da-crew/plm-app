@@ -8,6 +8,7 @@ import Dashboard from './routes/Dashboard.jsx';
 import LoginTest from './routes/LoginTest.jsx';
 import Create from './routes/Create.jsx';
 import ManageUser from './routes/ManageUser.jsx';
+import ProductOrder from './routes/ViewProductOrder.jsx'
 
 const router = createBrowserRouter([
     {
@@ -27,10 +28,10 @@ const router = createBrowserRouter([
       path: "/ManageUser",
       element: <ManageUser/>,
     },
- //   { ทำไงไม่รู้
- //     path: "/",
- //     element: <ProductOrder/>,
- //   },
+   { 
+     path: "/ProductOrder/:blnum",
+     element: <ProductOrder/>,
+   },
     {
         path: "/login-test",
         element: <LoginTest/>,

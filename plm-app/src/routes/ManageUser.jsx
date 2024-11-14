@@ -5,9 +5,10 @@ import DashboardHeader from "../components/DashboardHeader";
 import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import UserTable from "../components/UserTable";
 import ResetPasswordModal from "../components/ResetPassword";
+import axios from 'axios';
 
 export default function ManageUser() {
-    
+
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
 
@@ -29,20 +30,21 @@ export default function ManageUser() {
 
 
 
-
-    useEffect(() => console.log(JSON.stringify(userInfo)), []);
+    useEffect(() => {
+        console.log(JSON.stringify(userInfo));
+    }, []);
 
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
     }
-  
-    function handleOnReset(username){//click reset
-        setSelectedUser(username) 
+
+    function handleOnReset(username) {//click reset
+        setSelectedUser(username)
         setShowReset(true)
         console.log(selectedUser)
     }
-    function handleNewPassword(NewPassword){//click submit// password ที่จะเปลี่ยน
-        console.log('submit reset: '+NewPassword)
+    function handleNewPassword(NewPassword) {//click submit// password ที่จะเปลี่ยน
+        console.log('submit reset: ' + NewPassword)
     }
 
     return (<>
@@ -51,12 +53,12 @@ export default function ManageUser() {
         <p>Welcome, {userInfo.username}</p>
         <p>Role: {Role.toString(userInfo.role)}</p>
         <div className="center-block">
-            <UserTable users={users} onReset={handleOnReset}/>
+            <UserTable users={users} onReset={handleOnReset} />
         </div>
-        <ResetPasswordModal show={showReset} onClose={() => setShowReset(false)} 
-        onPasswordReset={handleNewPassword/**/}/>
-        
+        <ResetPasswordModal show={showReset} onClose={() => setShowReset(false)}
+            onPasswordReset={handleNewPassword/**/} />
+
     </>);
 
-
+    
 }

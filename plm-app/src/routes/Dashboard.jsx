@@ -12,10 +12,11 @@ const sampleData = [// for test
     { blNo: "12346", date: "2024-11-04", cNo: "C002", status: "Completed" },
 ];
 export default function Dashboard() {
-
+    
     let [toLogin, setToLogin] = useState(false);
     let [toCreate, setToCreate] = useState(false);
     let [toManageUser, setToManageUser] = useState(false);
+    let [toProductOrder, setToProductOrder] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
 
     const [selectedItem, setSelectedItem] = useState(null);//Product Order ที่กด
@@ -31,10 +32,17 @@ export default function Dashboard() {
     if (toManageUser) {
         return <Navigate to="/ManageUser" />
     }
+    if (toProductOrder) {
+        return <Navigate to="/ProductOrder" />
+    }
+
+
     function handlePOClick(item) {//when click product order in list
         console.log("Item clicked", item);
         setSelectedItem(item);
+        setToProductOrder(true)
       }
+
     return (<>
         <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />
         <h1>This is a dashboard</h1>
