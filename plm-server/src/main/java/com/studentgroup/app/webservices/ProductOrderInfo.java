@@ -5,7 +5,6 @@ import com.studentgroup.app.Misc;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 class ProductOrderInfo {
     private String BLNumber;
