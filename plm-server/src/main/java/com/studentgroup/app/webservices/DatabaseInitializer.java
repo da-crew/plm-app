@@ -176,6 +176,7 @@ public class DatabaseInitializer {
 
         userRepo.save(users[0]);
         userRepo.save(users[1]);
+        userRepo.save(users[2]);
         truckRepo.save(trucks[0]);
         truckRepo.save(trucks[1]);
 

@@ -99,24 +99,24 @@ public class UserController {
         CREATED
     */
     @RequestMapping(path = "/users/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<UserInfo> registerUser(@RequestBody JsonNode json) throws Exception {
+    public ResponseEntity<String> registerUser(@RequestBody JsonNode json) throws Exception {
 
         UserInfo userInfo = UserInfo.fromJson(json.get("user"));
         String password = Misc.jsonToString(json, "password");
         UserCreds callerCreds = json.get("caller") != null ? UserCreds.fromJson(json.get("caller")) : null;
 
         if (userInfo == null || callerCreds == null || password == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid data");
 
         EmployeeUser caller = userRepo.findByUsername(callerCreds.getUsername());
         if (caller == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("couldn't find a user");
 
         //Authorization
         if (!caller.verify(callerCreds.getPassword()))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("invalid credentials");
         if (caller.getRole() != Role.ADMIN)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("you are not allowed to do this!");
 
 
         if (userRepo.findByUsername(userInfo.getUsername()) != null) {
@@ -126,7 +126,7 @@ public class UserController {
         EmployeeUser emp = new EmployeeUser(userInfo, password);
         userRepo.save(emp);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserInfo.fromUser(emp));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully registered");
     }
 
 }
