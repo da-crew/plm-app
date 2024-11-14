@@ -153,7 +153,7 @@ public class ProductOrderController {
     }
 
     @GetMapping("/product-orders/{username}/")
-    public ResponseEntity<List<ProductOrder>> getAll(@PathVariable String username) {
+    public ResponseEntity<List<ProductOrder>> getAllFromUsername(@PathVariable String username) {
         EmployeeUser user = userRepo.findByUsername(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -164,4 +164,10 @@ public class ProductOrderController {
 
         return ResponseEntity.ok().body(orders);
     }
+
+    @GetMapping("/product-orders/")
+    public ResponseEntity<Iterable<ProductOrder>> getAll() {
+        return ResponseEntity.ok().body(prodOrderRepo.findAll());
+    }
+    
 }
