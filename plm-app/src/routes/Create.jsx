@@ -5,20 +5,23 @@ import DashboardHeader from "../components/DashboardHeader";
 import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import { useCookies } from "react-cookie"
 
-function deleteCookie(name) {
-    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-}
+
 
 export default function Create() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
-    let [cookies, setCookies, removeCookies] = useCookies(['username', 'password']);
+    let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
 
 
-    useEffect(() => console.log(JSON.stringify(userInfo)), []);
+    useEffect(() => {console.log(JSON.stringify(userInfo));
     if (toLogin || !validCreds) {
-        removeCookies()
-        return  <Navigate to="/login" />;
+        removeCookie("username");
+        removeCookie("password");
+    }
+
+}, [toLogin]);
+    if (toLogin || !validCreds) {
+        return <Navigate to="/login" />
     }
 
     return (<>
