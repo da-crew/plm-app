@@ -3,7 +3,7 @@ import { Navigate, useParams } from "react-router";
 import DashboardHeader from "../components/DashboardHeader";
 import Header from "../components/Header";
 import '../components/ProductOrder/ViewProductOrder.css';
-import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
+import {useAllProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import MainDetails from "../components/ProductOrder/mainDetails"
 import { useCookies } from "react-cookie"
 
@@ -12,6 +12,7 @@ export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
     let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
+    let [productOrders, succ] = useAllProductOrders();
     const {blnum} = useParams();////////
 
 
@@ -38,7 +39,7 @@ export default function ProductOrder() {
                 <div className="left-column">
 
                     {/* B/L and Order Info */}
-                    <MainDetails/>
+                    <MainDetails params= {blnum} productOrders={productOrders}/>
                     
 
                     {/* Product Order Table */}

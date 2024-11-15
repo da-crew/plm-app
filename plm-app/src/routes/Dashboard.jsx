@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import Header from "../components/Header";
 import DashboardHeader from "../components/DashboardHeader";
-import { useProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
+import { useAllProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import Table from "../components/Table";
 import { useCookies } from "react-cookie"
 
@@ -16,29 +16,29 @@ export default function Dashboard() {
     let [toManageUser, setToManageUser] = useState(false);
     let [toProductOrder, setToProductOrder] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
-    let [productOrders, succ] = useProductOrders();
+    let [productOrders, succ] = useAllProductOrders();
     const [selectedItem, setSelectedItem] = useState(null);//Product Order ที่กด
 
-    let [data,setData] = useState([])
+    let [data, setData] = useState([])
 
     useEffect(() => {
         if (succ) {
             setData(productOrders)
-         } else {
+        } else {
             console.log("error");
-          }
-          if (toLogin || !validCreds) {
+        }
+        if (toLogin || !validCreds) {
             removeCookie("username");
             removeCookie("password")
         }
-          
-        
-    }, [productOrders,toLogin]);
+
+
+    }, [productOrders, toLogin]);
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
-        }
-    
-    
+    }
+
+
 
     if (toCreate) {
         return <Navigate to="/create" />
