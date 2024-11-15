@@ -3,6 +3,9 @@ package com.studentgroup.app.model;
 import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.studentgroup.app.model.serializer.EmployeeUserFieldSerializer;
+import com.studentgroup.app.model.serializer.ProductOrderFieldSerializer;
 
 import jakarta.persistence.*;
 
@@ -24,12 +27,12 @@ public class ActionLog {
     //table relationships
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
-    @JsonBackReference
+    @JsonSerialize(using = ProductOrderFieldSerializer.class)
     private ProductOrder productOrder;
 
     @ManyToOne
     @JoinColumn(name = "EMP_ID")
-    @JsonBackReference
+    @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser employee;
 
 
@@ -52,10 +55,6 @@ public class ActionLog {
     //getter and setters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getActionText() {

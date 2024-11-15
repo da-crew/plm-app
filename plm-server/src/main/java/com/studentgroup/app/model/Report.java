@@ -17,6 +17,7 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(name = "DAMAGE_REPORT") private String damageReportText;
     @Column(name = "IMAGE_URL") private String imgUrl;
 
@@ -32,6 +33,11 @@ public class Report {
     }
 
     //getters and setters
+    
+    public Long getId() {
+        return id;
+    }
+
     public String getDamageReportText() {
         return damageReportText;
     }

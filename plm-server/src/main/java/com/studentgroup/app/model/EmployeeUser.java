@@ -28,15 +28,12 @@ public class EmployeeUser {
     Role role = Role.UNKNOWN;
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "checker", fetch = FetchType.EAGER)
-    @JsonManagedReference
     private List<ProductOrder> checkingOrders = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "dispatcher", fetch = FetchType.EAGER)
-    @JsonManagedReference
     private List<ProductOrder> dispatchingOrders = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "employee", fetch = FetchType.EAGER)
-    @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
 
     //constructors
@@ -95,6 +92,10 @@ public class EmployeeUser {
 
     //getters and setters
 
+    public Long getId() {
+        return id;
+    }
+
     public List<ProductOrder> getCheckingOrders() {
         return checkingOrders;
     }
@@ -107,13 +108,7 @@ public class EmployeeUser {
         return actionLogs;
     }
     
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
     
     public String getSalt() {
         return salt;

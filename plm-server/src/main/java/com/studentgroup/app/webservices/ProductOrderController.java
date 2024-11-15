@@ -107,6 +107,8 @@ public class ProductOrderController {
         return ResponseEntity.ok().build();
     }
 
+    
+
     @PostMapping("/product-orders/{blNumber}/set-image")
     public ResponseEntity<String> postMethodName(@PathVariable String blNumber, @RequestParam("file") MultipartFile file) {
         ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
@@ -123,7 +125,27 @@ public class ProductOrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     
+    @PostMapping("/product-orders/{blnumber}/assign-for-checking")
+    public ResponseEntity<String> assignForChecking(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
+        // authorization
+        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.DISPATCHER);
+        switch (authRes.getStatus()) {
+            case INVALID_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
+            case USER_NOT_FOUND:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
+            case INCORRECT_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
+            case NO_PERMISSION:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
+            case SUCCESSFUL: break;
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
 
     @GetMapping("/product-orders/{username}/checking")
     public ResponseEntity<List<ProductOrder>> getChecking(@PathVariable String username) {
