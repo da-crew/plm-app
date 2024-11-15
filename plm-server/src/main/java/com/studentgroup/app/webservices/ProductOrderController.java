@@ -233,7 +233,7 @@ public class ProductOrderController {
      */
     @PostMapping("/product-orders/{blNumber}/return")
     public ResponseEntity<String> returnProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
-        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.EXPORTER, Role.CHECKER);
+        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.EXPORTER, Role.CHECKER, Role.DISPATCHER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
@@ -268,7 +268,6 @@ public class ProductOrderController {
 
         productOrder.addActionLog(actionLog, caller);
         prodOrderRepo.save(productOrder);
-        userRepo.save(caller);
 
         return ResponseEntity.status(HttpStatus.OK).body("Returned successfully");
     }
@@ -293,7 +292,7 @@ public class ProductOrderController {
      */
     @PostMapping("/product-orders/{blNumber}/forward")
     public ResponseEntity<String> forwardProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
-        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.EXPORTER, Role.CHECKER);
+        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.EXPORTER, Role.CHECKER, Role.DISPATCHER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
@@ -316,12 +315,12 @@ public class ProductOrderController {
         String actionFormatMessage = "Change status from " + productOrder.getStatusName().toString() + " to %s. (forward)";
         ActionLog actionLog;
 
-        if ((caller.getRole() == Role.DISPATCHER  || caller.getRole() == Role.ADMIN) && productOrder.getStatusName() == ProductOrderStatus.REPORTED) {
+        if ((caller.getRole() == Role.DISPATCHER || caller.getRole() == Role.ADMIN) && productOrder.getStatusName() == ProductOrderStatus.REPORTED) {
             productOrder.setStatusName(ProductOrderStatus.CHECKING);
             actionLog = new ActionLog(String.format(actionFormatMessage, ProductOrderStatus.CHECKING));
         } else if ((caller.getRole() == Role.CHECKER || caller.getRole() == Role.ADMIN) && productOrder.getStatusName() == ProductOrderStatus.CHECKING) {
             productOrder.setStatusName(ProductOrderStatus.EXPORTING);
-            actionLog = new ActionLog(String.format(actionFormatMessage, ProductOrderStatus.CHECKING));
+            actionLog = new ActionLog(String.format(actionFormatMessage, ProductOrderStatus.EXPORTING));
         } else if ((caller.getRole() == Role.EXPORTER || caller.getRole() == Role.ADMIN) && productOrder.getStatusName() == ProductOrderStatus.EXPORTING) {
             productOrder.setStatusName(ProductOrderStatus.FINISHED);
             actionLog = new ActionLog(String.format(actionFormatMessage, ProductOrderStatus.FINISHED));
@@ -332,7 +331,6 @@ public class ProductOrderController {
 
         productOrder.addActionLog(actionLog, caller);
         prodOrderRepo.save(productOrder);
-        userRepo.save(caller);
 
         return ResponseEntity.status(HttpStatus.OK).body("Forwarded successfully");
     }
