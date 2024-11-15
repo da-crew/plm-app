@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
 class ProductOrderInfo {
+
     private String BLNumber;
     private ZonedDateTime orderDate;
     private String vesselName;
