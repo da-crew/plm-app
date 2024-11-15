@@ -35,7 +35,8 @@ public class FileController {
             return ResponseEntity.badRequest().body("Failed to upload the file");
         }
     }
-    
+
+    //the files from here can be served as static resources, meaning you can access them using URLs like "http://[hostname]/files/{id}"
     @GetMapping("/files/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         Optional<ImageFile> foundFile = storageService.getFile(id);
