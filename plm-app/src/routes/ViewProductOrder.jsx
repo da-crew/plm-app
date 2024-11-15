@@ -29,7 +29,7 @@ export default function ProductOrder() {
     }
 
     return (<>
-        <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />
+        <Header  onLogout={() => setToLogin(true)}  user={userInfo} />
         <h1>This is a ProductOrder</h1>
         <p>Welcome, {userInfo.username}</p>
         <p>Role: {Role.toString(userInfo.role)}</p>

@@ -58,10 +58,8 @@ export default function Dashboard() {
     }
 
     return (<>
-        <Header employeeName={userInfo.username} onLogout={() => setToLogin(true)} role={userInfo.role} />
-        <h1>This is a dashboard</h1>
-        <p>Welcome, {userInfo.username}</p>
-        <p>Role: {Role.toString(userInfo.role)}</p>
+        <Header  onLogout={() => setToLogin(true)}  user={userInfo} />
+        
         <p></p>
         <div className="center-block">
             <DashboardHeader role={userInfo.role} onCreate={() => setToCreate(true)} onManage={() => setToManageUser(true)} />
