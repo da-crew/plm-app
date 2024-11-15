@@ -6,11 +6,13 @@ import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import UserTable from "../components/UserTable";
 import ResetPasswordModal from "../components/ResetPassword";
 import axios from 'axios';
+import { useCookies } from "react-cookie"
 
 export default function ManageUser() {
 
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
+    let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
 
 
     const [users, setUsers] = useState([//mock data
@@ -32,7 +34,11 @@ export default function ManageUser() {
 
     useEffect(() => {
         console.log(JSON.stringify(userInfo));
-    }, []);
+        if (toLogin || !validCreds) {
+            removeCookie("username");
+            removeCookie("password");
+        }
+    }, [toLogin]);
 
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
