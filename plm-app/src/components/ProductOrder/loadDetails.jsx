@@ -1,8 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './ViewProductOrder.css';
+import axios from 'axios'; // Assuming Axios is used for API calls
 
-function LoadDetails({ params, productOrders }) {
+function LoadDetails({ params, productOrders, onDeleteCar }) {
     // Find the product order with the matching BL Number
     const thisProductOrder = productOrders.find(
         (item) => item.blnumber === params
@@ -13,39 +14,38 @@ function LoadDetails({ params, productOrders }) {
         return <p>No matching product order found.</p>;
     }
 
-    // State to store truck details as an array of objects, each with a truck and its associated IDs
-    const [truckDetails, setTruckDetails] = useState([]);
+    // Group cars by truck
+    const trucks = thisProductOrder.cars.reduce((acc, car) => {
+        if (!acc[car.truck]) {
+            acc[car.truck] = [];
+        }
+        acc[car.truck].push(car);
+        return acc;
+    }, {});
 
-    // useEffect to populate truck details only once when the component mounts
-    useEffect(() => {
-        const truckMap = {};
-
-        // Iterate over the cars array to group car IDs by their truck
-        thisProductOrder.cars.forEach((car) => {
-            const { truck, id } = car;
-            if (!truckMap[truck]) {
-                truckMap[truck] = []; // Initialize array for new truck
-            }
-            truckMap[truck].push(id); // Add car ID to the truck's array
-        });
-
-        // Convert the truckMap object to an array format for easier mapping in JSX
-        const truckArray = Object.entries(truckMap).map(([truck, ids]) => ({
-            truck,
-            ids,
-        }));
-
-        setTruckDetails(truckArray);
-    }, [thisProductOrder.cars]);
+    // Function to delete car by ID
+    const handleDeleteCar = async (carId) => {
+        try {
+            await axios.delete(`/api/cars/${carId}`); // Replace with your actual API endpoint
+            onDeleteCar(carId); // Update state in parent component to reflect deletion
+        } catch (error) {
+            console.error("Error deleting car:", error);
+        }
+    };
 
     return (
         <div className="load-details">
             <h4>Load Details</h4>
-            {/* Render each truck with its associated car IDs */}
-            {truckDetails.map(({ truck, ids }) => (
-                <div key={truck} className="truck-info">
+            {Object.entries(trucks).map(([truck, cars]) => (
+                <div key={truck} className="truck-details">
                     <p><strong>Truck:</strong> {truck}</p>
-                    <p><strong>Contains ID:</strong> {ids.join(', ')}</p>
+                    <p><strong>Contains ID:</strong> {cars.map((car, index) => (
+                        <span key={car.id}>
+                            {car.id}
+                            <button onClick={() => handleDeleteCar(car.id)} className="delete-button">🗑️</button>
+                            {index < cars.length - 1 ? ', ' : ''}
+                        </span>
+                    ))}</p>
                 </div>
             ))}
         </div>
