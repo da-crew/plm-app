@@ -16,7 +16,8 @@ function TableComponent(props){
           <tr>
             <th className="cell table-header">B/L No.</th>
             <th className="cell table-header">Date</th>
-            <th className="cell table-header">C. No.</th>
+            <th className="cell table-header">Checker</th>
+            <th className="cell table-header">Dispatcher</th>
             <th className="cell table-header">Status</th>
           </tr>
         </thead>
@@ -28,10 +29,11 @@ function TableComponent(props){
                 className="clickable-row"
                 onClick={() => handleRowClick(item)}
               >
-                <td className="cell"> {item.blNo}</td>
-                <td className="cell"> {item.date}</td>
-                <td className="cell"> {item.cNo}</td>
-                <td className="cell"> {item.status}</td>
+                <td className="cell"> {item.blnumber}</td>
+                <td className="cell"> {item.orderDate}</td>
+                <td className="cell"> {item.checker}</td>
+                <td className="cell"> {item.dispatcher}</td>
+                <td className="cell"> {item.statusName}</td>
               </tr>
             ))
           ) : (

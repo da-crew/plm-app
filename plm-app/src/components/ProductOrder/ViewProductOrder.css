@@ -3,6 +3,14 @@
     display: flex;
     gap: 20px;
     padding: 20px;
+    
+    overflow-x: auto;
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    
   }
   
   /* Left column styling */
@@ -21,6 +29,7 @@
   /* B/L and Order Info, Product Table, Report Section, and Action Buttons styling */
   .bl-info, .product-order-table, .report-section, .action-buttons {
     margin-bottom: 20px;
+    
   }
   
   /* Status and Dispatcher Info styling */
@@ -28,6 +37,7 @@
     border: 1px solid #000;
     padding: 10px;
     margin-bottom: 10px;
+    
   }
   
   /* Table styling for product order details */
