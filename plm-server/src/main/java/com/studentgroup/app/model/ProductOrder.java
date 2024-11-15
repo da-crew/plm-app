@@ -5,12 +5,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
+import com.studentgroup.app.model.serializer.*;
 
 import jakarta.persistence.*;
 
@@ -21,6 +19,7 @@ public class ProductOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PROD_ORDER_ID")
     private Long id; 
+
 
     //product order details
     @Column(name = "BL_NO") private String BLNumber;
@@ -35,16 +34,15 @@ public class ProductOrder {
 
     @ManyToOne
     @JoinColumn(name = "CHECKER_ID")
-    @JsonBackReference
+    @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser checker;
     
     @ManyToOne
     @JoinColumn(name = "DISPATCHER_ID")
-    @JsonBackReference
+    @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser dispatcher;
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
-    @JsonManagedReference
     private List<ActionLog> actionLogs = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
@@ -78,6 +76,10 @@ public class ProductOrder {
     }
 
     //getters and setters
+    
+    public Long getId() {
+        return id;
+    }
     public String getBLNumber() {
         return BLNumber;
     }
@@ -162,11 +164,3 @@ public class ProductOrder {
     //}
 }
 
-class ProductOrderEmployeeSerializer extends JsonSerializer<EmployeeUser> {
-
-    @Override
-    public void serialize(EmployeeUser user, JsonGenerator gen, SerializerProvider serializer) throws IOException {
-        gen.writeString(user.getUsername());
-    }
-    
-}

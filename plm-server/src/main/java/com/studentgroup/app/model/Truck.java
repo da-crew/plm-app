@@ -36,6 +36,11 @@ public class Truck {
     }
 
     //getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
     public String getTruckNumber() {
         return truckNumber;
     }

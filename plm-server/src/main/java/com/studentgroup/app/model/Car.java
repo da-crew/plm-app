@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.studentgroup.app.model.serializer.ProductOrderFieldSerializer;
+import com.studentgroup.app.model.serializer.TruckFieldSerializer;
 
 import jakarta.persistence.*;
 
@@ -13,22 +16,22 @@ import jakarta.persistence.*;
 @Table(name = "CAR")
 public class Car {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CAR_ID")
     private Long id;
-    
+
     @Column(name = "CAR_MODEL")
     private String modelName;
 
     //table relationships
     @ManyToOne
     @JoinColumn(name = "TRUCK_ID")
-    @JsonBackReference
+    @JsonSerialize(using = TruckFieldSerializer.class)
     private Truck truck;
 
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
-    @JsonBackReference
+    @JsonSerialize(using = ProductOrderFieldSerializer.class)
     private ProductOrder productOrder;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,6 +45,10 @@ public class Car {
 
     //constructors
     public Car() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public Car(String modelName) {
         this.modelName = modelName;
