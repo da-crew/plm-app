@@ -6,7 +6,7 @@ import '../components/ProductOrder/ViewProductOrder.css';
 import {useAllProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import MainDetails from "../components/ProductOrder/mainDetails"
 import { useCookies } from "react-cookie"
-
+import LoadDetails from "../components/ProductOrder/loadDetails";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -72,11 +72,8 @@ export default function ProductOrder() {
                             <p>Report : window broken</p>
                             <img src="damage-image.jpg" alt="Damage" className="damage-image" />
                         </div>
-                        <div className="load-details">
-                            <h4>Load Details</h4>
-                            <p>Truck : AB 123</p>
-                            <p>Contains : QW 456</p>
-                        </div>
+                        {/* Load detail */}
+                        <LoadDetails params = {blnum} productOrders= {productOrders}/>
                     </div>
 
                     {/* Action Buttons */}
