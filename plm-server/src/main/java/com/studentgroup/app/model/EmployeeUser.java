@@ -67,6 +67,11 @@ public class EmployeeUser {
         return Misc.hashPassword(password, salt).equals(passwordHash);
     }
 
+    public void resetPassword(String newPassword) throws Exception {
+        salt = Misc.genSalt();
+        passwordHash = Misc.hashPassword(newPassword, salt);
+    }
+
     public String toString() {
         return "{ username: " + username + ", passwordHash: " + passwordHash + ", salt: " + salt + ", role: " + role.toString() + " }";
     }
