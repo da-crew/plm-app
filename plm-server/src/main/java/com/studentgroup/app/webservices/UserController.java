@@ -4,10 +4,10 @@ package com.studentgroup.app.webservices;
 import com.studentgroup.app.Misc;
 
 import org.apache.catalina.connector.Response;
-import org.hibernate.query.NativeQuery.ReturnProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +25,7 @@ import com.studentgroup.app.webservices.authorization.AuthorizationManager;
 import com.studentgroup.app.webservices.authorization.AuthorizationResult;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 @RestController
@@ -92,16 +93,19 @@ public class UserController {
      *          username: String,
      *          password: String,
      *      },
-     *      userInfo: [see UserInfo.fromJson ]
+     *      user: [see UserInfo.fromJson ]
      * }
      * Returns:
      *      BAD_REQUEST,
      *      NOT_FOUND,
-     *      
+     *      UNAUTHORIZED,
+     *      FORBIDDEN,
+     *      CONFLICT,
+     *      OK
      */
-
+    //and no, you cannot reset password here, use "/users/{username}/reset-password" instead
     @RequestMapping(path = "/users/{username}/update", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<String> getMethodName(@PathVariable String username, @RequestBody JsonNode json) throws Exception {
+    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody JsonNode json) throws Exception {
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
@@ -109,14 +113,14 @@ public class UserController {
             case USER_NOT_FOUND:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
             case INCORRECT_PASSWORD:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("incorrect password!");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
             case NO_PERMISSION:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("are not permitted to do this!");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
             case SUCCESSFUL: break;
         }
 
         //validation
-        UserInfo updateInfo = UserInfo.fromJson(json.get("userInfo"));
+        UserInfo updateInfo = UserInfo.fromJson(json.get("user"));
         if (updateInfo == null) {
             return ResponseEntity.badRequest().body("invalid userInfo!");
         }
@@ -131,15 +135,91 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("username already exists!");
         }
 
+        UserInfo oldInfo = UserInfo.fromUser(user);
+
         user.setUsername(updateInfo.getUsername());
         user.setFirstname(updateInfo.getFirstname());
-        user.setLastname(updateInfo.getFirstname());
+        user.setLastname(updateInfo.getLastname());
         user.setRole(updateInfo.getRole());
 
+        userRepo.save(user);
 
-        return ResponseEntity.ok().body("Changed ");
+        //for debugging only!
+        boolean noAction = true;
+        StringBuilder actionsText = new StringBuilder();
+        if (!oldInfo.getUsername().equals(updateInfo.getUsername())){
+            actionsText.append(String.format("Changed username from %s to %s\n", oldInfo.getUsername(), user.getUsername()));
+            noAction = false;
+        }
+        if (!oldInfo.getFirstname().equals(updateInfo.getFirstname())){
+            actionsText.append(String.format("Changed firstname from %s to %s\n", oldInfo.getFirstname(), user.getFirstname()));
+            noAction = false;
+        }
+        if (!oldInfo.getLastname().equals(updateInfo.getLastname())){
+            actionsText.append(String.format("Changed last name from %s to %s\n", oldInfo.getLastname(), user.getLastname()));
+            noAction = false;
+        }
+        if (!oldInfo.getRole().equals(updateInfo.getRole())){
+            actionsText.append(String.format("Changed role from %s to %s\n", oldInfo.getRole().toString(), user.getRole().toString()));
+            noAction = false;
+        }
 
+        if (noAction) {
+            actionsText.append("No changes were made");
+        }
+
+        return ResponseEntity.ok().body(actionsText.toString());
     }
+
+    /*
+     * Request Body:
+     * {
+     *      caller: {
+     *          username: String,
+     *          password: String,
+     *      },
+     *      password: String
+     * }
+     * Returns:
+     *      BAD_REQUEST,
+     *      NOT_FOUND,
+     *      UNAUTHORIZED
+     *      FORBIDDEN,
+     *      NOT_ACCEPTABLE,
+     *      OK
+     */
+    @RequestMapping(path = "/users/{username}/reset-password", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<String> resetPassword(@PathVariable String username, @RequestBody JsonNode json) throws Exception {
+        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
+        switch (authRes.getStatus()) {
+            case INVALID_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
+            case USER_NOT_FOUND:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
+            case INCORRECT_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
+            case NO_PERMISSION:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
+            case SUCCESSFUL: break;
+        }
+
+        //vaidation
+        EmployeeUser user = userRepo.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String newPassword = Misc.jsonToString(json, "password");
+        if (newPassword == null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Password cannot be empty!");
+        }
+
+        user.resetPassword(newPassword);
+        userRepo.save(user);
+        
+        return ResponseEntity.ok().build();
+    }
+    
     
 
     /*
@@ -193,6 +273,46 @@ public class UserController {
         userRepo.save(emp);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully registered");
+    }
+
+    /*
+     * Request Body:
+     * {
+     *      caller: {
+     *          username: String,
+     *          password: String,
+     *      },
+     * }
+     * Returns:
+     *      BAD_REQUEST,
+     *      NOT_FOUND,
+     *      UNAUTHORIZED
+     *      FORBIDDEN,
+     *      NO_CONTENT
+     */
+    @RequestMapping(path = "/users/{username}/delete", method = RequestMethod.DELETE, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<String> deleteUser(@PathVariable String username, @RequestBody JsonNode json) throws Exception {
+        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
+        switch (authRes.getStatus()) {
+            case INVALID_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
+            case USER_NOT_FOUND:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
+            case INCORRECT_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
+            case NO_PERMISSION:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
+            case SUCCESSFUL: break;
+        }
+
+        EmployeeUser user = userRepo.findByUsername(username);
+        if (username == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userRepo.delete(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted " + username);
     }
 
 }

@@ -1,11 +1,15 @@
 package com.studentgroup.app.model;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
 
 import jakarta.persistence.*;
@@ -156,4 +160,13 @@ public class ProductOrder {
     //public List<Truck> getTrucks() {
     //    return trucks;
     //}
+}
+
+class ProductOrderEmployeeSerializer extends JsonSerializer<EmployeeUser> {
+
+    @Override
+    public void serialize(EmployeeUser user, JsonGenerator gen, SerializerProvider serializer) throws IOException {
+        gen.writeString(user.getUsername());
+    }
+    
 }

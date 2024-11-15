@@ -15,12 +15,9 @@ import com.studentgroup.app.webservices.authorization.AuthorizationResult;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,9 +69,9 @@ public class ProductOrderController {
             case USER_NOT_FOUND:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
             case INCORRECT_PASSWORD:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("incorrect password!");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
             case NO_PERMISSION:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("are not permitted to do this!");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
             case SUCCESSFUL: break;
         }
 
@@ -151,6 +148,8 @@ public class ProductOrderController {
 
         return ResponseEntity.ok().body(orders);
     }
+
+    
 
     @GetMapping("/product-orders/{username}/")
     public ResponseEntity<List<ProductOrder>> getAllFromUsername(@PathVariable String username) {
