@@ -1,7 +1,7 @@
 import React from 'react';
 import './ViewProductOrder.css';
 
-function ordertable({ params, productOrders }) {
+function OrderTable({ params, productOrders }) {
     // Find the product order with the matching BL Number
     const thisProductOrder = productOrders.find(
         (item) => item.blnumber === params
