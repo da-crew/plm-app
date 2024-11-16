@@ -29,4 +29,8 @@ public class FileStorageService {
     public Optional<ImageFile> getFile(String id) {
         return imgfileRepo.findById(id);
     }
+
+    public void deleteFile(String id) {
+        imgfileRepo.deleteById(id);
+    }
 }

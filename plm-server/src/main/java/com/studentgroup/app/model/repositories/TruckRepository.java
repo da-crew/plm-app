@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import com.studentgroup.app.model.Truck;
 
+
 @Repository
 public interface TruckRepository extends CrudRepository<Truck, Long>{
-
+    public Truck findByTruckNumber(String truckNumber);
 }

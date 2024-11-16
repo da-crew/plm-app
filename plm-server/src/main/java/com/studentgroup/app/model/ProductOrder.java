@@ -64,6 +64,16 @@ public class ProductOrder {
 
     //misc methods
 
+    public void removeChecker() {
+        //checker.getCheckingOrders().remove(this);
+        checker = null;
+    }
+
+    public void removeDispatcher() {
+        //dispatcher.getDispatchingOrders().remove(this);
+        dispatcher = null;
+    }
+
     public void addActionLog(ActionLog log, EmployeeUser user) {
         actionLogs.add(log);
         user.addActionLog(log);
