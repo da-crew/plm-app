@@ -59,11 +59,11 @@
   }
   
   /* Styling for Damage Report and Load Details boxes */
-  .damage-report, .load-details {
+  /* .damage-report, .load-details {
     border: 1px solid #000;
     padding: 10px;
     flex: 1;
-  }
+  } */
   
   /* Image styling */
   .document-image, .damage-image {
@@ -106,4 +106,42 @@
 
 .forward, .forward-exporter {
     background-color: #28a745; /* Green */
+}
+
+
+/* General styling for the Load Details container */
+.load-details, .damage-report {
+  margin: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Style for each truck's details */
+.truck-details, .Report-item {
+  border: 1px solid #ccc; /* Adds a border around each truck's section */
+  border-radius: 8px;     /* Rounds the corners */
+  padding: 10px;          /* Adds space inside the border */
+  margin-bottom: 15px;    /* Adds space between each truck's section */
+  background-color: #f9f9f9; /* Gives a light background for contrast */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Style for the Truck label */
+.truck-details p strong {
+  color: #007bff; /* A distinct color to highlight important labels */
+  font-weight: bold;
+}
+
+/* Style for the delete button */
+.delete-button {
+  background: none;
+  border: none;
+  color: #e63946;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.delete-button:hover {
+  text-decoration: underline;
 }

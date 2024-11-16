@@ -39,13 +39,15 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
             {Object.entries(trucks).map(([truck, cars]) => (
                 <div key={truck} className="truck-details">
                     <p><strong>Truck:</strong> {truck}</p>
-                    <p><strong>Contains ID:</strong> {cars.map((car, index) => (
-                        <span key={car.id}>
-                            {car.id}
-                            <button onClick={() => handleDeleteCar(car.id)} className="delete-button">🗑️</button>
-                            {index < cars.length - 1 ? ', ' : ''}
-                        </span>
-                    ))}</p>
+                    <p><strong>Contains ID:</strong></p>
+                    <div className="cars-container">
+                        {cars.map((car) => (
+                            <div key={car.id} className="car-item">
+                                {car.id}
+                                <button onClick={() => handleDeleteCar(car.id)} className="delete-button">🗑️</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             ))}
         </div>

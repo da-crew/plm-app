@@ -14,19 +14,32 @@ function ActionButtons({ params, productOrders, user }) {
         return <p>No matching product order found.</p>;
     }
 
+    const addDamageReport = <button class="add-damage-report">Add Damage Report</button>
+    const addLoadDetails = <button class="add-load-details">Add Load Details</button>
+
+    const returnDispatcher = <button class="return-dispatcher">Return to Dispatcher</button>
+    const returnChecker = <button class="return-dispatcher">Return to Checker</button>
+
+    const forwardChecker = <button class="forward">Forward to Checker</button>
+    const forwardExporter = <button class="forward-exporter">Forward to Exporter</button>
+
+    const edit = <button className="edit-product-order">Edit Product Order</button>
+
+    const confirm = <button class="forward-exporter">Confirm Export</button>
+
     if (thisProductOrder.statusName == "CHECKING") {
-        if ((user.role == Role.CHECKER && user.username == thisProductOrder.checker)||(user.role==Role.ADMIN)) {// status = checking , role = checker, current account username = this productorder checker     or  status= checking  role = admin
+        if ((user.role == Role.CHECKER && user.username == thisProductOrder.checker) || (user.role == Role.ADMIN)) {// status = checking , role = checker, current account username = this productorder checker     or  status= checking  role = admin
             return (
                 <div class="action-buttons">
                     <div class="add-buttons">
-                        <button class="add-damage-report">Add Damage Report</button>
-                        <button class="add-load-details">Add Load Details</button>
+                        {addDamageReport}
+                        {addLoadDetails}
                     </div>
                     <div class="other-buttons">
-                        <button class="return-dispatcher">Return to Dispatcher</button>
-                        <button class="forward-exporter">Forward to Exporter</button>
+                        {returnDispatcher}
+                        {forwardExporter}
                         {user.role === Role.ADMIN && (
-                            <button className="edit-product-order">Edit Product Order</button>
+                             edit 
                         )}
                     </div>
                 </div>
@@ -34,14 +47,13 @@ function ActionButtons({ params, productOrders, user }) {
         }
     }
     else if (thisProductOrder.statusName == "REPORTED") {
-        if ((user.role == Role.DISPATCHER && user.username == thisProductOrder.dispatcher)||(user.role==Role.ADMIN)) {// 
+        if ((user.role == Role.DISPATCHER && user.username == thisProductOrder.dispatcher) || (user.role == Role.ADMIN)) {
             return (
                 <div class="action-buttons">
-                    
                     <div class="other-buttons">
-                        <button class="forward">Forward to Checker</button>
+                        {forwardChecker}
                         {user.role === Role.ADMIN && (
-                            <button className="edit-product-order">Edit Product Order</button>
+                            edit
                         )}
                     </div>
                 </div>
@@ -49,14 +61,14 @@ function ActionButtons({ params, productOrders, user }) {
         }
     }
     else if (thisProductOrder.statusName == "EXPORTING") {
-        if ((user.role == Role.EXPORTER )||(user.role==Role.ADMIN)) {// 
+        if ((user.role == Role.EXPORTER) || (user.role == Role.ADMIN)) { 
             return (
                 <div class="action-buttons">
                     <div class="other-buttons">
-                        <button class="return-dispatcher">Return to Checker</button>
-                        <button class="forward-exporter">Confirm Export</button>
+                        {returnChecker}
+                        {confirm}
                         {user.role === Role.ADMIN && (
-                            <button className="edit-product-order">Edit Product Order</button>
+                            edit 
                         )}
                     </div>
                 </div>
@@ -64,20 +76,20 @@ function ActionButtons({ params, productOrders, user }) {
         }
     }
     else if (thisProductOrder.statusName == "FINISHED") {
-        if ((user.role==Role.ADMIN)) {//
+        if ((user.role == Role.ADMIN)) {
             return (
                 <div class="action-buttons">
                     <div class="other-buttons">
-                        <button className="edit-product-order">Edit Product Order</button>
+                        {edit}
                     </div>
                 </div>
             );
         }
     }
-    else{
-       return null;
+    else {
+        return null;
     }
-    
+
 }
 
 export default ActionButtons;

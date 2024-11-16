@@ -10,6 +10,8 @@ import LoadDetails from "../components/ProductOrder/loadDetails";
 import ActionButtons from "../components/ProductOrder/actionButtons";
 import OrderTable from "../components/ProductOrder/orderTable";
 import Status from "../components/ProductOrder/status";
+import DamageReport from "../components/ProductOrder/damageReport";
+
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -30,6 +32,7 @@ export default function ProductOrder() {
         return <Navigate to="/login" />
         
     }
+    
 
     return (<>
         <Header  onLogout={() => setToLogin(true)}  user={userInfo} />
@@ -50,12 +53,8 @@ export default function ProductOrder() {
 
                     {/* Damage Report and Load Details Section */}
                     <div className="report-section">
-                        <div className="damage-report">
-                            <h4>Damage Report</h4>
-                            <p>Vehicle registration number : AB 123</p>
-                            <p>Report : window broken</p>
-                            <img src="damage-image.jpg" alt="Damage" className="damage-image" />
-                        </div>
+                        <DamageReport params={blnum} productOrders={productOrders}/>
+                        
                         {/* Load detail */}
                         <LoadDetails params = {blnum} productOrders= {productOrders}/>
                     </div>
