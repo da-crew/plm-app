@@ -21,6 +21,7 @@ export default function Create() {
     }
 
 }, [toLogin]);
+  
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />;
     }
