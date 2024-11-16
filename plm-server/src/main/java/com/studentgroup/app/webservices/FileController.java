@@ -14,9 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.studentgroup.app.model.ImageFile;
 import com.studentgroup.app.service.FileStorageService;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 
 @Controller

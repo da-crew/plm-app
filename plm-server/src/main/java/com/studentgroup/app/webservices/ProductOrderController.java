@@ -334,6 +334,42 @@ public class ProductOrderController {
         return ResponseEntity.status(HttpStatus.OK).body("Forwarded successfully");
     }
 
+    @PostMapping("/product-orders/{blNumber}/cars/{carId}/add-damage-report")
+    public ResponseEntity<String> addDamageReport(@PathVariable String blNumber, @PathVariable Long carId, @RequestBody JsonNode json) throws Exception {
+        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.EXPORTER, Role.CHECKER, Role.DISPATCHER);
+        switch (authRes.getStatus()) {
+            case INVALID_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
+            case USER_NOT_FOUND:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
+            case INCORRECT_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
+            case NO_PERMISSION:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
+            case SUCCESSFUL: break;
+        }
+
+        ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
+        if (productOrder == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("product order not found!");
+        }
+
+        Car foundCar = null;
+        for (Car car : productOrder.getCars()) {
+            if (car.getId() == carId) {
+                foundCar = car;
+                break;
+            }
+        }
+        if (foundCar == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("car not found!");
+        }
+
+        
+
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("in construction...");
+    }
+
     
     @GetMapping("/product-orders/{username}/checking")
     public ResponseEntity<List<ProductOrder>> getChecking(@PathVariable String username) {
@@ -346,6 +382,8 @@ public class ProductOrderController {
 
         return ResponseEntity.ok().body(orders);
     }
+
+
 
     @GetMapping("/product-orders/{username}/dispatching")
     public ResponseEntity<List<ProductOrder>> getDispatching(@PathVariable String username) {
