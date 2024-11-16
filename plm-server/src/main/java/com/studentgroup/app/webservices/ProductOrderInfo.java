@@ -13,6 +13,12 @@ class ProductOrderInfo {
     private String vesselName;
     private String voyNumber;
     private String cosigneeName;
+    private String markAndNumsText;
+    private String packagesText;
+    private String description;
+    private String remarks;
+    
+
 
     public ProductOrderInfo() {}
     
@@ -23,7 +29,11 @@ class ProductOrderInfo {
         orderDate: String(formatted date time with timezone)
         vesselName: String,
         voyNumber: String,
-        cosigneeName: String
+        cosigneeName: String,
+        markAndNumsText: String,
+        packagesText: String,
+        description: String,
+        remarks: String
     }
     */
     public static ProductOrderInfo fromJsonNode(JsonNode jsonNode) {
@@ -33,9 +43,21 @@ class ProductOrderInfo {
         prodInfo.vesselName = Misc.jsonToString(jsonNode, "vesselName");
         prodInfo.voyNumber = Misc.jsonToString(jsonNode, "voyNumber");
         prodInfo.cosigneeName = Misc.jsonToString(jsonNode, "cosigneeName");
+        prodInfo.markAndNumsText = Misc.jsonToString(jsonNode, "markAndNumsText");
+        prodInfo.packagesText = Misc.jsonToString(jsonNode, "packagesText");
+        prodInfo.description = Misc.jsonToString(jsonNode, "description");
+        prodInfo.remarks = Misc.jsonToString(jsonNode, "remarks");
         String dateString = Misc.jsonToString(jsonNode, "orderDate");
 
-        if (prodInfo.BLNumber == null || prodInfo == null || prodInfo.voyNumber == null || prodInfo.cosigneeName == null) {
+        if (prodInfo.BLNumber == null || 
+        prodInfo == null || 
+        prodInfo.voyNumber == null || 
+        prodInfo.cosigneeName == null ||
+        prodInfo.markAndNumsText == null ||
+        prodInfo.packagesText == null ||
+        prodInfo.description == null ||
+        prodInfo.remarks == null 
+        ) {
             return null;
         }
         
@@ -66,5 +88,21 @@ class ProductOrderInfo {
 
     public String getCosigneeName() {
         return cosigneeName;
+    }
+
+    public String getMarkAndNumsText() {
+        return markAndNumsText;
+    }
+
+    public String getPackagesText() {
+        return packagesText;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getRemarks() {
+        return remarks;
     }
 }
