@@ -2,7 +2,6 @@ package com.studentgroup.app.model;
 
 import java.time.ZonedDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.studentgroup.app.model.serializer.EmployeeUserFieldSerializer;
 import com.studentgroup.app.model.serializer.ProductOrderFieldSerializer;

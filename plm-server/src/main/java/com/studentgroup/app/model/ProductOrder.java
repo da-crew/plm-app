@@ -1,6 +1,5 @@
 package com.studentgroup.app.model;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
