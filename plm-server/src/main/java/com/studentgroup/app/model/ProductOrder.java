@@ -26,6 +26,12 @@ public class ProductOrder {
     @Column(name = "VESSEL") private String vesselName;
     @Column(name = "VOY_NO") private String voyNumber;
     @Column(name = "COSIGNEE") private String cosigneeName;
+    @Column(name = "MARK_AND_NUMS") private String markAndNumsText;
+    @Column(name = "PKGS") private String packagesText;
+    @Column(name = "DESCRIPTION") private String description;
+    @Column(name = "REMARKS") private String remarks;
+    
+
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
@@ -166,6 +172,31 @@ public class ProductOrder {
 
     public List<Car> getCars() {
         return cars;
+    }
+
+    public String getMarkAndNumsText() {
+        return markAndNumsText;
+    }
+    public void setMarkAndNumsText(String markAndNumsText) {
+        this.markAndNumsText = markAndNumsText;
+    }
+    public String getPackagesText() {
+        return packagesText;
+    }
+    public void setPackagesText(String packagesText) {
+        this.packagesText = packagesText;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getRemarks() {
+        return remarks;
+    }
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     //public List<Truck> getTrucks() {

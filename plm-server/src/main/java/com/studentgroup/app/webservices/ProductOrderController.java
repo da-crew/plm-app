@@ -399,6 +399,26 @@ public class ProductOrderController {
             productOrder.setVoyNumber(productOrderInfo.getVoyNumber());
         }
 
+        if (productOrderInfo.getMarkAndNumsText() != productOrder.getMarkAndNumsText()) {
+            actionLogs.add(new ActionLog("Change Mark & Nums"));
+            productOrder.setMarkAndNumsText(productOrderInfo.getMarkAndNumsText());
+        }
+
+        if (productOrderInfo.getPackagesText() != productOrder.getPackagesText()) {
+            actionLogs.add(new ActionLog("Change Packages column"));
+            productOrder.setPackagesText(productOrderInfo.getPackagesText());
+        }
+
+        if (productOrderInfo.getDescription() != productOrder.getDescription()) {
+            actionLogs.add(new ActionLog("Change Description"));
+            productOrder.setDescription(productOrderInfo.getDescription());
+        }
+
+        if (productOrderInfo.getRemarks() != productOrder.getRemarks()) {
+            actionLogs.add(new ActionLog("Change Remarks"));
+            productOrder.setRemarks(productOrderInfo.getRemarks());
+        }
+
         for (ActionLog actionLog : actionLogs) {
             productOrder.addActionLog(actionLog, caller);
         }
@@ -738,3 +758,4 @@ public class ProductOrderController {
     }
     
 }
+//make it stop
