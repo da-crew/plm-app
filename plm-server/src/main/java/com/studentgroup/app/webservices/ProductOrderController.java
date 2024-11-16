@@ -158,65 +158,6 @@ public class ProductOrderController {
     }
 
     /*
-     * Request Body: {
-     * productOrder: [see method ProductOrderInfo.fromJsonNode]
-     * 
-     * caller: {
-     * username: String,
-     * password: String
-     * }
-     * 
-     * checker: String(checker's username)
-     * 
-     * }
-     * Returns:
-     * BAD_REQUEST
-     * FORBIDDEN
-     * CREATED
-     *
-    @PostMapping("/product-orders/{blNumber}/assign-for-checking")
-    public ResponseEntity<String> assignForChecking(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
-        //authorization
-        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.DISPATCHER);
-        switch (authRes.getStatus()) {
-            case INVALID_CREDENTIAL:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
-            case USER_NOT_FOUND:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
-            case INCORRECT_PASSWORD:
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
-            case NO_PERMISSION:
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
-            case SUCCESSFUL: break;
-        }
-
-        //validation
-        ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
-        if (productOrder == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("product order not found!");
-        }
-
-        EmployeeUser checker = userRepo.findByUsername(Misc.jsonToString(json, blNumber));
-        if (checker == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("checker not found!");
-        }
-
-        if (productOrder.getChecker() != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("product order already have a checker!");
-        }
-
-        checker.assignAsChecker(productOrder);
-        ActionLog actionLog = new ActionLog(String.format("Assign product order with BL Number %s to %s for checking.", productOrder.getBLNumber(), checker.getUsername()));
-        productOrder.addActionLog(actionLog, authRes.getUser());
-        prodOrderRepo.save(productOrder);
-        userRepo.save(checker);
-        userRepo.save(authRes.getUser());
-
-        return ResponseEntity.ok().body(String.format("Successfully assigned ", productOrder.getBLNumber(), checker.getUsername()));
-    }
-    */
-
-    /*
 
       [ROLE]             [STATUS]
 
