@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import Header from "../components/Header";
 import DashboardHeader from "../components/DashboardHeader";
-import ProductOrder from "../components/ProductOrder";
+
 import { authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import { useCookies } from "react-cookie"
 
