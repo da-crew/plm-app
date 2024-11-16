@@ -43,7 +43,8 @@ const styles = {
     borderRadius: '10px',
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
     marginBottom: '10px',
-    maxWidth: '1360px'
+    maxWidth: '1360px',
+    overflowX: 'auto',
   },
   buttonContainer: {
     display: 'flex',
