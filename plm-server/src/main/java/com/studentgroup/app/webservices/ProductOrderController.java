@@ -484,7 +484,7 @@ public class ProductOrderController {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("in construction...");
     }
 
-    /*
+    /*NOT TESTED
     this one accepts form-data instead of json,
     and hasn't been tested yet.
     */
@@ -548,7 +548,7 @@ public class ProductOrderController {
         }
     }
 
-
+    //NOT TESTED
     @DeleteMapping("/product-orders/{blNumber}/cars/{carId}/damage-report/{reportId}")
     public ResponseEntity<String> deleteDamageReport(    
     @PathVariable String blNumber, 
@@ -606,7 +606,7 @@ public class ProductOrderController {
     }
 
 
-    /*
+    /*NOT TESTED
     Request Body: {
         caller: {
             username: String,
@@ -660,7 +660,7 @@ public class ProductOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body("successfully added car");
     }
 
-    /*
+    /*NOT TESTED
     Request Body: {
         caller: {
             username: String,
