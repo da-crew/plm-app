@@ -374,7 +374,7 @@ public class ProductOrderController {
         return ResponseEntity.ok().body(orders);
     }
 
-    @GetMapping("/product-orders/")
+    @GetMapping("/product-orders")
     public ResponseEntity<Iterable<ProductOrder>> getAll() {
         return ResponseEntity.ok().body(prodOrderRepo.findAll());
     }
