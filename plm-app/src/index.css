@@ -4,7 +4,7 @@ html {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #BCBCBC;
-  
+
 }
 
 
@@ -31,4 +31,28 @@ html {
 .center-block {
     width: 70%; /* Adjust as necessary */
     margin: 0 auto;
+}
+
+
+/* about back button */
+.back {
+    display: inline-flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 24px; /* Adjust size */
+    font-weight: bold;
+    color: black; /* Adjust color */
+    text-decoration: none; /* Remove underline if it's a link */
+    cursor: pointer;
+}
+
+.back .arrow {
+    margin-right: 8px; /* Space between arrow and text */
+    font-size: 24px; /* Adjust size of the arrow */
+    line-height: 1;
+}
+
+.back:hover {
+    color: blue; /* Hover effect color */
+    text-decoration: underline; /* Optional hover effect */
 }
