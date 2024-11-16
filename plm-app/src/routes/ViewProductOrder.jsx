@@ -8,7 +8,8 @@ import MainDetails from "../components/ProductOrder/mainDetails"
 import { useCookies } from "react-cookie"
 import LoadDetails from "../components/ProductOrder/loadDetails";
 import ActionButtons from "../components/ProductOrder/actionButtons";
-
+import OrderTable from "../components/ProductOrder/orderTable";
+import Status from "../components/ProductOrder/status";
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
@@ -44,26 +45,7 @@ export default function ProductOrder() {
                     
 
                     {/* Product Order Table */}
-                    <div className="product-order-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Mark & Nos.</th>
-                                    <th>Pkgs.</th>
-                                    <th>Description</th>
-                                    <th>Remarks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>MN</td>
-                                    <td>1</td>
-                                    <td>MASERATI TOTAL 1 UNIT</td>
-                                    <td>1.870 TON 18.280 CBM</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <OrderTable params={blnum} productOrders={productOrders}/>
 
                     {/* Damage Report and Load Details Section */}
                     <div className="report-section">
@@ -84,9 +66,7 @@ export default function ProductOrder() {
                 {/* Right Column: Contains status and dispatcher information */}
                 <div className="right-column">
                     {/* Status Information */}
-                    <div className="status-info">
-                        <p><strong>Status :</strong> Checking</p>
-                    </div>
+                    <Status params = {blnum} productOrders= {productOrders}/>
 
                     {/* Dispatcher Information */}
                     <div className="dispatcher-info">
