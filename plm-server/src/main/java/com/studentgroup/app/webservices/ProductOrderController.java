@@ -8,7 +8,9 @@ import com.studentgroup.app.Misc;
 import com.studentgroup.app.model.*;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
 import com.studentgroup.app.model.enums.Role;
+import com.studentgroup.app.model.repositories.CarRepository;
 import com.studentgroup.app.model.repositories.ProductOrderRepository;
+import com.studentgroup.app.model.repositories.ReportRepository;
 import com.studentgroup.app.model.repositories.UserRepository;
 import com.studentgroup.app.service.FileStorageService;
 import com.studentgroup.app.webservices.authorization.*;
@@ -18,12 +20,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 @RestController
 public class ProductOrderController {
@@ -35,7 +39,10 @@ public class ProductOrderController {
     ProductOrderRepository prodOrderRepo;
 
     @Autowired
-    ObjectMapper mapper;
+    CarRepository carRepo;
+
+    @Autowired
+    ReportRepository reportRepo;
 
     @Autowired
     AuthorizationManager authMan;
@@ -43,6 +50,8 @@ public class ProductOrderController {
     @Autowired
     FileStorageService storageService;
 
+    @Autowired
+    ObjectMapper mapper;
     /*
      * Request Body: {
      * productOrder: [see method ProductOrderInfo.fromJsonNode]
@@ -214,21 +223,21 @@ public class ProductOrderController {
                          FINISHED
     
     /*
-     * Request Body: {
-     * 
-     * caller: {
-     * username: String,
-     * password: String
-     * }
-     * 
-     * }
-     * Returns:
-     * BAD_REQUEST
-     * FORBIDDEN
-     * NOT_FOUND
-     * NOT_ACCEPTABLE
-     * OK
-     * 
+     Request Body: {
+     
+     caller: {
+     username: String,
+     password: String
+     }
+     
+     }
+     Returns:
+     BAD_REQUEST
+     FORBIDDEN
+     NOT_FOUND
+     NOT_ACCEPTABLE
+     OK
+     
      */
     @PostMapping("/product-orders/{blNumber}/return")
     public ResponseEntity<String> returnProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
@@ -334,9 +343,20 @@ public class ProductOrderController {
         return ResponseEntity.status(HttpStatus.OK).body("Forwarded successfully");
     }
 
-    @PostMapping("/product-orders/{blNumber}/cars/{carId}/add-damage-report")
-    public ResponseEntity<String> addDamageReport(@PathVariable String blNumber, @PathVariable Long carId, @RequestBody JsonNode json) throws Exception {
-        AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.EXPORTER, Role.CHECKER, Role.DISPATCHER);
+
+    /*
+    this one accepts form-data not json,
+    and hasn't been tested yet.
+
+     */
+    @PostMapping(path = "/product-orders/{blNumber}/cars/{carId}/add-damage-report", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> addDamageReport(
+    @PathVariable String blNumber, 
+    @PathVariable Long carId, 
+    @RequestPart("report") String reportText,
+    @RequestPart("caller") UserCreds callerCreds,
+    @RequestPart("image") MultipartFile imageFile) throws Exception {
+        AuthorizationResult authRes = authMan.authorizeFromUserCreds(callerCreds, Role.ADMIN, Role.EXPORTER, Role.CHECKER, Role.DISPATCHER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
@@ -349,6 +369,8 @@ public class ProductOrderController {
             case SUCCESSFUL: break;
         }
 
+
+        //get product order and car
         ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
         if (productOrder == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("product order not found!");
@@ -364,8 +386,33 @@ public class ProductOrderController {
         if (foundCar == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("car not found!");
         }
-
         
+        EmployeeUser caller = authRes.getUser();
+        try {
+            ImageFile savedFile = storageService.store(imageFile);
+
+            Report report = new Report();
+            report.setDamageReportText(reportText.isEmpty() ? "No detail." : reportText);
+            report.setImgUrl(savedFile.getId());
+
+            foundCar.addReport(report);
+
+            //save report, car, user
+            
+            ActionLog actionLog = new ActionLog(String.format("Add report text to car ID %s.", carId));
+            productOrder.addActionLog(actionLog, caller);
+            prodOrderRepo.save(productOrder);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Add report text to car ID %s.", carId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
+        }
+    }
+
+
+    @PostMapping("/product-orders/{blNumber}/add-car")
+    public ResponseEntity<String> addCar(@RequestBody JsonNode json) {
+
 
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("in construction...");
     }

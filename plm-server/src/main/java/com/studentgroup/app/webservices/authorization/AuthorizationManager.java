@@ -35,4 +35,20 @@ public class AuthorizationManager {
         
         return new AuthorizationResult(AuthorizationStatus.SUCCESSFUL, caller);
     }
+
+    public AuthorizationResult authorizeFromUserCreds(UserCreds userCreds, Role... permittedRoles) throws Exception {
+        List<Role> roles = Arrays.asList(permittedRoles);
+
+        EmployeeUser caller = userRepo.findByUsername(userCreds.getUsername());
+        if (caller == null) {
+            return new AuthorizationResult(AuthorizationStatus.USER_NOT_FOUND, null);
+        }
+
+        if (!caller.verify(userCreds.getPassword()))
+            return new AuthorizationResult(AuthorizationStatus.INCORRECT_PASSWORD, null);
+        if (roles.indexOf(caller.getRole()) == -1)
+            return new AuthorizationResult(AuthorizationStatus.NO_PERMISSION, caller);
+    
+        return new AuthorizationResult(AuthorizationStatus.SUCCESSFUL, caller);
+    }
 }
