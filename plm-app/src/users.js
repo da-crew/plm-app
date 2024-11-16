@@ -148,7 +148,7 @@ export function useAllProductOrders() {
 
     useEffect(() => {
         if (success){
-            axios.get(WEB_SERVICE_URL + "/product-orders/")
+            axios.get(WEB_SERVICE_URL + "/product-orders")
                 .then((response) => {
                     setProductOrders(response.data);
                 })
