@@ -8,6 +8,7 @@ import Dashboard from './routes/Dashboard.jsx';
 import LoginTest from './routes/LoginTest.jsx';
 import Create from './routes/Create.jsx';
 import ManageUser from './routes/ManageUser.jsx';
+import FetchTest from './routes/FetchTest.jsx';
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     {
         path: "/login-test",
         element: <LoginTest/>,
+    },
+    {
+        path: "/fetch-test",
+        element: <FetchTest/>
     }
 ]);
 

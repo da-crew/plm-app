@@ -3,6 +3,9 @@ package com.studentgroup.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,18 +16,11 @@ public class Truck {
     @Column(name = "TRUCK_ID")
     private Long id;
 
-    //we probably dont need this
     @Column(name = "TRUCK_NUMBER")
     private String truckNumber;
 
-    //@Column(name = "TOTAL_CARS")
-    //private Integer totalCars;
-
-    @ManyToOne
-    @JoinColumn(name = "PROD_ORDER_ID")
-    private ProductOrder productOrder;
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "truck")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "truck")
+    @JsonManagedReference
     private List<Car> cars = new ArrayList<>();
     
     //constructor
@@ -40,6 +36,11 @@ public class Truck {
     }
 
     //getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
     public String getTruckNumber() {
         return truckNumber;
     }
@@ -47,33 +48,10 @@ public class Truck {
     public void setTruckNumber(String truckNumber) {
         this.truckNumber = truckNumber;
     }
-    
-    public ProductOrder getProductOrder() {
-        return productOrder;
-    }
-    public void setProductOrder(ProductOrder productOrder) {
-        this.productOrder = productOrder;
-    }
-
-    //public Integer getTotalCars() {
-    //    return totalCars;
-    //}
-
-
-    //public void setTotalCars(Integer totalCars) {
-    //    this.totalCars = totalCars;
-    //}
 
 
     public List<Car> getCars() {
         return cars;
     }
-
-
-    //public void setCars(List<Car> cars) {
-    //    this.cars = cars;
-    //}
-
-
-
+    
 }

@@ -42,6 +42,15 @@ public class UserInfo {
         this.role = role;
     }
 
+    /*
+    JSON must look like this:
+    {
+        username: String,
+        firstname: String,
+        lastname: String,
+        role: String representation of an Role enum value
+    }
+    */
     public static UserInfo fromJson(JsonNode json) {
         UserInfo user = new UserInfo();
         user.username = Misc.jsonToString(json, "username");

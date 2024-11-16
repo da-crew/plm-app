@@ -1,10 +1,14 @@
 package com.studentgroup.app.model;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.studentgroup.app.model.enums.ProductOrderStatus;
+import com.studentgroup.app.model.serializer.*;
 
 import jakarta.persistence.*;
 
@@ -16,6 +20,7 @@ public class ProductOrder {
     @Column(name = "PROD_ORDER_ID")
     private Long id; 
 
+
     //product order details
     @Column(name = "BL_NO") private String BLNumber;
     @Column(name = "ORDER_DATE") @Temporal(TemporalType.TIMESTAMP) private ZonedDateTime orderDate;
@@ -23,20 +28,26 @@ public class ProductOrder {
     @Column(name = "VOY_NO") private String voyNumber;
     @Column(name = "COSIGNEE") private String cosigneeName;
     @Column(name = "WHARF_RECEIPT_IMAGE") private String wharfReceiptImgUrl;
-    //@Column(name = "TOTAL_TRUCKS") private Integer totalTrucks;//we probably dont need this too
     @Enumerated(EnumType.STRING) @Column(name = "STATUS") private ProductOrderStatus statusName = ProductOrderStatus.UNKNOWN;
 
     //table relationships
+
     @ManyToOne
-    @JoinColumn(name = "EMP_ID")
+    @JoinColumn(name = "CHECKER_ID")
+    @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser checker;
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
-    private List<ActionLog> actionLogs;
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "productOrder")
-    private List<Truck> trucks;
     
+    @ManyToOne
+    @JoinColumn(name = "DISPATCHER_ID")
+    @JsonSerialize(using = EmployeeUserFieldSerializer.class)
+    private EmployeeUser dispatcher;
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
+    private List<ActionLog> actionLogs = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
+    @JsonManagedReference
+    private List<Car> cars = new ArrayList<>();
 
     //constructor
     public ProductOrder() {}
@@ -49,23 +60,26 @@ public class ProductOrder {
         this.cosigneeName = cosigneeName;
         this.wharfReceiptImgUrl = wharfReceiptImgUrl;
         this.statusName = prodStatus;
-        trucks = new ArrayList<>();
-        actionLogs = new ArrayList<>();
     }
 
     //misc methods
 
-    public void addActionLog(ActionLog log) {
+    public void addActionLog(ActionLog log, EmployeeUser user) {
         actionLogs.add(log);
+        user.addActionLog(log);
         log.setProductOrder(this);
     }
 
-    public void addTruck(Truck truck) {
-        trucks.add(truck);
-        truck.setProductOrder(this);
+    public void addCar(Car car) {
+        cars.add(car);
+        car.setProductOrder(this);
     }
 
     //getters and setters
+    
+    public Long getId() {
+        return id;
+    }
     public String getBLNumber() {
         return BLNumber;
     }
@@ -114,14 +128,6 @@ public class ProductOrder {
         this.wharfReceiptImgUrl = wharfReceiptImgUrl;
     }
 
-    //public Integer getTotalTrucks() {
-    //    return totalTrucks;
-    //}
-
-    //public void setTotalTrucks(Integer totalTrucks) {
-    //    this.totalTrucks = totalTrucks;
-    //}
-
     public ProductOrderStatus getStatusName() {
         return statusName;
     }
@@ -138,20 +144,23 @@ public class ProductOrder {
         this.checker = checker;
     }
 
+    public EmployeeUser getDispatcher() {
+        return dispatcher;
+    }
+    public void setDispatcher(EmployeeUser dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
     public List<ActionLog> getActionLogs() {
         return actionLogs;
     }
 
-    //public void setActionLogs(List<ActionLog> actionLogs) {
-    //    this.actionLogs = actionLogs;
-    //}
-
-    public List<Truck> getTrucks() {
-        return trucks;
+    public List<Car> getCars() {
+        return cars;
     }
 
-    //public void setTrucks(List<Truck> trucks) {
-    //    this.trucks = trucks;
+    //public List<Truck> getTrucks() {
+    //    return trucks;
     //}
-
 }
+

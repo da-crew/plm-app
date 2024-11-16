@@ -2,6 +2,11 @@ package com.studentgroup.app.model;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.studentgroup.app.model.serializer.EmployeeUserFieldSerializer;
+import com.studentgroup.app.model.serializer.ProductOrderFieldSerializer;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,18 +17,24 @@ public class ActionLog {
     @Column(name = "ACTION_LOG_ID")
     private Long id;
 
+    @Column(name = "TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime timestamp;
+
+    @Column(name = "ACTION")
+    private String actionText;
+
     //table relationships
     @ManyToOne
     @JoinColumn(name = "PROD_ORDER_ID")
+    @JsonSerialize(using = ProductOrderFieldSerializer.class)
     private ProductOrder productOrder;
 
     @ManyToOne
     @JoinColumn(name = "EMP_ID")
+    @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser employee;
 
-    @Column(name = "TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime timestamp;
 
     //constructor   
     public ActionLog() {}
@@ -31,13 +42,26 @@ public class ActionLog {
         this.timestamp = timestamp;
     }
 
+    public ActionLog(String action) {
+        this.timestamp = ZonedDateTime.now();
+        this.actionText = action;
+    }
+
+    public ActionLog(String action, ZonedDateTime timestamp) {
+        this.timestamp = timestamp;
+        this.actionText = action;
+    }
+
     //getter and setters
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getActionText() {
+        return actionText;
+    }
+    public void setActionText(String actionText) {
+        this.actionText = actionText;
     }
 
     public ProductOrder getProductOrder() {
