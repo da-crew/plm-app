@@ -7,6 +7,7 @@ import {useAllProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate }
 import MainDetails from "../components/ProductOrder/mainDetails"
 import { useCookies } from "react-cookie"
 import LoadDetails from "../components/ProductOrder/loadDetails";
+import ActionButtons from "../components/ProductOrder/actionButtons";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -77,17 +78,7 @@ export default function ProductOrder() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div class="action-buttons">
-                        <div class="add-buttons">
-                            <button class="add-damage-report">Add Damage Report</button>
-                            <button class="add-load-details">Add Load Details</button>
-                        </div>
-                        <div class="other-buttons">
-                            <button class="return-dispatcher">Return to Dispatcher</button>
-                            <button class="forward-exporter">Forward to Exporter</button>
-                            <button class="edit-product-order">Edit Product Order</button>
-                        </div>
-                    </div>
+                    <ActionButtons user = {userInfo} params={blnum} productOrders={productOrders}/>
                 </div>
 
                 {/* Right Column: Contains status and dispatcher information */}

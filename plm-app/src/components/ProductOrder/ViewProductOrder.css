@@ -100,10 +100,10 @@
     background-color: #007bff; /* Blue */
 }
 
-.return-dispatcher {
+.report, .return-dispatcher {
     background-color: #dc3545; /* Red */
 }
 
-.forward-exporter {
+.forward, .forward-exporter {
     background-color: #28a745; /* Green */
 }
