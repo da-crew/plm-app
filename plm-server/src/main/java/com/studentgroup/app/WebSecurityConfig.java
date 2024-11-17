@@ -13,10 +13,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//@Configuration
+@Configuration
+public class WebSecurityConfig implements WebMvcConfigurer {
 
-public class WebSecurityConfig extends WebSecurityConfiguration {
-
-
-
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry
+            .addMapping("/**")
+            .allowedOrigins("*") // Replace with allowed origins
+            .allowedMethods("*") // Allow all HTTP methods
+            .allowedHeaders("*") // Allow all headers
+            .exposedHeaders(
+                "Access-Control-Allow-Origin", 
+                "Access-Control-Allow-Methods", 
+                "Access-Control-Allow-Headers", 
+                "Access-Control-Max-Age", 
+                "Access-Control-Request-Headers", 
+                "Access-Control-Request-Method"
+            );
+    }
 }

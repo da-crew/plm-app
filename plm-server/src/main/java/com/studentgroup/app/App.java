@@ -27,13 +27,25 @@ public class App {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**").allowedOrigins("*");
-				registry.addMapping("/auth").allowedOrigins("*");
-				registry.addMapping("/test/users").allowedOrigins("*");
+                registry.addMapping("/product-orders/*/cars/*");
+                registry.addMapping("/**")
+                        .allowedOrigins("*") // Replace with allowed origins
+                        .allowedMethods("*") // Allow all HTTP methods
+                        .allowedHeaders("*") // Allow all headers
+                        .exposedHeaders(
+                            "Access-Control-Allow-Origin", 
+                            "Access-Control-Allow-Methods", 
+                            "Access-Control-Allow-Headers", 
+                            "Access-Control-Max-Age", 
+                            "Access-Control-Request-Headers", 
+                            "Access-Control-Request-Method"
+                        );
 			}
 		};
 	}
 
-    @Bean
+    /* 
+    //@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
@@ -44,6 +56,6 @@ public class App {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
+    */
 }
 
