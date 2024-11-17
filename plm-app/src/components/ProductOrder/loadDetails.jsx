@@ -42,6 +42,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
                 {
                     headers: {
                         "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
                     },
                     data: payload // Include payload in the config
                 }
