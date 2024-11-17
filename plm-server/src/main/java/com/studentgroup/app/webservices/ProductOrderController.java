@@ -356,7 +356,11 @@ public class ProductOrderController {
 
         EmployeeUser caller = authRes.getUser();
 
+
         if (newChecker != null && !productOrder.getChecker().getUsername().equals(newCheckerUsername)) {
+            if (newChecker.getRole() != Role.ADMIN && newChecker.getRole() != Role.CHECKER)
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("assigned checker must be a checker or an admin!");
+
             productOrder.removeChecker();
             newChecker.assignAsChecker(productOrder);
             ActionLog actionLog = new ActionLog("Reassign to " + newChecker.getUsername() + " as a checker");
@@ -364,6 +368,8 @@ public class ProductOrderController {
         }
 
         if (newDispatcher != null && !productOrder.getDispatcher().getUsername().equals(newDispatcherUsername)) {
+            if (newDispatcher.getRole() != Role.ADMIN && newDispatcher.getRole() != Role.DISPATCHER)
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("assigned dispatcher must be a dispatcher or an admin!");
             productOrder.removeDispatcher();
             newDispatcher.assignAsDispatcher(productOrder);
             ActionLog actionLog = new ActionLog("Reassign to " + newDispatcher.getUsername() + " as a dispatcher");
@@ -437,7 +443,7 @@ public class ProductOrderController {
         }
     }
      */
-    @DeleteMapping("product-orders/{blnumber}")
+    @DeleteMapping("product-orders/{blNumber}")
     public ResponseEntity<String> deleteProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
         switch (authRes.getStatus()) {
