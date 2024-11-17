@@ -3,7 +3,7 @@ import { Navigate, useParams } from "react-router";
 import DashboardHeader from "../components/DashboardHeader";
 import Header from "../components/Header";
 import '../components/ProductOrder/ViewProductOrder.css';
-import {useAllProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
+import { useAllProductOrders, authenticate, COOKIES_NAME, Role, useAuthenticate } from "../users";
 import MainDetails from "../components/ProductOrder/mainDetails"
 import { useCookies } from "react-cookie"
 import LoadDetails from "../components/ProductOrder/loadDetails";
@@ -19,11 +19,12 @@ export default function ProductOrder() {
     let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
     let [refreshTrigger, setRefreshTrigger] = useState(false);
     let [productOrders, setProductOrders, succ] = useAllProductOrders(refreshTrigger);
-    
-    const {blnum} = useParams();
+
+    const { blnum } = useParams();
 
 
-    useEffect(() => {console.log(JSON.stringify(userInfo))
+    useEffect(() => {
+        console.log(JSON.stringify(userInfo))
         if (toLogin || !validCreds) {
             removeCookie("username");
             removeCookie("password");
@@ -47,7 +48,7 @@ export default function ProductOrder() {
 
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
-        
+
     }
     const handleForward = async () => {
         const payload = {
@@ -58,7 +59,7 @@ export default function ProductOrder() {
         };
         try {
             const response = await axios.post(
-                "http://localhost:8080/product-orders/"+blnum+"/forward",
+                "http://localhost:8080/product-orders/" + blnum + "/forward",
                 payload,
                 {
                     headers: {
@@ -68,7 +69,7 @@ export default function ProductOrder() {
             );
             alert("Action successful!");
             setRefreshTrigger(!refreshTrigger);
-        }catch (error) {
+        } catch (error) {
             console.error("Error during forward request:", error);
             if (error.response) {
                 alert(`Error: ${error.response.status} - ${error.response.data}`);
@@ -87,7 +88,7 @@ export default function ProductOrder() {
         };
         try {
             const response = await axios.post(
-                "http://localhost:8080/product-orders/"+blnum+"/return",
+                "http://localhost:8080/product-orders/" + blnum + "/return",
                 payload,
                 {
                     headers: {
@@ -97,7 +98,7 @@ export default function ProductOrder() {
             );
             alert("Action successful!");
             setRefreshTrigger(!refreshTrigger);
-        }catch (error) {
+        } catch (error) {
             console.error("Error during forward request:", error);
             if (error.response) {
                 alert(`Error: ${error.response.status} - ${error.response.data}`);
@@ -107,13 +108,15 @@ export default function ProductOrder() {
         }
 
     }
-    
+
     function handleRefresh() {//when click product order in list
         setRefreshTrigger(!refreshTrigger);
     }
 
+
+
     return (<>
-        <Header  onLogout={() => setToLogin(true)}  user={userInfo} />
+        <Header onLogout={() => setToLogin(true)} user={userInfo} />
         <h1>This is a ProductOrder</h1>
         <p>Welcome, {userInfo.username}</p>
         <p>Role: {Role.toString(userInfo.role)}</p>
@@ -123,28 +126,28 @@ export default function ProductOrder() {
                 <div className="left-column">
 
                     {/* B/L and Order Info */}
-                    <MainDetails params= {blnum} productOrders={productOrders}/>
-                    
+                    <MainDetails params={blnum} productOrders={productOrders} />
+
 
                     {/* Product Order Table */}
-                    <OrderTable params={blnum} productOrders={productOrders}/>
+                    <OrderTable params={blnum} productOrders={productOrders} />
 
                     {/* Damage Report and Load Details Section */}
                     <div className="report-section">
-                        <DamageReport params={blnum} productOrders={productOrders}/>
-                        
+                        <DamageReport params={blnum} productOrders={productOrders} />
+
                         {/* Load detail */}
-                        <LoadDetails params = {blnum} productOrders= {productOrders} onDeleteCar={handleRefresh}/>
+                        <LoadDetails params={blnum} productOrders={productOrders} onDeleteCar={handleRefresh} />
                     </div>
 
                     {/* Action Buttons */}
-                    <ActionButtons user = {userInfo} params={blnum} productOrders={productOrders} handleForward={handleForward} handleReturn={handleReturn} />
+                    <ActionButtons user={userInfo} params={blnum} productOrders={productOrders} handleForward={handleForward} handleReturn={handleReturn} />
                 </div>
 
                 {/* Right Column: Contains status and dispatcher information */}
                 <div className="right-column">
                     {/* Status Information */}
-                    <Status params = {blnum} productOrders= {productOrders}/>
+                    <Status params={blnum} productOrders={productOrders} />
 
                     {/* Dispatcher Information */}
                     <div className="dispatcher-info">

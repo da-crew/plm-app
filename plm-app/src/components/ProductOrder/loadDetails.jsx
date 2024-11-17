@@ -59,7 +59,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
             } else {
                 console.error("Error deleting car:", error.message);
             }
-        }
+        };
     };
    
 
