@@ -123,7 +123,6 @@ export function useProductOrders() {
 
     useEffect(() => {
         if (cookies.username != null && success){
-            //console.log("Sending Request to " + WEB_SERVICE_URL + "/product-orders/" + cookies.username + "/");
             axios.get(WEB_SERVICE_URL + "/product-orders/" + cookies.username + "/")
                 .then((response) => {
                     setProductOrders(response.data);
@@ -142,7 +141,28 @@ export function useProductOrders() {
     return [productOrders, success]
 }
 
-export function useAllProductOrders() {
+//previous
+// export function useAllProductOrders() {
+//     let [success, setSuccess] = useState(true);
+//     let [productOrders, setProductOrders] = useState([]);
+
+//     useEffect(() => {
+//         if (success){
+//             axios.get(WEB_SERVICE_URL + "/product-orders")
+//                 .then((response) => {
+//                     setProductOrders(response.data);
+//                 })
+//                 .catch((error) => {
+//                     setSuccess(false);
+//                 });
+//         } else {
+//         }
+//     }, [success]);
+
+
+//     return [productOrders, success]
+// }
+export function useAllProductOrders(refreshTrigger) {
     let [success, setSuccess] = useState(true);
     let [productOrders, setProductOrders] = useState([]);
 
@@ -157,11 +177,12 @@ export function useAllProductOrders() {
                 });
         } else {
         }
-    }, [success]);
+    }, [success, refreshTrigger]);
 
 
-    return [productOrders, success]
+    return [productOrders, setProductOrders, success]
 }
+
 
 export function createProduct(){
 

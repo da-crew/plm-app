@@ -22,7 +22,12 @@ function DamageReport({ params, productOrders }) {
 
     // If no cars with reports are found
     if (reportedCars.length === 0) {
-        return <p>No damage reports available for this product order.</p>;
+        return (
+        <div className= "damage-report">
+            <h4>Damage Report</h4>
+        <p>No damage reports available for this product order.</p>
+        </div>
+        )
     }
 
     

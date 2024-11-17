@@ -11,14 +11,16 @@ import ActionButtons from "../components/ProductOrder/actionButtons";
 import OrderTable from "../components/ProductOrder/orderTable";
 import Status from "../components/ProductOrder/status";
 import DamageReport from "../components/ProductOrder/damageReport";
-
+import axios from 'axios';
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
     let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
-    let [productOrders, succ] = useAllProductOrders();
-    const {blnum} = useParams();////////
+    let [refreshTrigger, setRefreshTrigger] = useState(false);
+    let [productOrders, setProductOrders, succ] = useAllProductOrders(refreshTrigger);
+    
+    const {blnum} = useParams();
 
 
     useEffect(() => {console.log(JSON.stringify(userInfo))
@@ -28,9 +30,82 @@ export default function ProductOrder() {
         }
     }, [toLogin]);
 
+    useEffect(() => {
+        // Logic to refresh productOrders when refreshTrigger changes
+        // Assume fetchProductOrders is a function in useAllProductOrders
+        const fetchUpdatedOrders = async () => {
+            try {
+                // Re-fetch data logic
+                let response = await axios.get("http://localhost:8080/product-orders");
+                setProductOrders(response.data); // Update local state if needed
+            } catch (error) {
+                console.error("Error refreshing product orders:", error);
+            }
+        };
+        fetchUpdatedOrders();
+    }, [refreshTrigger]); // Dependency on refreshTrigger
+
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
         
+    }
+    const handleForward = async () => {
+        const payload = {
+            caller: {
+                username: userInfo.username,
+                password: password,
+            }
+        };
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/product-orders/"+blnum+"/forward",
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            alert("Action successful!");
+            setRefreshTrigger(!refreshTrigger);
+        }catch (error) {
+            console.error("Error during forward request:", error);
+            if (error.response) {
+                alert(`Error: ${error.response.status} - ${error.response.data}`);
+            } else {
+                console.error("Error:", error.message);
+            }
+        }
+
+    }
+    const handleReturn = async () => {
+        const payload = {
+            caller: {
+                username: userInfo.username,
+                password: password,
+            }
+        };
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/product-orders/"+blnum+"/return",
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                },
+            );
+            alert("Action successful!");
+            setRefreshTrigger(!refreshTrigger);
+        }catch (error) {
+            console.error("Error during forward request:", error);
+            if (error.response) {
+                alert(`Error: ${error.response.status} - ${error.response.data}`);
+            } else {
+                console.error("Error:", error.message);
+            }
+        }
+
     }
     
 
@@ -60,7 +135,7 @@ export default function ProductOrder() {
                     </div>
 
                     {/* Action Buttons */}
-                    <ActionButtons user = {userInfo} params={blnum} productOrders={productOrders}/>
+                    <ActionButtons user = {userInfo} params={blnum} productOrders={productOrders} handleForward={handleForward} handleReturn={handleReturn} />
                 </div>
 
                 {/* Right Column: Contains status and dispatcher information */}
