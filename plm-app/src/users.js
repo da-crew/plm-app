@@ -162,3 +162,26 @@ export function useAllProductOrders() {
 
     return [productOrders, success]
 }
+
+export function createProduct(){
+
+    return
+}
+
+export const createProductOrder = async (caller, checker, productOrder) => {
+    try {
+      const response = await axios.post(WEB_SERVICE_URL+"/product-orders/create", {
+        caller,
+        checker,
+        productOrder,
+      });
+      return response.data; // Return success response
+    } catch (error) {
+      // Handle error response
+      if (error.response) {
+        throw new Error(error.response.data); // Error message from backend
+      } else {
+        throw new Error("Failed to connect to the server.");
+      }
+    }
+  };
