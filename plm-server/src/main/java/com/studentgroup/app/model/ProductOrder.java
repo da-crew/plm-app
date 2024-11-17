@@ -22,7 +22,7 @@ public class ProductOrder {
 
     //product order details
     @Column(name = "BL_NO") private String BLNumber;
-    @Column(name = "ORDER_DATE") @Temporal(TemporalType.TIMESTAMP) private ZonedDateTime orderDate;
+    @Column(name = "ORDER_DATE", columnDefinition = "TIMESTAMP(6)") @Temporal(TemporalType.TIMESTAMP) private ZonedDateTime orderDate;//
     @Column(name = "VESSEL") private String vesselName;
     @Column(name = "VOY_NO") private String voyNumber;
     @Column(name = "COSIGNEE") private String cosigneeName;
@@ -42,7 +42,7 @@ public class ProductOrder {
     @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser checker;
     
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "DISPATCHER_ID")
     @JsonSerialize(using = EmployeeUserFieldSerializer.class)
     private EmployeeUser dispatcher;

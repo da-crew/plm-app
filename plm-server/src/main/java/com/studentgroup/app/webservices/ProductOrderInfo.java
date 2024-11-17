@@ -60,6 +60,9 @@ class ProductOrderInfo {
         ) {
             return null;
         }
+
+        //truncate nanoseconds
+        dateString = dateString.substring(0, dateString.indexOf(".")) + "Z";
         
         try {
             prodInfo.orderDate = ZonedDateTime.parse(dateString);

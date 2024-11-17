@@ -316,6 +316,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted " + username);
     }
 
+    @GetMapping("/users")
+    public Iterable<EmployeeUser> getAllUsers() {
+        return userRepo.findAll();
+    }
+    
+
     @GetMapping("/users/checkers")
     public Iterable<EmployeeUser> getCheckers() {
         return userRepo.findByRole(Role.CHECKER);
