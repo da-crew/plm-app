@@ -443,7 +443,7 @@ public class ProductOrderController {
         }
     }
      */
-    @DeleteMapping("product-orders/{blnumber}")
+    @DeleteMapping("product-orders/{blNumber}")
     public ResponseEntity<String> deleteProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
         switch (authRes.getStatus()) {
