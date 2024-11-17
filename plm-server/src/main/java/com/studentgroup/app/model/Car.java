@@ -15,7 +15,7 @@ import jakarta.persistence.*;
 @Table(name = "CAR")
 public class Car {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CAR_ID")
     private Long id;
 

@@ -3,6 +3,8 @@ package com.studentgroup.app.webservices;
 
 import com.studentgroup.app.Misc;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -312,6 +314,26 @@ public class UserController {
         userRepo.delete(user);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted " + username);
+    }
+
+    @GetMapping("/users/checkers")
+    public Iterable<EmployeeUser> getCheckers() {
+        return userRepo.findByRole(Role.CHECKER);
+    }
+
+    @GetMapping("/users/dispatchers")
+    public Iterable<EmployeeUser> getDispatchers() {
+        return userRepo.findByRole(Role.DISPATCHER);
+    }
+
+    @GetMapping("/users/exporters")
+    public Iterable<EmployeeUser> getExporters() {
+        return userRepo.findByRole(Role.EXPORTER);
+    }
+
+    @GetMapping("/users/admins")
+    public Iterable<EmployeeUser> getAdmins() {
+        return userRepo.findByRole(Role.ADMIN);
     }
 
 }

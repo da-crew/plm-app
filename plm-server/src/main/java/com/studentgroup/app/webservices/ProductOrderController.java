@@ -17,6 +17,9 @@ import com.studentgroup.app.model.repositories.UserRepository;
 import com.studentgroup.app.service.FileStorageService;
 import com.studentgroup.app.webservices.authorization.*;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
@@ -63,6 +66,9 @@ public class ProductOrderController {
 
     @Autowired
     ObjectMapper mapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
     /*
      * Request Body: {
      * productOrder: [see method ProductOrderInfo.fromJsonNode]
@@ -511,7 +517,7 @@ public class ProductOrderController {
     @PostMapping(path = "/product-orders/{blNumber}/cars/{carId}/damage-report", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> addDamageReport(
     @PathVariable String blNumber, 
-    @PathVariable Long carId, 
+    @PathVariable long carId, 
     @RequestPart("report") String reportText,
     @RequestPart("caller") UserCreds callerCreds,
     @RequestPart("image") MultipartFile imageFile) throws Exception {
@@ -536,8 +542,12 @@ public class ProductOrderController {
         }
 
         Car foundCar = null;
-        for (Car car : productOrder.getCars()) {
-            if (car.getId() == carId) {
+
+        List<Car> cars = productOrder.getCars();
+
+        carRepo.findById(carId);
+        for (Car car : cars) {
+            if (car.getId().longValue() == carId) {
                 foundCar = car;
                 break;
             }
@@ -572,8 +582,8 @@ public class ProductOrderController {
     @DeleteMapping("/product-orders/{blNumber}/cars/{carId}/damage-report/{reportId}")
     public ResponseEntity<String> deleteDamageReport(    
     @PathVariable String blNumber, 
-    @PathVariable Long carId, 
-    @PathVariable Long reportId,
+    @PathVariable long carId, 
+    @PathVariable long reportId,
     @RequestBody JsonNode json) throws Exception {
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
         switch (authRes.getStatus()) {
@@ -594,7 +604,7 @@ public class ProductOrderController {
         }
         Car foundCar = null;
         for (Car car : productOrder.getCars()) {
-            if (car.getId() == carId) {
+            if (car.getId().longValue() == carId) {
                 foundCar = car;
                 break;
             }
@@ -605,7 +615,7 @@ public class ProductOrderController {
 
         Report foundReport = null;
         for (Report report : foundCar.getReports()) {
-            if (report.getId() == reportId) {
+            if (report.getId().longValue() == reportId) {
                 foundReport = report;
                 break;
             }
@@ -616,11 +626,13 @@ public class ProductOrderController {
 
         foundReport.setCar(null);
         storageService.deleteFile(foundReport.getImgUrl());
+        
         reportRepo.delete(foundReport);
 
         ActionLog actionLog = new ActionLog("Delete damage report ");
         productOrder.addActionLog(actionLog, authRes.getUser());
         prodOrderRepo.save(productOrder);
+        carRepo.save(foundCar);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("removed report");
     }
@@ -689,7 +701,7 @@ public class ProductOrderController {
     }
      */
     @DeleteMapping("/product-orders/{blNumber}/cars/{carId}")
-    public ResponseEntity<String> removeCar(@PathVariable String blNumber, @PathVariable Long carId, @RequestBody JsonNode json) throws Exception{
+    public ResponseEntity<String> removeCar(@PathVariable String blNumber, @PathVariable long carId, @RequestBody JsonNode json) throws Exception{
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.CHECKER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
@@ -710,7 +722,7 @@ public class ProductOrderController {
 
         Car foundCar = null;
         for (Car car : productOrder.getCars()) {
-            if (car.getId() == carId) {
+            if (car.getId().longValue() == carId) {
                 foundCar = car;
                 break;
             }

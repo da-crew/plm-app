@@ -27,12 +27,15 @@ public class DatabaseInitializer {
     private TruckRepository truckRepo;
     @Autowired 
     private ReportRepository reportRepo;
+    @Autowired
+    ImageFileRepository imageFileRepo;
 
     //please find a way to turn this off when we're deploying this thing on Google Cloud.
     @PostConstruct
     public void initDatabase() throws Exception {
-        
+        imageFileRepo.deleteAll();
         /**/
+
         for (ProductOrder prod : prodOrderRepo.findAll()) {
             prod.setChecker(null);
             prod.setDispatcher(null);
