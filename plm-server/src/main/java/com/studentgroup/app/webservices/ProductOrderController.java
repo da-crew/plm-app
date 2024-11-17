@@ -144,7 +144,7 @@ public class ProductOrderController {
         userRepo.save(checker);
         userRepo.save(caller);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
@@ -199,7 +199,6 @@ public class ProductOrderController {
      NOT_FOUND
      NOT_ACCEPTABLE
      OK
-     
      */
     @PostMapping("/product-orders/{blNumber}/return")
     public ResponseEntity<String> returnProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
@@ -308,20 +307,22 @@ public class ProductOrderController {
     
 
     /*
-    NOT TESTED
     Request Body: {
         caller: {
             username: String,
             password: String
-        }
+        },
 
-        productOrder: [see ProductOrderInfo.fromJsonNode]
+        productOrder: [see ProductOrderInfo.fromJsonNode],
 
-        checker: String(can be left null if you want to leave it unchanged)
-        dispatcher: String(can be left null if you want to leave it unchanged)
+        checker: String(can be left null if you want to leave it unchanged),
+        dispatcher: String(can be left null if you want to leave it unchanged),
+
+        removeChecker: [boolean. defaults to false],
+        removeDispatcher: [boolean. defaults to false]
 
     }
-     */
+    */
     @PostMapping("/product-orders/{blNumber}/edit")
     public ResponseEntity<String> editProductOrder(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN);
@@ -365,28 +366,46 @@ public class ProductOrderController {
         }
 
         EmployeeUser caller = authRes.getUser();
-
-
-        if (newChecker != null && !productOrder.getChecker().getUsername().equals(newCheckerUsername)) {
-            if (newChecker.getRole() != Role.ADMIN && newChecker.getRole() != Role.CHECKER)
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("assigned checker must be a checker or an admin!");
-
-            productOrder.removeChecker();
-            newChecker.assignAsChecker(productOrder);
-            ActionLog actionLog = new ActionLog("Reassign to " + newChecker.getUsername() + " as a checker");
-            productOrder.addActionLog(actionLog, caller);
-        }
-
-        if (newDispatcher != null && !productOrder.getDispatcher().getUsername().equals(newDispatcherUsername)) {
-            if (newDispatcher.getRole() != Role.ADMIN && newDispatcher.getRole() != Role.DISPATCHER)
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("assigned dispatcher must be a dispatcher or an admin!");
-            productOrder.removeDispatcher();
-            newDispatcher.assignAsDispatcher(productOrder);
-            ActionLog actionLog = new ActionLog("Reassign to " + newDispatcher.getUsername() + " as a dispatcher");
-            productOrder.addActionLog(actionLog, caller);
-        }
-
+        
         List<ActionLog> actionLogs = new ArrayList<>();
+
+        Boolean removeChecker = json.get("removeChecker") != null ? json.get("removeChecker").asBoolean(false) : false;
+        Boolean removeDispatcher = json.get("removeDispatcher") != null ? json.get("removeDispatcher").asBoolean(false) : false;
+
+        if (removeChecker) {
+            if (productOrder.getChecker() != null) {
+                ActionLog actionLog = new ActionLog("Remove " + productOrder.getChecker().getUsername() + " as a checker.");
+                productOrder.removeChecker();
+                actionLogs.add(actionLog);
+            }
+        } else if (newChecker != null) {
+            if (productOrder.getChecker() != null ? !productOrder.getChecker().getUsername().equals(newCheckerUsername) : true) {
+                if (newChecker.getRole() != Role.ADMIN && newChecker.getRole() != Role.CHECKER)
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("assigned checker must be a checker or an admin!");
+
+                productOrder.removeChecker();
+                newChecker.assignAsChecker(productOrder);
+                ActionLog actionLog = new ActionLog("Reassign to " + newChecker.getUsername() + " as a checker");
+                actionLogs.add(actionLog);
+            }
+        }
+
+        if (removeDispatcher) {
+            if (productOrder.getDispatcher() != null) {
+                ActionLog actionLog = new ActionLog("Remove " + productOrder.getDispatcher().getUsername() + " as a dispatcher.");
+                productOrder.removeDispatcher();
+                actionLogs.add(actionLog);
+            }
+        } else if (newDispatcher != null) {
+            if (productOrder.getDispatcher() != null ? !productOrder.getDispatcher().getUsername().equals(newDispatcherUsername) : true){
+                if (newDispatcher.getRole() != Role.ADMIN && newDispatcher.getRole() != Role.DISPATCHER)
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("assigned dispatcher must be a dispatcher or an admin!");
+                productOrder.removeDispatcher();
+                newDispatcher.assignAsDispatcher(productOrder);
+                ActionLog actionLog = new ActionLog("Reassign to " + newDispatcher.getUsername() + " as a dispatcher");
+                actionLogs.add(actionLog);
+            }
+        }
 
         if (!productOrderInfo.getBLNumber().equals(productOrder.getBLNumber())) {
             if (prodOrderRepo.findByBLNumber(productOrderInfo.getBLNumber()) != null)
@@ -441,7 +460,7 @@ public class ProductOrderController {
 
         prodOrderRepo.save(productOrder);
 
-        return ResponseEntity.ok().body("Updated");
+        return ResponseEntity.ok().body(actionLogs.size() > 0 ? "Updated" : "No changes were made");
     }
 
     /*
@@ -631,7 +650,7 @@ public class ProductOrderController {
     }
 
 
-    /*NOT TESTED
+    /*
     Request Body: {
         caller: {
             username: String,
