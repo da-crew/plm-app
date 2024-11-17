@@ -50,7 +50,7 @@ public class ProductOrder {
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
     private List<ActionLog> actionLogs = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "productOrder", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Car> cars = new ArrayList<>();
 

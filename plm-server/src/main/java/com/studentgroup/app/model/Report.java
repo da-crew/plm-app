@@ -1,5 +1,7 @@
 package com.studentgroup.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "CAR_ID")
+    @JsonBackReference
     private Car car;
 
     //constructors
