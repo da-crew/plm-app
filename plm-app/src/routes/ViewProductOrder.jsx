@@ -108,6 +108,9 @@ export default function ProductOrder() {
 
     }
     
+    function handleRefresh() {//when click product order in list
+        setRefreshTrigger(!refreshTrigger);
+    }
 
     return (<>
         <Header  onLogout={() => setToLogin(true)}  user={userInfo} />
@@ -131,7 +134,7 @@ export default function ProductOrder() {
                         <DamageReport params={blnum} productOrders={productOrders}/>
                         
                         {/* Load detail */}
-                        <LoadDetails params = {blnum} productOrders= {productOrders}/>
+                        <LoadDetails params = {blnum} productOrders= {productOrders} onDeleteCar={handleRefresh}/>
                     </div>
 
                     {/* Action Buttons */}

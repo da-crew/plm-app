@@ -2,8 +2,11 @@
 import React from 'react';
 import './ViewProductOrder.css';
 import axios from 'axios'; // Assuming Axios is used for API calls
+import { useAuthenticate } from '../../users';
 
 function LoadDetails({ params, productOrders, onDeleteCar }) {
+    let [validCreds, userInfo, password] = useAuthenticate();
+
     // Find the product order with the matching BL Number
     const thisProductOrder = productOrders.find(
         (item) => item.blnumber === params
@@ -23,15 +26,42 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
         return acc;
     }, {});
 
+
+
     // Function to delete car by ID
     const handleDeleteCar = async (carId) => {
+        const payload = {
+            caller: {
+                username: userInfo.username,
+                password: password,
+            }
+        };
         try {
-            await axios.delete(`/api/cars/${carId}`); // Replace with your actual API endpoint
-            onDeleteCar(carId); // Update state in parent component to reflect deletion
+            const response = await axios.delete(
+                "http://localhost:8080/product-orders/"+params+"/cars/"+ carId,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    data: payload // Include payload in the config
+                }
+                // payload,
+                // {
+                //     headers: {
+                //         "Content-Type": "application/json",
+                //     },
+                // }
+                // data: payload
+            );
         } catch (error) {
-            console.error("Error deleting car:", error);
+            if (error.response) {
+                console.error("Error deleting car:", error.response.data);
+            } else {
+                console.error("Error deleting car:", error.message);
+            }
         }
     };
+   
 
     return (
         <div className="load-details">
