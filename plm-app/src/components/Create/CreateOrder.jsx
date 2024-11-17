@@ -110,7 +110,7 @@ const ReceiptInfo = ({ productOrder }) => {
                 }
             );
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 alert("Product Order Created Successfully!");
             } else {
                 alert(`Error: ${response.status}`);
