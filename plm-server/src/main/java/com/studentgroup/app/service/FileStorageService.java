@@ -1,8 +1,11 @@
 package com.studentgroup.app.service;
 
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,10 @@ public class FileStorageService {
 
     public ImageFile store(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        //TODO: Add validation
+        BufferedImage img = ImageIO.read(file.getInputStream());
+        if (img == null) {
+            throw new IOException("Failed to read image file");
+        }
         ImageFile imgFile = new ImageFile(fileName, file.getContentType(), file.getBytes());
         return imgfileRepo.save(imgFile);
     }
