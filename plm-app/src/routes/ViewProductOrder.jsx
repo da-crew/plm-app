@@ -19,7 +19,10 @@ export default function ProductOrder() {
     let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
     let [refreshTrigger, setRefreshTrigger] = useState(false);
     let [productOrders, setProductOrders, succ] = useAllProductOrders(refreshTrigger);
+    let [toReprot, setToReport] = useState(false)
+    let [toLoad, setToLoad] = useState(false)
 
+    
     const { blnum } = useParams();
 
 
@@ -45,6 +48,13 @@ export default function ProductOrder() {
         };
         fetchUpdatedOrders();
     }, [refreshTrigger]); // Dependency on refreshTrigger
+
+    if (toReprot) {
+        return <Navigate to={`/ProductOrder/${blnum}/add-report`} />;
+    }
+    if (toLoad) {
+        return <Navigate to={`/ProductOrder/${blnum}/add-load`} />;
+    }
 
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />
@@ -141,7 +151,12 @@ export default function ProductOrder() {
                     </div>
 
                     {/* Action Buttons */}
-                    <ActionButtons user={userInfo} params={blnum} productOrders={productOrders} handleForward={handleForward} handleReturn={handleReturn} />
+                    <ActionButtons user={userInfo} params={blnum} 
+                    productOrders={productOrders} 
+                    handleForward={handleForward} 
+                    handleReturn={handleReturn} 
+                    onReport={()=> setToReport(true)}
+                    onLoad={() => setToLoad(true)} />
                 </div>
 
                 {/* Right Column: Contains status and dispatcher information */}
