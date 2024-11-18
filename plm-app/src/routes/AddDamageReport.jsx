@@ -6,9 +6,9 @@ import { useAuthenticate } from "../users";
 import { useCookies } from "react-cookie"
 import BackButton from "../components/BackButton";
 
-import AddLoadComponent from "../components/AddLoadAndDamage/addLoad";
+import AddDamageComponent from "../components/AddLoadAndDamage/addDamage";
 
-export default function AddLoadDetail() {
+export default function AddDamageReport() {
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
     let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);
@@ -26,23 +26,14 @@ export default function AddLoadDetail() {
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />;
     }
-
-    return (<>
-        <Header onLogout={() => setToLogin(true)} user={userInfo} />
-       
+    return(<>
+    <Header onLogout={() => setToLogin(true)} user={userInfo} />
         
         <div className="center-block">
-            <div style={{marginLeft: '225px'}}><BackButton/></div>
-            <AddLoadComponent blnum={blnum} />
-
-
-
-
+        <div style={{marginLeft: '225px'}}><BackButton/></div>
+            <AddDamageComponent blnum={blnum} />
+            
         </div>
-
-
-
-    </>);
-
+    </>)
 
 }

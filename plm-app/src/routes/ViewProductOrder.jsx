@@ -52,7 +52,7 @@ export default function ProductOrder() {
     }, [refreshTrigger]); // Dependency on refreshTrigger
 
     if (toReprot) {
-        return <Navigate to={`/ProductOrder/${blnum}/add-report`} />;
+        return <Navigate to={`/ProductOrder/${blnum}/add-Damage`} />;
     }
     if (toLoad) {
         return <Navigate to={`/ProductOrder/${blnum}/add-load`} />;

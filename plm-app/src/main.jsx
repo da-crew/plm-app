@@ -11,6 +11,7 @@ import ManageUser from './routes/ManageUser.jsx';
 
 import ProductOrder from './routes/ViewProductOrder.jsx'
 import AddLoadDetail from "./routes/AddLoadDetail.jsx"; 
+import AddDamageReport from "./routes/AddDamageReport.jsx"
 import FetchTest from './routes/FetchTest.jsx';
 
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/ProductOrder/:blnum/add-load",
     element: <AddLoadDetail/>,
+  },
+  {
+    path: "/ProductOrder/:blnum/add-damage",
+    element: <AddDamageReport/>,
   },
   {
     path: "/login-test",
