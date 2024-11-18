@@ -675,7 +675,7 @@ public class ProductOrderController {
         carModel: String
     }
      */
-    @PostMapping("/product-orders/{blNumber}/cars/add")
+    @PostMapping("/product-orders/{blNumber}/cars")
     public ResponseEntity<String> addLoadDetails(@PathVariable String blNumber, @RequestBody JsonNode json) throws Exception {
         AuthorizationResult authRes = authMan.authorizeFromJson(json.get("caller"), Role.ADMIN, Role.CHECKER);
         switch (authRes.getStatus()) {

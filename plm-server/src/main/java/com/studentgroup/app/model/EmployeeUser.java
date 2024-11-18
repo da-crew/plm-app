@@ -1,5 +1,6 @@
 package com.studentgroup.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.studentgroup.app.Misc;
 import com.studentgroup.app.model.enums.Role;
 import com.studentgroup.app.webservices.UserInfo;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "EMPLOYEE")
+@JsonIgnoreProperties(value = {"passwordHash", "salt"})
 public class EmployeeUser {
 
     @Id
