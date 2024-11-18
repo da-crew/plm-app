@@ -20,6 +20,7 @@ import com.studentgroup.app.webservices.authorization.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
@@ -164,7 +165,28 @@ public class ProductOrderController {
 
     
     @PostMapping("/product-orders/{blNumber}/set-image")
-    public ResponseEntity<String> setProductOrderImage(@PathVariable String blNumber, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> setProductOrderImage(@PathVariable String blNumber, 
+    @RequestParam("file") MultipartFile file,
+    @RequestParam("caller") String userCredsString) throws Exception {
+        UserCreds userCreds = null;
+        try {
+            userCreds = mapper.readValue(userCredsString, UserCreds.class);
+        } catch (JsonMappingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("couldn't parse json!");
+        }
+        AuthorizationResult authRes = authMan.authorizeFromUserCreds(userCreds, Role.ADMIN, Role.DISPATCHER);
+        switch (authRes.getStatus()) {
+            case INVALID_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
+            case USER_NOT_FOUND:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
+            case INCORRECT_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
+            case NO_PERMISSION:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
+            case SUCCESSFUL: break;
+        }
+
         ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
         if (productOrder == null) {
             return ResponseEntity.notFound().build();
@@ -538,13 +560,22 @@ public class ProductOrderController {
     this one accepts form-data instead of json,
     and hasn't been tested yet.
     */
-    @PostMapping(path = "/product-orders/{blNumber}/cars/{carId}/damage-report", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(path = "/product-orders/{blNumber}/cars/{carId}/damage-report", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> addDamageReport(
     @PathVariable String blNumber, 
     @PathVariable long carId, 
-    @RequestPart("report") String reportText,
-    @RequestPart("caller") UserCreds callerCreds,
+    @RequestParam("report") String reportText,
+    @RequestParam("caller") String callerCredsString,
     @RequestPart("image") MultipartFile imageFile) throws Exception {
+
+        UserCreds callerCreds = null;
+        
+        try {
+            callerCreds = mapper.readValue(callerCredsString, UserCreds.class);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("couldn't parse caller as a json!");
+        }
+
         AuthorizationResult authRes = authMan.authorizeFromUserCreds(callerCreds, Role.ADMIN, Role.CHECKER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
@@ -655,8 +686,8 @@ public class ProductOrderController {
 
         reportRepo.delete(foundReport);
 
-        ActionLog actionLog = new ActionLog("Delete damage report ");
-        productOrder.addActionLog(actionLog, authRes.getUser());
+        //ActionLog actionLog = new ActionLog("Delete damage report ");
+        //productOrder.addActionLog(actionLog, authRes.getUser());
         prodOrderRepo.save(productOrder);
         carRepo.save(foundCar);
 
