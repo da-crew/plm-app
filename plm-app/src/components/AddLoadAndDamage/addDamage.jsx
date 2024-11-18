@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 
 const AddLoadComponent = () => {
-    const [licensePlate, setLicensePlate] = useState("");
+    const [carID, setCarID] = useState(0);
     const [reportDetails, setReportDetails] = useState("");
     const [file, setFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false); // **Added state for submission status**
@@ -20,7 +20,7 @@ const AddLoadComponent = () => {
     };
 
     const handleSubmit = async () => {
-        if (!licensePlate || !reportDetails) { // **Validates mandatory fields**
+        if (!carID || !reportDetails) { // **Validates mandatory fields**
             alert("License plate and details are required!");
             return;
         }
@@ -35,16 +35,18 @@ const AddLoadComponent = () => {
             })
         ); // Serializes the caller object into a JSON string
         formData.append("image", file); // Adds the file to form-data
-
+        for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+        }
         setIsSubmitting(true); // **Disables the button during submission**
         try {
-            const carId = /* Logic to retrieve or map carId from licensePlate */ 1; // **Placeholder for carId**
+            const carId = /* Logic to retrieve or map carId from licensePlate */ carID; // **Placeholder for carId**
             const response = await axios.post(
                 `${WEB_SERVICE_URL}/product-orders/${blnum}/cars/${carId}/damage-report`, // **API endpoint URL**
                 formData,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data", // **Specifies form-data content type**
+                        //"Content-Type": "multipart/form-data", // **Specifies form-data content type**
                         "Access-Control-Allow-Origin": "*"
                     },
                 }
@@ -68,12 +70,12 @@ const AddLoadComponent = () => {
         <div className="damage-report-container">
             <h3>Damage Report</h3>
             <div className="form-group">
-                <label htmlFor="licensePlate">Please enter vehicle's license plate number:</label>
+                <label htmlFor="licensePlate">Please enter car's ID:</label>
                 <input
-                    type="text"
+                    type="number"
                     id="licensePlate"
-                    value={licensePlate}
-                    onChange={(e) => setLicensePlate(e.target.value)}
+                    value={carID}
+                    onChange={(e) => setCarID(e.target.value)}
                     placeholder="Enter license plate"
                     className="form-input"
                 />
