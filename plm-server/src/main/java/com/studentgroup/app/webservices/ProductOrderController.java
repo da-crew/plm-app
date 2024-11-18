@@ -524,13 +524,22 @@ public class ProductOrderController {
     this one accepts form-data instead of json,
     and hasn't been tested yet.
     */
-    @PostMapping(path = "/product-orders/{blNumber}/cars/{carId}/damage-report", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(path = "/product-orders/{blNumber}/cars/{carId}/damage-report", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> addDamageReport(
     @PathVariable String blNumber, 
     @PathVariable long carId, 
-    @RequestPart("report") String reportText,
-    @RequestPart("caller") UserCreds callerCreds,
+    @RequestParam("report") String reportText,
+    @RequestParam("caller") String callerCredsString,
     @RequestPart("image") MultipartFile imageFile) throws Exception {
+
+        UserCreds callerCreds = null;
+        
+        try {
+            callerCreds = mapper.readValue(callerCredsString, UserCreds.class);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("couldn't parse caller as a json!");
+        }
+
         AuthorizationResult authRes = authMan.authorizeFromUserCreds(callerCreds, Role.ADMIN, Role.CHECKER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
