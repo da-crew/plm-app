@@ -54,7 +54,7 @@ const AddLoadComponent = () => {
 
             if (response.status === 201) { // **Checks for successful creation**
                 alert("Damage recorded successfully!");
-                navigate("/success"); // **Redirects on success**
+                //navigate("/success"); // **Redirects on success**
             } else {
                 alert(`Error: ${response.data}`); // **Handles API errors**
             }
