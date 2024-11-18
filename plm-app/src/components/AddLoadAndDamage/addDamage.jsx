@@ -72,7 +72,7 @@ const AddLoadComponent = () => {
             <div className="form-group">
                 <label htmlFor="licensePlate">Please enter car's ID:</label>
                 <input
-                    type="number"
+                    type="text"
                     id="licensePlate"
                     value={carID}
                     onChange={(e) => setCarID(e.target.value)}
