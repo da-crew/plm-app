@@ -12,7 +12,7 @@ const AddLoadComponent = () => {
     const [isSubmitting, setIsSubmitting] = useState(false); // **Added state for submission status**
     const navigate = useNavigate();
     let [validCreds, userInfo, password] = useAuthenticate();
-    const blnum = useParams();
+    const {blnum} = useParams();
 
 
     const handleFileChange = (event) => {
@@ -45,7 +45,7 @@ const AddLoadComponent = () => {
                 {
                     headers: {
                         "Content-Type": "multipart/form-data", // **Specifies form-data content type**
-
+                        "Access-Control-Allow-Origin": "*"
                     },
                 }
             );
