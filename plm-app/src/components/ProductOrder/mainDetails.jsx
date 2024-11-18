@@ -1,5 +1,6 @@
 import React from 'react';
 import './ViewProductOrder.css';
+import { WEB_SERVICE_URL } from '../../users';
 
 function MainDetails({ params, productOrders }) {
     // Find the product order with the matching BL Number
@@ -40,7 +41,7 @@ function MainDetails({ params, productOrders }) {
           <strong>Consignee :</strong> {cosigneeName}
         </p>
         <img
-          src={wharfReceiptImgUrl}
+          src={WEB_SERVICE_URL + "/files/" + wharfReceiptImgUrl}
           alt="Document"
           className="document-image"
         />
