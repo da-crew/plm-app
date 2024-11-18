@@ -150,7 +150,22 @@ public class ProductOrderController {
 
     
     @PostMapping("/product-orders/{blNumber}/set-image")
-    public ResponseEntity<String> setProductOrderImage(@PathVariable String blNumber, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> setProductOrderImage(@PathVariable String blNumber, 
+    @RequestParam("file") MultipartFile file,
+    @RequestParam("caller") UserCreds userInfo) throws Exception {
+        AuthorizationResult authRes = authMan.authorizeFromUserCreds(userInfo, Role.ADMIN, Role.DISPATCHER);
+        switch (authRes.getStatus()) {
+            case INVALID_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
+            case USER_NOT_FOUND:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("caller not found!");
+            case INCORRECT_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect password!");
+            case NO_PERMISSION:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("are not permitted to do this!");
+            case SUCCESSFUL: break;
+        }
+
         ProductOrder productOrder = prodOrderRepo.findByBLNumber(blNumber);
         if (productOrder == null) {
             return ResponseEntity.notFound().build();
