@@ -1,7 +1,7 @@
-import React from 'react';
+import {React, useState} from 'react';
 import { Role } from '../users';
 
-function DashboardHeader(props) {
+function DashboardHeader(props,{onSearch}) {
   let CreateButton;
   let ManageButton;
 
@@ -16,8 +16,15 @@ function DashboardHeader(props) {
   } else {
     ManageButton = null;
   }
+  const [searchValue, setSearchValue] = useState("");
 
-
+  const handleInputChange = (e) => {
+    setSearchValue(e.target.value); 
+  };
+  const handleSearchClick = () => {
+    props.onSearch(searchValue); 
+  };
+  
   return (
     <div style={styles.panelContainer}>
       <div style={styles.buttonContainer}>
@@ -26,8 +33,11 @@ function DashboardHeader(props) {
       </div>
 
       <div style={styles.searchContainer}>
-        <input type="text" placeholder="Enter B/L No..." style={styles.searchInput} />
-        <button style={styles.searchButton}>Search</button>
+        <input type="text" placeholder="Enter B/L No..." style={styles.searchInput}
+        onChange={handleInputChange}
+        value={searchValue}
+        />
+        <button style={styles.searchButton} onClick={handleSearchClick}>Search</button>
       </div>
     </div>
   );

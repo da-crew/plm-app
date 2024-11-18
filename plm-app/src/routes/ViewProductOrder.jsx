@@ -164,14 +164,7 @@ export default function ProductOrder() {
                 <div className="right-column">
                     {/* Status Information */}
                     <Status params={blnum} productOrders={productOrders} />
-
                     {/* Dispatcher Information */}
-                    <div className="right-column">
-                    {/* Status Information */}
-                    <Status params={blnum} productOrders={productOrders} />
-
-                    {/* Dispatcher Information */}
-                </div>
                     <ActionLogs params={blnum} productOrders={productOrders}/>
                 </div>
             </div>

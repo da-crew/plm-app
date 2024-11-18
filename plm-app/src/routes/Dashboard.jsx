@@ -17,12 +17,13 @@ export default function Dashboard() {
     let [validCreds, userInfo, password] = useAuthenticate();
     let [productOrders, succ] = useAllProductOrders();
     const [selectedItem, setSelectedItem] = useState(null);//Product Order ที่กด
+    const [searchBLnum, setSearchBLnum] = useState(null)
 
     let [data, setData] = useState([])
-
+    const [filteredData, setFilteredData] = useState([productOrders]);
     useEffect(() => {
         if (succ) {
-            setData(productOrders)
+            setFilteredData(productOrders)
         } else {
             console.log("error");
         }
@@ -48,7 +49,16 @@ export default function Dashboard() {
     if (toProductOrder && selectedItem) {
         return <Navigate to={"/ProductOrder/" + selectedItem.blnumber} />
     }
-
+    const handleSearch = (value) => {
+        setSearchBLnum(value);
+        if (value === "" || value === null) {
+            setFilteredData(productOrders);
+        } else {
+            const filtered = productOrders.filter((item) => item.blnumber === value);
+            setFilteredData(filtered);
+        }
+    };
+    
 
     function handlePOClick(item) {//when click product order in list
         console.log("Item clicked", item);
@@ -61,10 +71,12 @@ export default function Dashboard() {
         
         <p></p>
         <div className="center-block">
-            <DashboardHeader role={userInfo.role} onCreate={() => setToCreate(true)} onManage={() => setToManageUser(true)} />
-
-            <Table data={data} onRowClick={handlePOClick} />{/*<-- List of product order */}
-
+            <DashboardHeader role={userInfo.role} 
+            onCreate={() => setToCreate(true)} 
+            onManage={() => setToManageUser(true) } 
+            onSearch={handleSearch} />
+            <Table data={filteredData} onRowClick={handlePOClick} />{/*<-- List of product order */}
+            
         </div>
 
     </>);
