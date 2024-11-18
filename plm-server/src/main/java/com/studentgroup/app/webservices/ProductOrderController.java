@@ -686,8 +686,8 @@ public class ProductOrderController {
 
         reportRepo.delete(foundReport);
 
-        ActionLog actionLog = new ActionLog("Delete damage report ");
-        productOrder.addActionLog(actionLog, authRes.getUser());
+        //ActionLog actionLog = new ActionLog("Delete damage report ");
+        //productOrder.addActionLog(actionLog, authRes.getUser());
         prodOrderRepo.save(productOrder);
         carRepo.save(foundCar);
 
