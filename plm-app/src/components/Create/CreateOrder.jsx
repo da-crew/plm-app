@@ -18,6 +18,8 @@ const ReceiptInfo = ({ productOrder }) => {
         });
     };
 
+    
+    const [file, setFile] = useState(null);
     const [checkers, setCheckers] = React.useState([]);
     let [validCreds, userInfo, password] = useAuthenticate();
     const [formData, setFormData] = useState({
@@ -33,11 +35,15 @@ const ReceiptInfo = ({ productOrder }) => {
         checker: "",
     });
 
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]); // **Handles file selection**
+    };
+
 
     React.useEffect(() => {
         async function fetchCheckers() {
             try {
-                const response = await fetch(WEB_SERVICE_URL + '/checkers'); // API to fetch checkers
+                const response = await fetch(WEB_SERVICE_URL + '/users/checkers'); // API to fetch checkers
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -121,6 +127,30 @@ const ReceiptInfo = ({ productOrder }) => {
             } else {
                 console.error("Error:", error.message);
             }
+            return;
+        }
+        let imgFormData = new FormData()
+        imgFormData.append("file", file);
+        imgFormData.append("caller", JSON.stringify({
+            username: userInfo.username,
+            password: password
+        }));
+        for (let pair of imgFormData.entries()) {
+            console.log(pair[0], pair[1]);
+        }
+
+        try {
+            let response = await axios.post(`${WEB_SERVICE_URL}/product-orders/${formData.BLNumber}/set-image`, 
+                imgFormData,
+                {
+                    headers: {
+                        //"Content-Type": "multipart/form-data", // **Specifies form-data content type**
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                }
+            );
+        } catch (error) {
+
         }
     };
 
@@ -189,7 +219,6 @@ const ReceiptInfo = ({ productOrder }) => {
                         onChange={handleInputChange}
                     >
                         <option value="">Select</option>
-                        <option value="carlos_H">Carlos Hernandez</option>
                         {checkers.map((checker) => (
 
                             <option key={checker.id} value={checker.username}>
@@ -199,7 +228,13 @@ const ReceiptInfo = ({ productOrder }) => {
                     </select>
                 </div>
                 <div className="form-group">
-                    <button>Choose file</button>
+                <label htmlFor="fileUpload">Choose file</label>
+                <input
+                    type="file"
+                    id="fileUpload"
+                    onChange={handleFileChange}
+                    className="form-input"
+                />
                 </div>
             </div>
 
