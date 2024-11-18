@@ -20,6 +20,7 @@ import com.studentgroup.app.webservices.authorization.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
@@ -152,8 +153,14 @@ public class ProductOrderController {
     @PostMapping("/product-orders/{blNumber}/set-image")
     public ResponseEntity<String> setProductOrderImage(@PathVariable String blNumber, 
     @RequestParam("file") MultipartFile file,
-    @RequestParam("caller") UserCreds userInfo) throws Exception {
-        AuthorizationResult authRes = authMan.authorizeFromUserCreds(userInfo, Role.ADMIN, Role.DISPATCHER);
+    @RequestParam("caller") String userCredsString) throws Exception {
+        UserCreds userCreds = null;
+        try {
+            userCreds = mapper.readValue(userCredsString, UserCreds.class);
+        } catch (JsonMappingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("couldn't parse json!");
+        }
+        AuthorizationResult authRes = authMan.authorizeFromUserCreds(userCreds, Role.ADMIN, Role.DISPATCHER);
         switch (authRes.getStatus()) {
             case INVALID_CREDENTIAL:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid credential!");
