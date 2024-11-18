@@ -4,8 +4,13 @@ import './ViewProductOrder.css';
 import axios from 'axios'; // Assuming Axios is used for API calls
 import { useAuthenticate, WEB_SERVICE_URL } from '../../users';
 
+
+
 function LoadDetails({ params, productOrders, onDeleteCar }) {
     let [validCreds, userInfo, password] = useAuthenticate();
+
+
+
 
     // Find the product order with the matching BL Number
     const thisProductOrder = productOrders.find(
@@ -38,7 +43,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
         };
         try {
             const response = await axios.delete(
-                WEB_SERVICE_URL + "/product-orders/"+params+"/cars/"+ carId,
+                WEB_SERVICE_URL + "/product-orders/" + params + "/cars/" + carId,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -54,6 +59,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
                 // }
                 // data: payload
             );
+            onDeleteCar();
         } catch (error) {
             if (error.response) {
                 console.error("Error deleting car:", error.response.data);
@@ -62,7 +68,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
             }
         };
     };
-   
+
 
     return (
         <div className="load-details">
@@ -75,7 +81,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
                         {cars.map((car) => (
                             <div key={car.id} className="car-item">
                                 {car.id}
-                                <button onClick={() => handleDeleteCar(car.id)} className="delete-button">🗑️</button>
+                                <button onClick={() => handleDeleteCar(car.id)} className="delete-button">delete🗑️</button>
                             </div>
                         ))}
                     </div>

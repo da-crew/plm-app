@@ -147,7 +147,7 @@ export default function ProductOrder() {
                         <DamageReport params={blnum} productOrders={productOrders} />
 
                         {/* Load detail */}
-                        <LoadDetails params={blnum} productOrders={productOrders} onDeleteCar={handleRefresh} />
+                        <LoadDetails params={blnum} productOrders={productOrders} onDeleteCar={(handleRefresh)} />
                     </div>
 
                     {/* Action Buttons */}

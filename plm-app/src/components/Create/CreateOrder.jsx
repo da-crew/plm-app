@@ -263,9 +263,6 @@ const ReceiptInfo = ({ productOrder }) => {
             <div className="save-button-section">
                 <button onClick={handleSave}>SAVE</button>
             </div>
-            <p>{userInfo.username}</p>
-            <p>{password}</p>
-
         </div>
     );
 };

@@ -2,12 +2,18 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useAuthenticate, WEB_SERVICE_URL } from '../../users';
 import './addLoad.css'
+import { useNavigate } from "react-router-dom";
 
 const AddLoadComponent = ({blnum}) => {
     const [truckLicense, setTruckLicense] = useState("");
     const [vehicleLicense, setVehicleLicense] = useState("");
     const [vehicles, setVehicles] = useState([]);
     let [validCreds, userInfo, password] = useAuthenticate();
+
+    const navigate = useNavigate(); // React Router's hook for navigation
+    const goBack = () => {
+        navigate(-2); // Go back to the previous page
+    };
 
     const addVehicle = () => {
         if (vehicleLicense.trim() && vehicles.length < 8) {
@@ -74,7 +80,8 @@ const AddLoadComponent = ({blnum}) => {
         
                 console.log(`Added vehicle: ${vehicle}`, response.data);
               }
-        
+              
+            goBack();
               alert("All vehicles added successfully!");
         } catch (error) {
           // Handle error response
