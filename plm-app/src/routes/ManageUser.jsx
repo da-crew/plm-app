@@ -38,7 +38,9 @@ export default function ManageUser() {
         if (toLogin || !validCreds) {
             removeCookie("username");
             removeCookie("password");
+        
         }
+        
     }, [toLogin]);
 
     if (toLogin || !validCreds) {
