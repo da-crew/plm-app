@@ -2,7 +2,7 @@
 import React from 'react';
 import './ViewProductOrder.css';
 import axios from 'axios'; // Assuming Axios is used for API calls
-import { useAuthenticate } from '../../users';
+import { useAuthenticate, WEB_SERVICE_URL } from '../../users';
 
 function LoadDetails({ params, productOrders, onDeleteCar }) {
     let [validCreds, userInfo, password] = useAuthenticate();
@@ -38,7 +38,7 @@ function LoadDetails({ params, productOrders, onDeleteCar }) {
         };
         try {
             const response = await axios.delete(
-                "http://localhost:8080/product-orders/"+params+"/cars/"+ carId,
+                WEB_SERVICE_URL + "/product-orders/"+params+"/cars/"+ carId,
                 {
                     headers: {
                         "Content-Type": "application/json",

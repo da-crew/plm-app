@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useAuthenticate } from '../../users';
+import { useAuthenticate, WEB_SERVICE_URL } from '../../users';
 import './addLoad.css'
 
 const AddLoadComponent = ({blnum}) => {
@@ -33,7 +33,7 @@ const AddLoadComponent = ({blnum}) => {
                 },
               };
               const response = await axios.post(
-                "http://localhost:8080/trucks",
+                WEB_SERVICE_URL + "/trucks",
                 payload,
                 {
                   headers: {
@@ -63,7 +63,7 @@ const AddLoadComponent = ({blnum}) => {
         
                 // Make the POST request for each vehicle
                 const response = await axios.post(
-                  `http://localhost:8080/product-orders/${blnum}/cars`,
+                  WEB_SERVICE_URL + `/product-orders/${blnum}/cars`,
                   payload,
                   {
                     headers: {

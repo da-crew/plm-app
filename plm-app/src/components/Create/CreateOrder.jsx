@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import axios from "axios";
-import { useAuthenticate } from '../../users';
+import { useAuthenticate, WEB_SERVICE_URL } from '../../users';
 
 
 
@@ -37,7 +37,7 @@ const ReceiptInfo = ({ productOrder }) => {
     React.useEffect(() => {
         async function fetchCheckers() {
             try {
-                const response = await fetch('http://localhost:8080/checkers'); // API to fetch checkers
+                const response = await fetch(WEB_SERVICE_URL + '/checkers'); // API to fetch checkers
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -101,7 +101,7 @@ const ReceiptInfo = ({ productOrder }) => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/product-orders/create",
+                WEB_SERVICE_URL + "/product-orders/create",
                 payload,
                 {
                     headers: {

@@ -12,6 +12,7 @@ import OrderTable from "../components/ProductOrder/orderTable";
 import Status from "../components/ProductOrder/status";
 import DamageReport from "../components/ProductOrder/damageReport";
 import axios from 'axios';
+import { WEB_SERVICE_URL } from "../users";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -40,7 +41,7 @@ export default function ProductOrder() {
         const fetchUpdatedOrders = async () => {
             try {
                 // Re-fetch data logic
-                let response = await axios.get("http://localhost:8080/product-orders");
+                let response = await axios.get(WEB_SERVICE_URL + "/product-orders");
                 setProductOrders(response.data); // Update local state if needed
             } catch (error) {
                 console.error("Error refreshing product orders:", error);
@@ -69,7 +70,7 @@ export default function ProductOrder() {
         };
         try {
             const response = await axios.post(
-                "http://localhost:8080/product-orders/" + blnum + "/forward",
+                WEB_SERVICE_URL + "/product-orders/" + blnum + "/forward",
                 payload,
                 {
                     headers: {
@@ -98,7 +99,7 @@ export default function ProductOrder() {
         };
         try {
             const response = await axios.post(
-                "http://localhost:8080/product-orders/" + blnum + "/return",
+                WEB_SERVICE_URL + "/product-orders/" + blnum + "/return",
                 payload,
                 {
                     headers: {
