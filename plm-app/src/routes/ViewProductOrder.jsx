@@ -14,6 +14,7 @@ import DamageReport from "../components/ProductOrder/damageReport";
 import axios from 'axios';
 import { WEB_SERVICE_URL } from "../users";
 import BackButton from "../components/BackButton";
+import ActionLogs from "../components/ProductOrder/actinLogs";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -165,11 +166,13 @@ export default function ProductOrder() {
                     <Status params={blnum} productOrders={productOrders} />
 
                     {/* Dispatcher Information */}
-                    <div className="dispatcher-info">
-                        <p><strong>Dispatcher Name :</strong> Employee Admin</p>
-                        <p><strong>Date :</strong> 04/10/2023</p>
-                        <p><strong>Time :</strong> 16:00</p>
-                    </div>
+                    <div className="right-column">
+                    {/* Status Information */}
+                    <Status params={blnum} productOrders={productOrders} />
+
+                    {/* Dispatcher Information */}
+                </div>
+                    <ActionLogs params={blnum} productOrders={productOrders}/>
                 </div>
             </div>
         </div>
