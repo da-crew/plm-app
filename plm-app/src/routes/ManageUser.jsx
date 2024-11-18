@@ -7,6 +7,7 @@ import UserTable from "../components/UserTable";
 import ResetPasswordModal from "../components/ResetPassword";
 import axios from 'axios';
 import { useCookies } from "react-cookie"
+import BackButton from "../components/BackButton";
 
 export default function ManageUser() {
 
@@ -59,6 +60,7 @@ export default function ManageUser() {
         <p>Welcome, {userInfo.username}</p>
         <p>Role: {Role.toString(userInfo.role)}</p>
         <div className="center-block">
+            <BackButton/>
             <UserTable users={users} onReset={handleOnReset} />
         </div>
         <ResetPasswordModal show={showReset} onClose={() => setShowReset(false)}

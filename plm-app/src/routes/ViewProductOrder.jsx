@@ -13,6 +13,7 @@ import Status from "../components/ProductOrder/status";
 import DamageReport from "../components/ProductOrder/damageReport";
 import axios from 'axios';
 import { WEB_SERVICE_URL } from "../users";
+import BackButton from "../components/BackButton";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -128,10 +129,8 @@ export default function ProductOrder() {
 
     return (<>
         <Header onLogout={() => setToLogin(true)} user={userInfo} />
-        <h1>This is a ProductOrder</h1>
-        <p>Welcome, {userInfo.username}</p>
-        <p>Role: {Role.toString(userInfo.role)}</p>
         <div className="center-block">
+            <BackButton/>
             <div className="product-order-detail-container">
                 {/* Left Column: Contains main product order details, damage and load details, and action buttons */}
                 <div className="left-column">

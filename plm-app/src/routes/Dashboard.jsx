@@ -7,7 +7,6 @@ import Table from "../components/Table";
 import { useCookies } from "react-cookie"
 
 
-
 export default function Dashboard() {
 
     let [cookies, setCookies, removeCookie] = useCookies(['username', 'password']);

@@ -36,10 +36,19 @@ export default function AddLoadDetail() {
 
     return (<>
         <Header onLogout={() => setToLogin(true)} user={userInfo} />
+        
         <div className="center-block">
+        <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "450px"
+            }}
+        >
             <BackButton />
-            <AddLoadComponent blnum ={blnum}/>
-            
+        </div>
+            <AddLoadComponent blnum={blnum} />
+
 
 
 

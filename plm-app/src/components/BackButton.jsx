@@ -5,10 +5,10 @@ const BackButton = () => {
     const navigate = useNavigate(); // React Router's hook for navigation
 
     const goBack = () => {
-        navigate(-1); // Go back to the previous page
+        navigate(-2); // Go back to the previous page
     };
 
-    // Inline styles
+    // Inline styles remain the same
     const styles = {
         back: {
             display: "inline-flex",
@@ -31,13 +31,20 @@ const BackButton = () => {
         },
     };
 
+    // Hover state logic
+    const [isHovered, setIsHovered] = React.useState(false);
+
     return (
         <div
             className="back"
-            style={styles.back}
-            onClick={goBack}
-            onMouseEnter={(e) => (e.target.style.color = styles.hover.color)} // Hover effect
-            onMouseLeave={(e) => (e.target.style.color = styles.back.color)} // Reset color
+            style={{
+                ...styles.back,
+                color: isHovered ? styles.hover.color : styles.back.color,
+                textDecoration: isHovered ? styles.hover.textDecoration : styles.back.textDecoration,
+            }}
+            onClick={goBack} // Handles navigation
+            onMouseEnter={() => setIsHovered(true)} // Sets hover state
+            onMouseLeave={() => setIsHovered(false)} // Resets hover state
         >
             <span style={styles.arrow}>&larr;</span> Back
         </div>
