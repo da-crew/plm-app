@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studentgroup.app.model.ActionLog;
 import com.studentgroup.app.model.EmployeeUser;
+import com.studentgroup.app.model.ProductOrder;
 import com.studentgroup.app.model.enums.Role;
+import com.studentgroup.app.model.repositories.ActionLogRepository;
 import com.studentgroup.app.model.repositories.ProductOrderRepository;
 import com.studentgroup.app.model.repositories.UserRepository;
 import com.studentgroup.app.webservices.authorization.AuthorizationManager;
@@ -40,6 +43,9 @@ public class UserController {
 
     @Autowired
     DatabaseInitializer dbInitializer;
+
+    @Autowired
+    ActionLogRepository actionLogRepo;
 
     @Autowired
     AuthorizationManager authMan;
@@ -307,6 +313,25 @@ public class UserController {
         if (username == null) {
             return ResponseEntity.notFound().build();
         }
+
+        for (ProductOrder prod : user.getCheckingOrders()) {
+            prod.removeChecker();
+            productOrderRepo.save(prod);
+        }
+
+        for (ProductOrder prod : user.getDispatchingOrders()) {
+            prod.removeDispatcher();
+            productOrderRepo.save(prod);
+        }
+
+        for (ActionLog actionLog : user.getActionLogs()) {
+            actionLog.setEmployee(null);
+            actionLogRepo.save(actionLog);
+        }
+
+        user.getCheckingOrders().clear();
+        user.getDispatchingOrders().clear();
+        user.getActionLogs().clear();
 
         userRepo.delete(user);
 
