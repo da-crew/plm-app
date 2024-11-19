@@ -13,6 +13,7 @@ import ProductOrder from './routes/ViewProductOrder.jsx'
 import AddLoadDetail from "./routes/AddLoadDetail.jsx"; 
 import AddDamageReport from "./routes/AddDamageReport.jsx"
 import FetchTest from './routes/FetchTest.jsx';
+import EditProductOrder from './routes/EditProductOrder.jsx';
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/ProductOrder/:blnum",
     element: <ProductOrder />,
+  },
+  {
+    path: "/ProductOrder/:blnum/edit",
+    element: <EditProductOrder/>,
   },
   {
     path: "/ProductOrder/:blnum/add-load",
