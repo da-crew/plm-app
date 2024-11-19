@@ -7,11 +7,15 @@ function MainDetails({ params, productOrders }) {
     const thisProductOrder = productOrders.find(
       (item) => item.blnumber === params
     );
-  
+    
     // If no matching product order is found
     if (!thisProductOrder) {
       return <p>No matching product order found.</p>;
     }
+    console.log(productOrders)
+    console.log(typeof productOrders)
+    console.log(params)
+    console.log(typeof params)
   
     // Destructure data for easier usage
     const {

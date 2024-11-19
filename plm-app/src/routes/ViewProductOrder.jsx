@@ -24,7 +24,7 @@ export default function ProductOrder() {
     let [productOrders, setProductOrders, succ] = useAllProductOrders(refreshTrigger);
     let [toReprot, setToReport] = useState(false)
     let [toLoad, setToLoad] = useState(false)
-
+    let [toEdit, setToEdit] = useState(false)
     
     const { blnum } = useParams();
 
@@ -57,6 +57,9 @@ export default function ProductOrder() {
     }
     if (toLoad) {
         return <Navigate to={`/ProductOrder/${blnum}/add-load`} />;
+    }
+    if (toEdit) {
+        return <Navigate to={`/ProductOrder/${blnum}/Edit`} />;
     }
 
     if (toLogin || !validCreds) {
@@ -155,7 +158,9 @@ export default function ProductOrder() {
                     handleForward={handleForward} 
                     handleReturn={handleReturn} 
                     onReport={()=> setToReport(true)}
-                    onLoad={() => setToLoad(true)} />
+                    onLoad={() => setToLoad(true)} 
+                    onEdit={()=>setToEdit(true)}
+                    />
                 </div>
 
                 {/* Right Column: Contains status and dispatcher information */}
