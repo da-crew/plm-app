@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router";
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router';
 import Header from "../components/Header";
 import UserTable from "../components/UserTable";
 import ResetPasswordModal from "../components/ResetPassword";
@@ -24,43 +24,88 @@ export default function ManageUser() {
         // ทำการเรียกข้อมูลผู้ใช้จาก backend
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/users'); // ตรวจสอบ URL ของ API
+                const response = await axios.get('http://localhost:8080/users');
                 setUsers(response.data);  // อัปเดต state ของ users
-                console.log(users);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
         };
 
         fetchUsers();  
+    }, []);
 
-    }, []);  // [] หมายถึงจะดึงข้อมูลเมื่อ component ติดตั้งครั้งแรก
+    // กรองผู้ใช้ที่ไม่ใช่ admin
+    const filteredUsers = users.filter(user => user.role !== Role.ADMIN);
 
-    useEffect(() => {
-        console.log(JSON.stringify(userInfo));
-        if (toLogin || !validCreds) {
-            removeCookie("username");
-            removeCookie("password");
+    // ฟังก์ชันลบผู้ใช้
+    const handleDelete = async (username) => {
+        try {
+            // แทนที่ `{username}` ด้วยค่าจริงของ `username`
+            const response = await axios.delete(`http://localhost:8080/users/${username}/delete`, {
+                data: {
+                    caller: {
+                        username: userInfo.username,
+                        password: password,
+                    }
+                }
+            });
+    
+            // อัปเดต state ใน ManageUser
+            setUsers((prevUsers) => prevUsers.filter((user) => user.username !== username));
+            alert(`Deleted user ${username} successfully`);
+        } catch (error) {
+            console.error("Error deleting user:", error.response ? error.response.data : error.message);
+            alert("Failed to delete user. Please try again.");
         }
-    }, [toLogin]);
+    };
+    
 
-    if (toLogin || !validCreds) {
-        return <Navigate to="/login" />
-    }
+    // ฟังก์ชันอัปเดตผู้ใช้
+    const handleUpdate = async (username) => {
+        if (userInfo.role !== Role.ADMIN) {
+            alert("You do not have permission to update users.");
+            return; // ถ้าไม่ใช่ admin ให้ยกเลิกการอัปเดต
+        }
+        const updatedUser = users.find((user) => user.username === username);
+        if (!updatedUser) return;
+    
+        try {
+            await axios.put(`http://localhost:8080/users/${username}`, updatedUser);
+            alert("User updated successfully!");
+        } catch (error) {
+            console.error("Error updating user:", error);
+            alert("Failed to update user. Please try again.");
+        }
+    };
 
-    function handleOnReset(username) { // คลิก reset
-        setSelectedUser(username);
-        setShowReset(true);
-    }
+    // ฟังก์ชันเปิด Modal สำหรับรีเซ็ตรหัสผ่าน
+    const handleOnReset = (username) => {
+        setSelectedUser(username); // เลือกผู้ใช้ที่ต้องการรีเซ็ตรหัสผ่าน
+        setShowReset(true); // เปิด Modal
+    };
 
-    function handleNewPassword(NewPassword) { // คลิก submit สำหรับการเปลี่ยนรหัสผ่าน
-        console.log('submit reset: ' + NewPassword);
-    }
-
-    // ใช้ useEffect เพื่อตรวจสอบการอัปเดต selectedUser
-    useEffect(() => {
-        console.log(selectedUser);
-    }, [selectedUser]);
+    // ฟังก์ชันรีเซ็ตรหัสผ่าน
+    const handlePasswordReset = async (newPassword) => {
+        if (userInfo.role !== Role.ADMIN) {
+            alert("You do not have permission to reset passwords.");
+            return; // ถ้าไม่ใช่ admin ให้ยกเลิกการรีเซ็ตรหัสผ่าน
+        }
+        if (!selectedUser || !newPassword) return; // ตรวจสอบข้อมูล
+        try {
+            await axios.post(`http://localhost:8080/users/${selectedUser}/reset-password`, {
+                caller: {
+                    username: userInfo.username,
+                    password: password,
+                },
+                password: newPassword,
+            });
+            alert("Password reset successfully!");
+            setShowReset(false); // ปิด Modal
+            setSelectedUser(null); // รีเซ็ต state
+        } catch (error) {
+            console.error("Error resetting password:", error);
+        }
+    };
 
     return (<>
         <Header onLogout={() => setToLogin(true)} user={userInfo} />
@@ -69,12 +114,17 @@ export default function ManageUser() {
         <p>Role: {Role.toString(userInfo.role)}</p>
         <div className="center-block">
             <BackButton />
-            <UserTable users={users} onReset={handleOnReset} /> {/* ส่งข้อมูลผู้ใช้ไปยัง UserTable */}
+            <UserTable 
+                users={filteredUsers} 
+                onDelete={handleDelete} 
+                onUpdate={handleUpdate}
+                onReset={handleOnReset}
+            />
         </div>
         <ResetPasswordModal
             show={showReset}
             onClose={() => setShowReset(false)}
-            onPasswordReset={handleNewPassword}
+            onPasswordReset={handlePasswordReset}  // ใช้ฟังก์ชันที่เชื่อมต่อกับ Backend
         />
     </>);
 }

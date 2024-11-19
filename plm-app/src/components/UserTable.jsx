@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Role } from '../users';
 
 const UserTable = (props) => {
-    
     const [users, setUsers] = useState(props.users);
 
     useEffect(() => {
-        
         setUsers(props.users);
-    }, [props.users]); 
+    }, [props.users]);
 
     const roles = [Role.DISPATCHER, Role.CHECKER, Role.EXPORTER, Role.ADMIN];
 
-    // Handler to update username or role
+    const filteredUsers = users.filter(user => user.role !== Role.ADMIN);
+
     const handleInputChange = (username, field, value) => {
         setUsers((prevUsers) =>
             prevUsers.map((user) =>
@@ -24,21 +23,21 @@ const UserTable = (props) => {
     const handleDelete = (username) => {
         console.log(`Delete user with username: ${username}`);
         if (props.onDelete) {
-            props.onDelete(username);
+            props.onDelete(username);  // เรียกใช้ฟังก์ชัน onDelete จาก props
         }
     };
 
     const handleUpdate = (username) => {
         console.log(`Update user with username: ${username}`);
-        if (props.onDelete) {
-            props.onUpdate(username);
+        if (props.onUpdate) {
+            props.onUpdate(username);  // เรียกใช้ฟังก์ชัน onUpdate จาก props
         }
     };
 
     const handleResetPassword = (username) => {
         console.log(`Reset password with username: ${username}`);
         if (props.onReset) {
-            props.onReset(username);
+            props.onReset(username);  // เรียกใช้ฟังก์ชัน onReset จาก props
         }
     };
 
@@ -57,12 +56,12 @@ const UserTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => (
+                    {filteredUsers.map((user) => (
                         <tr key={user.id}>
                             <td className="cell">
                                 <button
                                     onClick={() => handleDelete(user.username)}
-                                    style={{ backgroundColor: '#D32F2F', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
+                                    style={{ cursor: 'pointer', backgroundColor: '#D32F2F', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
                                 >
                                     Delete
                                 </button>
@@ -108,7 +107,7 @@ const UserTable = (props) => {
                             <td className="cell">
                                 <button
                                     onClick={() => handleResetPassword(user.username)}
-                                    style={{ backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
+                                    style={{ cursor: 'pointer', backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
                                 >
                                     Reset Password
                                 </button>
@@ -116,7 +115,7 @@ const UserTable = (props) => {
                             <td className="cell">
                                 <button
                                     onClick={() => handleUpdate(user.username)}
-                                    style={{ backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
+                                    style={{ cursor: 'pointer', backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
                                 >
                                     Update
                                 </button>
