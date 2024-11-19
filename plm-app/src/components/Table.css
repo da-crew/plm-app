@@ -13,6 +13,7 @@
   
   .table-header {
     background-color: #f8f8f8;
+
     font-weight: bold;
   }
   
@@ -31,3 +32,13 @@
   .clickable-row {
     cursor: pointer;
   }
+
+  .cell.table-header {
+    color: #000000; /* Change text color */
+    background-color: #f1f1f1; /* Optional: Change background color */
+    font-weight: bold; /* Optional: Make the text bold */
+}
+
+.clickable-row:hover {
+    background-color: #e9f5ff;
+}
