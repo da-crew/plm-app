@@ -10,34 +10,25 @@ const UserTable = (props) => {
 
     const roles = [Role.DISPATCHER, Role.CHECKER, Role.EXPORTER, Role.ADMIN];
 
-    const filteredUsers = users.filter(user => user.role !== Role.ADMIN);
-
     const handleInputChange = (username, field, value) => {
-        setUsers((prevUsers) =>
-            prevUsers.map((user) =>
-                user.username === username ? { ...user, [field]: value } : user
-            )
+        const updatedUsers = users.map((user) =>
+            user.username === username ? { ...user, [field]: value } : user
         );
+        setUsers(updatedUsers); // อัปเดต UI
+        props.onUpdate(username); // ส่งข้อมูลไปยัง ManageUser
     };
 
     const handleDelete = (username) => {
         console.log(`Delete user with username: ${username}`);
         if (props.onDelete) {
-            props.onDelete(username);  // เรียกใช้ฟังก์ชัน onDelete จาก props
-        }
-    };
-
-    const handleUpdate = (username) => {
-        console.log(`Update user with username: ${username}`);
-        if (props.onUpdate) {
-            props.onUpdate(username);  // เรียกใช้ฟังก์ชัน onUpdate จาก props
+            props.onDelete(username); // เรียกใช้ฟังก์ชัน onDelete จาก props
         }
     };
 
     const handleResetPassword = (username) => {
         console.log(`Reset password with username: ${username}`);
         if (props.onReset) {
-            props.onReset(username);  // เรียกใช้ฟังก์ชัน onReset จาก props
+            props.onReset(username); // เรียกใช้ฟังก์ชัน onReset จาก props
         }
     };
 
@@ -56,12 +47,19 @@ const UserTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredUsers.map((user) => (
+                    {users.map((user) => (
                         <tr key={user.id}>
                             <td className="cell">
                                 <button
                                     onClick={() => handleDelete(user.username)}
-                                    style={{ cursor: 'pointer', backgroundColor: '#D32F2F', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
+                                    style={{
+                                        cursor: 'pointer',
+                                        backgroundColor: '#D32F2F',
+                                        color: 'white',
+                                        padding: '5px 10px',
+                                        border: 'none',
+                                        borderRadius: '5px'
+                                    }}
                                 >
                                     Delete
                                 </button>
@@ -72,7 +70,13 @@ const UserTable = (props) => {
                                     type="text"
                                     value={user.username}
                                     onChange={(e) => handleInputChange(user.username, 'username', e.target.value)}
-                                    style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: '5px',
+                                        width: '100px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #B0BEC5'
+                                    }}
                                 />
                             </td>
                             <td className="cell">
@@ -80,7 +84,13 @@ const UserTable = (props) => {
                                     type="text"
                                     value={user.firstname}
                                     onChange={(e) => handleInputChange(user.username, 'firstname', e.target.value)}
-                                    style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: '5px',
+                                        width: '100px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #B0BEC5'
+                                    }}
                                 />
                             </td>
                             <td className="cell">
@@ -88,14 +98,26 @@ const UserTable = (props) => {
                                     type="text"
                                     value={user.lastname}
                                     onChange={(e) => handleInputChange(user.username, 'lastname', e.target.value)}
-                                    style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: '5px',
+                                        width: '100px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #B0BEC5'
+                                    }}
                                 />
                             </td>
                             <td className="cell">
                                 <select
                                     value={user.role}
                                     onChange={(e) => handleInputChange(user.username, 'role', e.target.value)}
-                                    style={{ textAlign: 'center', padding: '5px', width: '100px', borderRadius: '4px', border: '1px solid #B0BEC5' }}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: '5px',
+                                        width: '100px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #B0BEC5'
+                                    }}
                                 >
                                     {roles.map((role) => (
                                         <option key={Role.toString(role)} value={Role.toString(role)}>
@@ -107,15 +129,29 @@ const UserTable = (props) => {
                             <td className="cell">
                                 <button
                                     onClick={() => handleResetPassword(user.username)}
-                                    style={{ cursor: 'pointer', backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
+                                    style={{
+                                        cursor: 'pointer',
+                                        backgroundColor: '#1976D2',
+                                        color: 'white',
+                                        padding: '5px 10px',
+                                        border: 'none',
+                                        borderRadius: '5px'
+                                    }}
                                 >
                                     Reset Password
                                 </button>
                             </td>
                             <td className="cell">
                                 <button
-                                    onClick={() => handleUpdate(user.username)}
-                                    style={{ cursor: 'pointer', backgroundColor: '#1976D2', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}
+                                    onClick={() => handleDelete(user.username)}
+                                    style={{
+                                        cursor: 'pointer',
+                                        backgroundColor: '#1976D2',
+                                        color: 'white',
+                                        padding: '5px 10px',
+                                        border: 'none',
+                                        borderRadius: '5px'
+                                    }}
                                 >
                                     Update
                                 </button>

@@ -36,7 +36,7 @@ export default function ManageUser() {
 
     // กรองผู้ใช้ที่ไม่ใช่ admin
     const filteredUsers = users.filter(user => user.role !== Role.ADMIN);
-
+    
     // ฟังก์ชันลบผู้ใช้
     const handleDelete = async (username) => {
         try {
@@ -64,7 +64,7 @@ export default function ManageUser() {
     const handleUpdate = async (username) => {
         if (userInfo.role !== Role.ADMIN) {
             alert("You do not have permission to update users.");
-            return; // ถ้าไม่ใช่ admin ให้ยกเลิกการอัปเดต
+            return;
         }
         const updatedUser = users.find((user) => user.username === username);
         if (!updatedUser) return;
@@ -77,6 +77,7 @@ export default function ManageUser() {
             alert("Failed to update user. Please try again.");
         }
     };
+    
 
     // ฟังก์ชันเปิด Modal สำหรับรีเซ็ตรหัสผ่าน
     const handleOnReset = (username) => {
@@ -91,6 +92,7 @@ export default function ManageUser() {
             return; // ถ้าไม่ใช่ admin ให้ยกเลิกการรีเซ็ตรหัสผ่าน
         }
         if (!selectedUser || !newPassword) return; // ตรวจสอบข้อมูล
+    
         try {
             await axios.post(`http://localhost:8080/users/${selectedUser}/reset-password`, {
                 caller: {
@@ -104,6 +106,7 @@ export default function ManageUser() {
             setSelectedUser(null); // รีเซ็ต state
         } catch (error) {
             console.error("Error resetting password:", error);
+            alert("Failed to reset password. Please try again.");
         }
     };
 
@@ -126,5 +129,6 @@ export default function ManageUser() {
             onClose={() => setShowReset(false)}
             onPasswordReset={handlePasswordReset}  // ใช้ฟังก์ชันที่เชื่อมต่อกับ Backend
         />
+        
     </>);
 }
