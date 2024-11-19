@@ -85,7 +85,6 @@ export default function ManageUser() {
         };
 
         if (!updatedUser) return;
-        console.log(updatedUser);
         try {
             await axios.post(`http://localhost:8080/users/${username}/update`, data);
             alert("User updated successfully!");
