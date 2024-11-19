@@ -133,6 +133,7 @@ export default function ProductOrder() {
         <div className="center-block">
             <BackButton/>
             <div className="product-order-detail-container">
+
                 {/* Left Column: Contains main product order details, damage and load details, and action buttons */}
                 <div className="left-column">
 
