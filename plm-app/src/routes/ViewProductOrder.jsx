@@ -14,7 +14,7 @@ import DamageReport from "../components/ProductOrder/damageReport";
 import axios from 'axios';
 import { WEB_SERVICE_URL } from "../users";
 import BackButton from "../components/BackButton";
-import ActionLogs from "../components/ProductOrder/actinLogs";
+import ActionLogs from "../components/ProductOrder/actionLogs";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -25,6 +25,8 @@ export default function ProductOrder() {
     let [toReprot, setToReport] = useState(false)
     let [toLoad, setToLoad] = useState(false)
 
+
+    let [toEdit, setToEdit] = useState(false)
     
     const { blnum } = useParams();
 
@@ -57,6 +59,9 @@ export default function ProductOrder() {
     }
     if (toLoad) {
         return <Navigate to={`/ProductOrder/${blnum}/add-load`} />;
+    }
+    if (toEdit) {
+        return <Navigate to={`/ProductOrder/${blnum}/Edit`} />;
     }
 
     if (toLogin || !validCreds) {
@@ -126,8 +131,6 @@ export default function ProductOrder() {
         setRefreshTrigger(!refreshTrigger);
     }
 
-
-
     return (<>
         <Header onLogout={() => setToLogin(true)} user={userInfo} />
         <div className="center-block">
@@ -135,40 +138,44 @@ export default function ProductOrder() {
             <div className="product-order-detail-container">
 
                 {/* Left Column: Contains main product order details, damage and load details, and action buttons */}
-                <div className="left-column">
+                <div className="product-order-detail-container">
+                    <div className="left-column">
 
-                    {/* B/L and Order Info */}
-                    <MainDetails params={blnum} productOrders={productOrders} />
+                        {/* B/L and Order Info */}
+                        <MainDetails params={blnum} productOrders={productOrders} />
 
 
-                    {/* Product Order Table */}
-                    <OrderTable params={blnum} productOrders={productOrders} />
+                        {/* Product Order Table */}
+                        <OrderTable params={blnum} productOrders={productOrders} />
 
-                    {/* Damage Report and Load Details Section */}
-                    <div className="report-section">
-                        <DamageReport params={blnum} productOrders={productOrders} />
+                        {/* Damage Report and Load Details Section */}
+                        <div className="report-section">
+                            <DamageReport params={blnum} productOrders={productOrders} />
 
-                        {/* Load detail */}
-                        <LoadDetails params={blnum} productOrders={productOrders} onDeleteCar={(handleRefresh)} />
+                            {/* Load detail */}
+                            <LoadDetails params={blnum} productOrders={productOrders} onDeleteCar={(handleRefresh)} />
+                        </div>
+
+                        {/* Action Buttons */}
+                        <ActionButtons user={userInfo} params={blnum}
+                            productOrders={productOrders}
+                            handleForward={handleForward}
+                            handleReturn={handleReturn}
+                            onReport={() => setToReport(true)}
+                            onLoad={() => setToLoad(true)}
+                            onEdit={()=>setToEdit(true)} />
                     </div>
 
-                    {/* Action Buttons */}
-                    <ActionButtons user={userInfo} params={blnum} 
-                    productOrders={productOrders} 
-                    handleForward={handleForward} 
-                    handleReturn={handleReturn} 
-                    onReport={()=> setToReport(true)}
-                    onLoad={() => setToLoad(true)} />
+                    <div className="right-column">
+                        <Status params={blnum} productOrders={productOrders} />
+                    </div>
+                </div>
+                <div className="action-logs-container">
+                    <ActionLogs params={blnum} productOrders={productOrders} />
                 </div>
 
-                {/* Right Column: Contains status and dispatcher information */}
-                <div className="right-column">
-                    {/* Status Information */}
-                    <Status params={blnum} productOrders={productOrders} />
-                    {/* Dispatcher Information */}
-                    <ActionLogs params={blnum} productOrders={productOrders}/>
-                </div>
             </div>
+
         </div>
 
     </>);

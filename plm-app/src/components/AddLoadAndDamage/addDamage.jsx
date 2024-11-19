@@ -4,27 +4,123 @@ import { useAuthenticate, WEB_SERVICE_URL } from '../../users';
 import './addLoadandDamage.css'
 import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import { useAllProductOrders } from '../../users';
 
-const AddLoadComponent = () => {
-    const [carID, setCarID] = useState(0);
+
+const AddDamageComponent = () => {
+    const [carModel, setCarModel] = useState("");/////carmodel/
     const [reportDetails, setReportDetails] = useState("");
     const [file, setFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false); // **Added state for submission status**
     const navigate = useNavigate();
     let [validCreds, userInfo, password] = useAuthenticate();
-    const {blnum} = useParams();
+    const { blnum } = useParams();
+    let [productOrders, setProductOrders, succ] = useAllProductOrders();
 
+    const getCarIdByBLAndModel = (blnumber, modelName) => {
+        // Find the product order by BL number
+        const productOrder = productOrders.find(order => order.blnumber === blnumber);
+
+        // If the product order exists, find the first matching car
+        if (productOrder) {
+            const car = productOrder.cars.find(car => car.truck === "none" && car.modelName === modelName);
+            return car ? car.id : null; // Return the ID or null if not found
+        }
+
+        // Return null if no matching product order is found
+        return null;
+    };
+    const isTruckNoneExist = (blnumber) => {
+        // Find the product order by BL number
+        const productOrder = productOrders.find(order => order.blnumber === blnumber);
+
+        // If the product order exists, check if any car has truck "none"
+        if (productOrder) {
+            return productOrder.cars.some(car => car.truck === "none");
+        }
+
+        // Return false if no matching product order is found
+        return false;
+    };
+    function isThisCarNotExist( blnumber, carModelName) {
+        // Find the product order with the matching blnumber
+        const productOrder = productOrders.find(order => order.blnumber === blnumber);
+        
+        // If no such product order exists, return true (car doesn't exist for non-existent blnumber)
+        if (!productOrder) return true;
+    
+        // Check if the car with the given modelName exists in the cars array
+        return !productOrder.cars.some(car => car.modelName === carModelName);
+    }
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]); // **Handles file selection**
     };
 
     const handleSubmit = async () => {
-        if (!carID || !reportDetails) { // **Validates mandatory fields**
+        if (!carModel || !reportDetails) { // **Validates mandatory fields**
             alert("License plate and details are required!");
             return;
         }
+        if (!isTruckNoneExist(blnum)) {/////////////////////////////////////////////////////////////////////
+            try {
 
+                const payload = {
+                    truckNumber: "none",
+                    caller: {
+                        username: userInfo.username,
+                        password: password,
+                    },
+                };
+                const response = await axios.post(
+                    WEB_SERVICE_URL + "/trucks",
+                    payload,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+            } catch (error) {
+                if (error.response) {
+                  //  console.log(`Error: add truck   ${error.response.data}`);
+                } else {
+                    alert("Error: Unable to connect to the server.");
+                }
+            }
+        }
+        
+        try {///// add car ///////////////////////////////////////////////////////////////////////
+
+            const payload = {
+                caller: {
+                    username: userInfo.username,
+                    password: password,
+                },
+                truckNumber: "none",
+                carModel: carModel, // Send one car 
+
+            };
+            const response = await axios.post(
+                WEB_SERVICE_URL + `/product-orders/${blnum}/cars`,
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            console.log(`Added vehicle: ${vehicle}`, response.data);
+        } catch (error) {
+            // Handle error response
+            if (error.response) {
+                alert(`Error: ${error.response.data}`);
+            } else {
+                alert("Error: Unable to connect to the server.");
+            }
+        }
+    
         const formData = new FormData();
         formData.append("report", reportDetails); // Adds report details to form-data
         formData.append(
@@ -35,12 +131,12 @@ const AddLoadComponent = () => {
             })
         ); // Serializes the caller object into a JSON string
         formData.append("image", file); // Adds the file to form-data
-        for (let pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
+
         setIsSubmitting(true); // **Disables the button during submission**
-        try {
-            const carId = /* Logic to retrieve or map carId from licensePlate */ carID; // **Placeholder for carId**
+        try {///////////////REPORT//////////REPORT/////////////////REPORT////////////REPORT////////////
+
+            const carId = getCarIdByBLAndModel(blnum, carModel);
+            alert(carId)
             const response = await axios.post(
                 `${WEB_SERVICE_URL}/product-orders/${blnum}/cars/${carId}/damage-report`, // **API endpoint URL**
                 formData,
@@ -74,8 +170,8 @@ const AddLoadComponent = () => {
                 <input
                     type="text"
                     id="licensePlate"
-                    value={carID}
-                    onChange={(e) => setCarID(e.target.value)}
+                    value={carModel}
+                    onChange={(e) => setCarModel(e.target.value)}
                     placeholder="Enter license plate"
                     className="form-input"
                 />
@@ -110,91 +206,4 @@ const AddLoadComponent = () => {
     );
 };
 
-export default AddLoadComponent;
-
-// const AddDamageComponent = () => {
-//     const [licensePlate, setLicensePlate] = useState("");
-//     const [reportDetails, setReportDetails] = useState("");
-//     const [file, setFile] = useState(null);
-//     const blnum = useParams();
-
-//     const handleFileChange = (event) => {
-//         setFile(event.target.files[0]);
-//     };
-
-//     const handleSubmit = async () => {
-//         if (!licensePlate || !file) { // **Validates mandatory fields**
-//             alert("License plate and file are required!");
-//             return;
-//         }
-//         console.log("License Plate:", licensePlate);
-//         console.log("Report Details:", reportDetails);
-//         console.log("Uploaded File:", file);
-//         alert("Damage recorded successfully!");
-//         try {
-//             const carId = /* Logic to retrieve or map carId from licensePlate */ 1; // **Placeholder for carId**
-//             const response = await axios.post(
-//                 `${WEB_SERVICE_URL}/product-orders/${blnum}/cars/${carId}/damage-report`, // **API endpoint URL**
-//                 formData,
-//                 {
-//                     headers: {
-//                         "Content-Type": "multipart/form-data", // **Specifies form-data content type**
-//                     },
-//                 }
-//             );
-
-//             if (response.status === 201) { // **Checks for successful creation**
-//                 alert("Damage recorded successfully!");
-//                 navigate("/success"); // **Redirects on success**
-//             } else {
-//                 alert(`Error: ${response.data}`); // **Handles API errors**
-//             }
-//         } catch (error) {
-//             console.error("Failed to record damage report:", error);
-//             alert("An error occurred while submitting the form. Please try again."); // **Error feedback**
-//         }
-//     };
-
-//     return (
-//         <div className="damage-report-container">
-//             <h3>Damage Report{blnum}</h3>
-//             <div className="form-group">
-//                 <label htmlFor="licensePlate">Please enter vehicle's license plate number:</label>
-//                 <input
-//                     type="text"
-//                     id="licensePlate"
-//                     value={licensePlate}
-//                     onChange={(e) => setLicensePlate(e.target.value)}
-//                     placeholder="Enter license plate"
-//                     className="form-input"
-//                 />
-//             </div>
-//             <div className="form-group">
-//                 <label htmlFor="fileUpload">Upload evidence:</label>
-//                 <input
-//                     type="file"
-//                     id="fileUpload"
-//                     onChange={handleFileChange}
-//                     className="form-input"
-//                 />
-//             </div>
-//             <div className="form-group">
-//                 <label htmlFor="reportDetails">Enter report details:</label>
-//                 <textarea
-//                     id="reportDetails"
-//                     value={reportDetails}
-//                     onChange={(e) => setReportDetails(e.target.value)}
-//                     placeholder="Enter report details"
-//                     className="form-textarea"
-//                 ></textarea>
-//             </div>
-//             <button onClick={handleSubmit} className="submit-button">
-//                 Record Damage
-//             </button>
-//         </div>
-//     );
-
-// }
-
-
-// export default AddDamageComponent;
+export default AddDamageComponent;

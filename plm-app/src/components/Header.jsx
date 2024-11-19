@@ -7,7 +7,7 @@ function Header(props) {
       
       <div style={styles.userSection}>
         <button style={styles.logoutButton} onClick={props.onLogout}>Logout</button>
-        <span className='employeeName' style={styles.employeeText}>  {Role.toString(props.user.role)} : {props.user.username} : {props.user.firstname} {props.user.lastname}</span>
+        <span className='employeeName' style={styles.employeeText}> {props.user.firstname} {props.user.lastname}</span>
         <div style={styles.profileIcon}>👤</div>
       </div>
     </header>
