@@ -12,7 +12,7 @@ const AddLoadComponent = () => {
     const [isSubmitting, setIsSubmitting] = useState(false); // **Added state for submission status**
     const navigate = useNavigate();
     let [validCreds, userInfo, password] = useAuthenticate();
-    const {blnum} = useParams();
+    const { blnum } = useParams();
 
 
     const handleFileChange = (event) => {
@@ -24,8 +24,63 @@ const AddLoadComponent = () => {
             alert("License plate and details are required!");
             return;
         }
+        try {
+            const payload = {
+                truckNumber: "none",
+                caller: {
+                    username: userInfo.username,
+                    password: password,
+                },
+            };
+            const response = await axios.post(
+                WEB_SERVICE_URL + "/trucks",
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+        } catch (error) {
+            if (error.response) {
+                console.log(`Error: add truck   ${error.response.data}`);
+            } else {
+                alert("Error: Unable to connect to the server.");
+            }
+        }
+        try {///// add car
 
-        const formData = new FormData();
+            const payload = {
+                caller: {
+                    username: userInfo.username,
+                    password: password,
+                },
+                truckNumber: "none",
+                carModel: carID, // Send one car 
+
+            };
+            const response = await axios.post(
+                WEB_SERVICE_URL + `/product-orders/${blnum}/cars`,
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            console.log(`Added vehicle: ${vehicle}`, response.data);
+        } catch(error) {
+            // Handle error response
+            if (error.response) {
+                alert(`Error: ${error.response.data}`);
+            } else {
+                alert("Error: Unable to connect to the server.");
+            }
+        }
+
+
+        const formData = new FormData()
         formData.append("report", reportDetails); // Adds report details to form-data
         formData.append(
             "caller",
@@ -35,12 +90,12 @@ const AddLoadComponent = () => {
             })
         ); // Serializes the caller object into a JSON string
         formData.append("image", file); // Adds the file to form-data
-        for (let pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
+        // for (let pair of formData.entries()) {
+        //     console.log(pair[0], pair[1]);
+        // }
         setIsSubmitting(true); // **Disables the button during submission**
         try {
-            const carId = /* Logic to retrieve or map carId from licensePlate */ carID; // **Placeholder for carId**
+            const carId = carID; // **Placeholder for carId**
             const response = await axios.post(
                 `${WEB_SERVICE_URL}/product-orders/${blnum}/cars/${carId}/damage-report`, // **API endpoint URL**
                 formData,
