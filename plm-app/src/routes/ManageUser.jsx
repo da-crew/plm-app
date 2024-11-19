@@ -24,9 +24,9 @@ export default function ManageUser() {
         // ทำการเรียกข้อมูลผู้ใช้จาก backend
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/users');
-                console.log(response.data);  // ตรวจสอบ URL ของ API
+                const response = await axios.get('http://localhost:8080/users'); // ตรวจสอบ URL ของ API
                 setUsers(response.data);  // อัปเดต state ของ users
+                console.log(users);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
