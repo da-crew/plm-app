@@ -133,9 +133,10 @@ export default function ProductOrder() {
 
     return (<>
         <Header onLogout={() => setToLogin(true)} user={userInfo} />
-        <div className="center-block-prods">
-            <BackButton />
-            <div >
+        <div className="center-block">
+            <BackButton/>
+            <div className="product-order-detail-container">
+
                 {/* Left Column: Contains main product order details, damage and load details, and action buttons */}
                 <div className="product-order-detail-container">
                     <div className="left-column">

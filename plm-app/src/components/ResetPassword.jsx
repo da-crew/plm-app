@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const ResetPasswordModal = (props) => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);  // เพิ่ม state สำหรับการโหลด
 
     function handleNewPasswordChange(event) {
         setNewPassword(event.target.value);
@@ -13,22 +15,30 @@ const ResetPasswordModal = (props) => {
         setConfirmPassword(event.target.value);
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (newPassword !== confirmPassword) {
             setErrorMessage("Passwords don't match!");
             return;
         }
 
-        // If passwords match, call the onPasswordReset callback to notify the parent component
-        if(props.onPasswordReset){
-        props.onPasswordReset(newPassword);// password ที่จะเปลี่ยน
+        // ถ้ารหัสผ่านตรงกัน เรียกใช้ฟังก์ชัน onPasswordReset เพื่อส่งรหัสผ่านใหม่ไปที่ backend
+        if (props.onPasswordReset) {
+            setIsLoading(true); // เริ่มโหลด
+            try {
+                await props.onPasswordReset(newPassword);  // เรียกฟังก์ชันที่ส่งไปยัง backend
+                setIsLoading(false);  // หยุดการโหลด
+                alert("Password reset successfully!");  // แจ้งเตือนเมื่อสำเร็จ
+            } catch (error) {
+                setIsLoading(false);  // หยุดการโหลด
+                setErrorMessage("Failed to reset password. Please try again.");  // แสดงข้อความผิดพลาด
+            }
         }
-        // Clear the fields and close the modal
-        setNewPassword(''); 
+
+        // รีเซ็ตฟิลด์และปิด modal
+        setNewPassword('');
         setConfirmPassword('');
         setErrorMessage('');
         props.onClose();
-        
     };
 
     const styles = {
@@ -73,6 +83,13 @@ const ResetPasswordModal = (props) => {
             border: 'none',
             borderRadius: '5px',
         },
+        loadingButton: {
+            padding: '8px 12px',
+            backgroundColor: 'gray',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+        },
     };
 
     if (!props.show) return null;
@@ -99,7 +116,12 @@ const ResetPasswordModal = (props) => {
                 <div style={styles.buttonContainer}>
                     <button onClick={props.onClose} style={styles.cancelButton}>Cancel</button>
                     <button 
-                    onClick={handleSubmit} style={styles.submitButton}>Submit</button>
+                        onClick={handleSubmit} 
+                        style={isLoading ? styles.loadingButton : styles.submitButton}
+                        disabled={isLoading} // ปิดการใช้งานปุ่มเมื่อกำลังโหลด
+                    >
+                        {isLoading ? 'Loading...' : 'Submit'}
+                    </button>
                 </div>
             </div>
         </div>
