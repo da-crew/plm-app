@@ -1,0 +1,23 @@
+.action-log {
+    border: 2px solid #7e7e7e;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.action-log th {
+    background-color: whitesmoke;
+    color: black;
+    border-radius: 10px;
+    border: 2px solid #7e7e7e;
+}
+
+.action-log:hover tr {
+    background-color: unset;
+}
+
+h4 {  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
