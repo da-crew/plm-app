@@ -14,7 +14,7 @@ import DamageReport from "../components/ProductOrder/damageReport";
 import axios from 'axios';
 import { WEB_SERVICE_URL } from "../users";
 import BackButton from "../components/BackButton";
-import ActionLogs from "../components/ProductOrder/actinLogs";
+import ActionLogs from "../components/ProductOrder/actionLogs";
 
 export default function ProductOrder() {
     let [toLogin, setToLogin] = useState(false);
@@ -125,8 +125,6 @@ export default function ProductOrder() {
     function handleRefresh() {//when click product order in list
         setRefreshTrigger(!refreshTrigger);
     }
-
-
 
     return (<>
         <Header onLogout={() => setToLogin(true)} user={userInfo} />

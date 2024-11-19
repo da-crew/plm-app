@@ -29,12 +29,12 @@
   /* B/L and Order Info, Product Table, Report Section, and Action Buttons styling */
   .bl-info, .product-order-table, .report-section, .action-buttons {
     margin-bottom: 20px;
-    
   }
   
   /* Status and Dispatcher Info styling */
   .status-info, .dispatcher-info {
-    border: 1px solid #000;
+    border: 2px solid #7e7e7e;
+    border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
     

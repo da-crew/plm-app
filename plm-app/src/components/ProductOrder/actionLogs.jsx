@@ -35,8 +35,14 @@ function ActionLogs({ params, productOrders }) {
             <h4>Action Logs</h4>
             {actionLogs && actionLogs.length > 0 ? ( // Added conditional rendering for `actionLogs`
                 actionLogs.map((log) => (
-                    <div key={log.id} className="action-log-item dispatcher-info">
-                        <p>
+                    <div key={log.id} className="dispatcher-info">
+                        <table>
+                            <thead>
+                                <tr>Hi</tr>
+                            </thead>
+                        </table>
+
+                        {/*<p>
                             <strong>Timestamp:</strong>{' '}
                             {new Date(log.timestamp).toLocaleString()} 
                         </p>
@@ -45,7 +51,7 @@ function ActionLogs({ params, productOrders }) {
                         </p>
                         <p>
                             <strong>Employee:</strong> {log.employee} 
-                        </p>
+                        </p>*/}
                     </div>
                 ))
             ) : (
