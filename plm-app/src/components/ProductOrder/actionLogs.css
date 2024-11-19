@@ -3,7 +3,9 @@
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
+    
 }
+
 
 .action-log th {
     background-color: whitesmoke;
@@ -12,12 +14,16 @@
     border: 2px solid #7e7e7e;
 }
 
-.action-log:hover tr {
-    background-color: unset;
+.action-log tr:first-child th:last-child {
+    border-radius: 10px;
 }
 
-h4 {  
-    display: flex;
-    justify-content: center;
-    align-items: center;
+h4 {
+    text-align: center;
+}
+
+.info {
+    font-weight: normal;
+    word-wrap: break-word;
+    word-wrap: break-word;
 }

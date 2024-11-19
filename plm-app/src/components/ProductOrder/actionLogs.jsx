@@ -1,8 +1,6 @@
-// ActionLogs.jsx
 import React from 'react';
 import './ViewProductOrder.css';
 import './actionLogs.css';
-import { useParams } from 'react-router';
 
 function ActionLogs({ params, productOrders }) {
     const thisProductOrder = productOrders.find(
@@ -23,15 +21,15 @@ function ActionLogs({ params, productOrders }) {
                     <table key={log.id} className="action-log">
                         <tr>
                             <th>Timestamp</th>
-                            <th>{new Date(log.timestamp).toLocaleString()}</th>
+                            <th className='info'>{new Date(log.timestamp).toLocaleString()}</th>
                         </tr>
                         <tr>
                             <th>Action</th>
-                            <th>{log.actionText}</th>
+                            <th className='info'>{log.actionText}</th>
                         </tr>
                         <tr>
                             <th>Employee</th>
-                            <th>{log.employee}</th>
+                            <th className='info'>{log.employee}</th>
                         </tr>
                     </table>
                 ))
