@@ -3,8 +3,8 @@ html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #BCBCBC;
-  
+    background-color: #F3F4F6;
+
 }
 
 
@@ -31,4 +31,70 @@ html {
 .center-block {
     width: 70%; /* Adjust as necessary */
     margin: 0 auto;
+}
+
+
+/* about back button */
+.back {
+    display: inline-flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 24px; /* Adjust size */
+    font-weight: bold;
+    color: black; /* Adjust color */
+    text-decoration: none; /* Remove underline if it's a link */
+    cursor: pointer;
+}
+
+.back .arrow {
+    margin-right: 8px; /* Space between arrow and text */
+    font-size: 24px; /* Adjust size of the arrow */
+    line-height: 1;
+}
+
+.back:hover {
+    color: blue; /* Hover effect color */
+    text-decoration: underline; /* Optional hover effect */
+}
+
+tr:hover {
+    background-color: #e6f7ff; /* Light blue highlight */
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: bold;
+    border-bottom: 2px solid #0056b3;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9f5ff;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
 }

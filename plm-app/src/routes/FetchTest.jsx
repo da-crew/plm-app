@@ -1,11 +1,11 @@
-import { useProductOrders, useAuthenticate } from "../users";
+import { useAllProductOrders, useAuthenticate } from "../users";
 import { useEffect, useState } from "react";
 
 export default function FetchTest() {
     
     let [toLogin, setToLogin] = useState(false);
     let [validCreds, userInfo, password] = useAuthenticate();
-    let [productOrders, succ] = useProductOrders();
+    let [productOrders, succ] = useAllProductOrders();
 
     if (toLogin || !validCreds) {
         return <Navigate to="/login" />

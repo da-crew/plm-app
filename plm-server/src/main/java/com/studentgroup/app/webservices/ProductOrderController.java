@@ -73,6 +73,20 @@ public class ProductOrderController {
     /*
      * Request Body: {
      * productOrder: [see method ProductOrderInfo.fromJsonNode]
+     *  
+    JSON must look like this: 
+    {
+        BLNumber: String,
+        orderDate: String(formatted date time with timezone)
+        vesselName: String,
+        voyNumber: String,
+        cosigneeName: String,
+        markAndNumsText: String,
+        packagesText: String,
+        description: String,
+        remarks: String
+    }
+    
      * 
      * caller: {
      * username: String,

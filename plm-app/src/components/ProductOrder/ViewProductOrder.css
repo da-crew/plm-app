@@ -1,0 +1,191 @@
+/* Main container for the component with flex layout to create two columns */
+.product-order-detail-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+
+    overflow-x: auto;
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+
+}
+
+/* Left column styling */
+.left-column {
+    flex: 2;
+    /* Takes up more space than the right column */
+}
+
+/* Right column styling */
+.right-column {
+    
+    flex: 1;
+    /* Takes up less space than the left column */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* B/L and Order Info, Product Table, Report Section, and Action Buttons styling */
+.bl-info,
+.product-order-table,
+.report-section,
+.action-buttons {
+    margin-bottom: 20px;
+}
+
+/* Status and Dispatcher Info styling */
+.status-info,
+.dispatcher-info {
+    border: 2px solid #7e7e7e;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+
+}
+
+/* Table styling for product order details */
+.product-order-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-order-table th,
+.product-order-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+}
+
+/* Report section layout for Damage Report and Load Details */
+.report-section {
+    display: flex;
+    gap: 20px;
+}
+
+/* Styling for Damage Report and Load Details boxes */
+/* .damage-report, .load-details {
+    border: 1px solid #000;
+    padding: 10px;
+    flex: 1;
+  } */
+
+/* Image styling */
+.document-image,
+.damage-image {
+    width: 100px;
+    height: auto;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 10px;
+    /* Space between rows */
+}
+
+.add-buttons,
+.other-buttons {
+    display: flex;
+    gap: 10px;
+    /* Space between buttons in each row */
+}
+
+.add-buttons button,
+.other-buttons button {
+    width: 180px;
+    /* Fixed width for each button */
+    padding: 10px 0;
+    font-size: 14px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Specific button colors */
+.add-damage-report,
+.add-load-details,
+.edit-product-order {
+    background-color: #007bff;
+    /* Blue */
+}
+
+.report,
+.return-dispatcher {
+    background-color: #dc3545;
+    /* Red */
+}
+
+.forward,
+.forward-exporter {
+    background-color: #28a745;
+    /* Green */
+}
+
+
+/* General styling for the Load Details container */
+.load-details,
+.damage-report {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Style for each truck's details */
+.truck-details,
+.Report-item {
+    border: 1px solid #ccc;
+    /* Adds a border around each truck's section */
+    border-radius: 8px;
+    /* Rounds the corners */
+    padding: 10px;
+    /* Adds space inside the border */
+    margin-bottom: 15px;
+    /* Adds space between each truck's section */
+    background-color: #f9f9f9;
+    /* Gives a light background for contrast */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+}
+
+/* Style for the Truck label */
+.truck-details p strong {
+    color: #007bff;
+    /* A distinct color to highlight important labels */
+    font-weight: bold;
+}
+
+/* Style for the delete button */
+.delete-button {
+    background: none;
+    border: none;
+    color: #e63946;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.delete-button:hover {
+    text-decoration: underline;
+}
+
+.action-logs-container {
+    margin-left: auto;
+    padding: 10px;
+    
+    background-color: white;
+    border-radius: 8px;
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+}
+
+.center-block-prods {
+    width: 70%; /* Adjust as necessary */
+    margin: 0 auto;
+    /*display: flex;*/
+}

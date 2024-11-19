@@ -1,0 +1,44 @@
+.table-container {
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-header {
+    background-color: #f8f8f8;
+    font-weight: bold;
+  }
+  
+  .cell {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .empty-row {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+  }
+  
+  .clickable-row {
+    cursor: pointer;
+  }
+
+  .cell.table-header {
+    color: #000000; /* Change text color */
+    background-color: #f1f1f1; /* Optional: Change background color */
+    font-weight: bold; /* Optional: Make the text bold */
+}
+
+.clickable-row:hover {
+    background-color: #e9f5ff;
+}
+
