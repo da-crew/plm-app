@@ -66,11 +66,27 @@ export default function ManageUser() {
             alert("You do not have permission to update users.");
             return;
         }
-        const updatedUser = users.find((user) => user.username === username);
+
+        const foundUser = users.find((user) => user.username === username);
+
+        const updatedUser = {
+            username: foundUser.username,
+            firstname: foundUser.firstname,
+            lastname: foundUser.lastname,
+            role: foundUser.role
+        };
+
+        const data = {
+            caller: {
+                username: userInfo.username,
+                password: password,
+            },
+            user: updatedUser
+        };
+
         if (!updatedUser) return;
-    
         try {
-            await axios.put(`http://localhost:8080/users/${username}`, updatedUser);
+            await axios.post(`http://localhost:8080/users/${username}/update`, data);
             alert("User updated successfully!");
         } catch (error) {
             console.error("Error updating user:", error);
