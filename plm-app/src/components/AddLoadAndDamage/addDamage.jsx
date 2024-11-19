@@ -5,14 +5,30 @@ import './addLoadandDamage.css'
 import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 
-const AddLoadComponent = () => {
+// Function to get car IDs based on BL Number and Model Name
+const getCarIdsByBLAndModel = (blnumber, modelName) => {
+    // Filter product orders by BL number
+    const productOrder = data.find(order => order.blnumber === blnumber);
+  
+    // If the product order is found, filter cars by model name and truck value
+    if (productOrder) {
+      return productOrder.cars
+        .filter(car => car.truck === "none" && car.modelName === modelName)
+        .map(car => car.id);
+    }
+  
+    // Return an empty array if no matching product order is found
+    return [];
+  };
+
+const AddDamageComponent = () => {
     const [carID, setCarID] = useState(0);
     const [reportDetails, setReportDetails] = useState("");
     const [file, setFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false); // **Added state for submission status**
     const navigate = useNavigate();
     let [validCreds, userInfo, password] = useAuthenticate();
-    const { blnum } = useParams();
+    const {blnum} = useParams();
 
 
     const handleFileChange = (event) => {
@@ -80,7 +96,7 @@ const AddLoadComponent = () => {
         }
 
 
-        const formData = new FormData()
+        const formData = new FormData();
         formData.append("report", reportDetails); // Adds report details to form-data
         formData.append(
             "caller",
@@ -95,7 +111,7 @@ const AddLoadComponent = () => {
         // }
         setIsSubmitting(true); // **Disables the button during submission**
         try {
-            const carId = carID; // **Placeholder for carId**
+            const carId = /* Logic to retrieve or map carId from licensePlate */ carID; // **Placeholder for carId**
             const response = await axios.post(
                 `${WEB_SERVICE_URL}/product-orders/${blnum}/cars/${carId}/damage-report`, // **API endpoint URL**
                 formData,
@@ -165,7 +181,7 @@ const AddLoadComponent = () => {
     );
 };
 
-export default AddLoadComponent;
+export default AddDamageComponent;
 
 // const AddDamageComponent = () => {
 //     const [licensePlate, setLicensePlate] = useState("");
